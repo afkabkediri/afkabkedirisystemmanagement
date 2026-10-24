@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="id" class="h-screen overflow-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Scorer Panel - AFKAB Kediri</title>
+    
+    <!-- FAVICON (Ganti path/nama file di bawah ini sesuai dengan lokasi file .webp Anda) -->
+    <link rel="icon" type="image/webp" href="01. Logo Web/002. Logo Afkab.webp">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; overflow: hidden; }
+        .sporty-font { font-family: 'Syne', sans-serif; }
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(9, 13, 22, 0.90) 0%, rgba(17, 30, 56, 0.90) 50%, rgba(3, 46, 34, 0.90) 100%), url('01. Logo Web/001. Background.webp');
+            background-size: cover; background-position: center; background-attachment: fixed;
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.5); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.8); }
+        .modal-active { display: flex !important; }
+
+        /* Animasi Modal & Notifikasi */
+        .custom-notification-modal, .custom-confirm-modal, .form-modal, .import-modal { transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .custom-notification-content, .custom-confirm-content, .form-modal-content, .import-modal-content { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1); transform: scale(0.95); opacity: 0; }
+        .custom-notification-active .custom-notification-content, .custom-confirm-active .custom-confirm-content, .form-modal-active .form-modal-content, .import-modal-active .import-modal-content { transform: scale(1); opacity: 1; }
+
+        /* Pengaturan Cetak / PDF Khusus */
+        @media print {
+            body { background: white !important; color: black !important; overflow: auto !important; }
+            header, nav, button, .no-print { display: none !important; }
+            .hero-bg { background: white !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 font-sans text-slate-100 antialiased h-screen hero-bg flex flex-col overflow-hidden">
+
+    <!-- Input File Tersembunyi untuk Fitur Import Excel/CSV -->
+    <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" class="hidden" onchange="processExcelUpload(event)">
+
+    <!-- Navbar Atas -->
+    <header class="w-full px-6 lg:px-10 py-3 flex items-center justify-between z-20 border-b border-white/10 backdrop-blur-md bg-slate-950/60 sticky top-0 flex-shrink-0 no-print">
+        <a href="index.html" id="navbar-brand-link" class="flex items-center space-x-3 transition-all duration-300 hover:opacity-80 group">
+            <div class="w-10 h-10 flex items-center justify-center transition-transform duration-300 group-hover:rotate-6">
+                <img src="01. Logo Web/002. Logo Afkab.webp" alt="Logo Afkab Kediri" class="w-full h-full object-contain">
+            </div>
+            <div>
+                <span class="sporty-font text-base font-extrabold tracking-wider text-white group-hover:text-blue-400 transition-colors">AFKAB KEDIRI</span>
+                <span id="navbar-subtitle" class="block text-[9px] text-amber-400 font-bold uppercase tracking-widest">Top Scorer Panel</span>
+            </div>
+        </a>
+
+        <!-- Menu Navigasi (Dinamis Berdasarkan Role: Match Commissioner / Operations vs Coordinator) -->
+        <nav id="navbar-menu-container" class="hidden xl:flex items-center space-x-1 bg-slate-900/40 p-1.5 rounded-2xl border border-white/10 backdrop-blur-md">
+            <a href="coordinator.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Dashboard</a>
+            <a href="master_data.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Master Data</a>
+            <a href="schedule.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Schedule</a>
+            <a href="screening.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Screening</a>
+            <a href="report.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Report</a>
+            <a href="topscorer.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl bg-blue-600 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md">Top Scorer</a>
+            <a href="discipline.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Discipline</a>
+            <a href="archive.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Archive</a>
+        </nav>
+
+        <div class="hidden lg:flex items-center space-x-3 bg-slate-900/60 border border-white/10 px-4 py-1.5 rounded-full backdrop-blur-md text-xs text-slate-300 font-semibold shadow-inner">
+            <span id="current-date">--</span>
+            <span class="text-slate-500">|</span>
+            <span id="current-time" class="font-mono font-bold text-white">--:--:--</span>
+        </div>
+    </header>
+
+    <!-- Konten Utama -->
+    <main class="flex-1 w-full px-4 lg:px-8 py-5 flex flex-col max-w-screen-2xl mx-auto gap-3 overflow-hidden">
+        
+        <!-- Header & Baris Tombol Utiliti -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900/60 border border-white/10 p-4 rounded-2xl backdrop-blur-xl shadow-lg flex-shrink-0 no-print">
+            <div>
+                <h1 class="sporty-font text-2xl font-bold text-white tracking-wide">Papan Top Skor</h1>
+                <p class="text-slate-400 text-xs mt-0.5">Daftar pemain dengan perolehan gol terbanyak secara real-time.</p>
+            </div>
+
+            <!-- Tombol Utiliti Aktif -->
+            <div id="utility-buttons-container" class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+                <!-- Tombol Tambah -->
+                <button onclick="openAddModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md flex items-center space-x-1.5">
+                    <i class="fas fa-plus text-xs"></i>
+                    <span>Tambah</span>
+                </button>
+
+                <!-- Tombol Import -->
+                <button onclick="handleImport()" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md flex items-center space-x-1.5">
+                    <i class="fas fa-file-excel text-xs"></i>
+                    <span>Import</span>
+                </button>
+
+                <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
+
+                <!-- Tombol Export Excel -->
+                <button onclick="handleExportExcel()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shadow-md flex items-center space-x-1.5" title="Export Excel">
+                    <i class="fas fa-download text-xs text-blue-400"></i>
+                    <span class="hidden sm:inline">Excel</span>
+                </button>
+
+                <!-- Tombol Export PDF -->
+                <button onclick="handleExportPDF()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shadow-md flex items-center space-x-1.5" title="Export PDF">
+                    <i class="fas fa-file-pdf text-xs text-rose-400"></i>
+                    <span class="hidden sm:inline">PDF</span>
+                </button>
+
+                <!-- Tombol Refresh -->
+                <button onclick="loadTopScorers()" class="bg-slate-800 hover:bg-slate-700 text-blue-400 border border-white/10 p-2.5 rounded-xl text-xs transition-all shadow-md" title="Refresh Data">
+                    <i class="fas fa-sync-alt" id="refresh-icon"></i>
+                </button>
+
+                <!-- Input Pencarian -->
+                <div class="relative flex-1 sm:w-56">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400"><i class="fas fa-search text-xs"></i></span>
+                    <input type="text" id="search-input" oninput="renderTable()" placeholder="Cari data..." class="w-full bg-slate-950/80 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-all shadow-inner">
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Filter Kategori (Putra / Putri) -->
+        <div class="flex items-center space-x-2 bg-slate-900/60 border border-white/10 p-1.5 rounded-2xl backdrop-blur-xl w-fit flex-shrink-0 no-print">
+            <button onclick="switchCategory('Putra')" id="btn-cat-putra" class="px-5 py-2 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-md">Putra</button>
+            <button onclick="switchCategory('Putri')" id="btn-cat-putri" class="px-5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white">Putri</button>
+        </div>
+
+        <!-- Tabel Leaderboard Full Width -->
+        <div class="bg-slate-900/60 border border-white/10 rounded-3xl p-6 backdrop-blur-xl shadow-2xl flex-1 flex flex-col min-h-0 overflow-hidden">
+            <div class="flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/40 custom-scrollbar relative">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-900/95 text-slate-300 uppercase text-[10px] tracking-wider sticky top-0 z-20 border-b border-white/10 shadow-md">
+                        <tr>
+                            <th class="py-3 px-4 font-bold text-center w-14 bg-slate-900">#</th>
+                            <th class="py-3 px-4 font-bold bg-slate-900">Nama Pemain</th>
+                            <th class="py-3 px-4 font-bold bg-slate-900">Tim / Klub</th>
+                            <th class="py-3 px-4 font-bold text-center w-28 bg-slate-900">Jumlah Gol</th>
+                            <th id="table-header-action" class="py-3 px-4 font-bold text-center w-32 no-print bg-slate-900">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-white/5 text-xs text-slate-200">
+                        <!-- Data Top Scorer -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODAL FORM TAMBAH / EDIT TOP SCORER -->
+    <div id="modal-form" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-md px-4 form-modal">
+        <div class="bg-slate-900 border border-white/10 rounded-3xl p-6 w-full max-w-md shadow-2xl form-modal-content relative overflow-hidden">
+            <div class="flex justify-between items-center border-b border-white/10 pb-4 mb-4">
+                <h3 id="modal-title" class="sporty-font text-lg font-bold text-white flex items-center">
+                    <i class="fas fa-futbol text-amber-400 mr-2"></i> Update Top Scorer
+                </h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white w-8 h-8 rounded-lg flex items-center justify-center transition-all bg-white/5">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="topscorer-form" onsubmit="saveTopScorer(event)" class="space-y-4">
+                <input type="hidden" id="form-mode" value="add">
+                <input type="hidden" id="original-id" value="">
+
+                <!-- Pilih Tim -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Pilih Tim</label>
+                    <select id="team-select" onchange="handleTeamChange()" required class="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-all appearance-none cursor-pointer">
+                        <option value="">-- Pilih Tim Dahulu --</option>
+                    </select>
+                    <input type="hidden" id="team-name" value="">
+                </div>
+
+                <!-- Pilih Pemain -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Pilih Pemain (ID diambil otomatis)</label>
+                    <select id="player-select" onchange="handlePlayerChange()" required disabled class="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-all appearance-none disabled:opacity-50 disabled:cursor-not-allowed">
+                        <option value="">-- Pilih Tim Terlebih Dahulu --</option>
+                    </select>
+                    <input type="hidden" id="player-name" value="">
+                </div>
+
+                <!-- Pilih Kategori Kompetisi -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Kategori Kompetisi</label>
+                    <select id="category-select" required class="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-all appearance-none cursor-pointer">
+                        <option value="Putra">Putra</option>
+                        <option value="Putri">Putri</option>
+                    </select>
+                </div>
+
+                <!-- Input Goal -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Total Gol</label>
+                    <input type="number" id="goal-input" required min="0" placeholder="0" class="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-2.5 text-lg font-bold text-amber-400 text-center focus:outline-none focus:border-blue-500 transition-all placeholder-slate-600">
+                </div>
+
+                <div class="pt-4 grid grid-cols-2 gap-3 border-t border-white/10 mt-2">
+                    <button type="button" onclick="closeModal()" class="bg-slate-800 hover:bg-slate-700 text-white py-2.5 rounded-xl text-xs font-bold transition-all shadow-md">Batal</button>
+                    <button type="submit" id="btn-submit" class="bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl text-xs font-bold transition-all shadow-lg flex items-center justify-center">
+                        <i class="fas fa-save mr-2"></i> Simpan Data
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL POPUP KUSTOM: Import by Template Top Scorer -->
+    <div id="modal-import-confirm" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4 import-modal">
+        <div class="bg-slate-900 border border-white/10 rounded-3xl p-6 w-full max-w-md shadow-2xl relative import-modal-content">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0 shadow-inner">
+                    <i class="fas fa-file-excel text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="sporty-font text-lg font-bold text-white">Import Top Scorer by Template</h3>
+                    <p class="text-[11px] text-slate-400">Kelola data perolehan gol massal dengan mudah</p>
+                </div>
+            </div>
+            <p class="text-slate-300 text-sm mb-6 leading-relaxed">
+                Silakan unduh template kosong terlebih dahulu untuk diisi, atau langsung unggah file Excel/CSV Anda.
+            </p>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="executeDownloadTemplate()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold py-3 px-3 rounded-xl border border-white/10 transition-all flex items-center justify-center space-x-2 group">
+                    <i class="fas fa-download text-blue-400 group-hover:scale-110 transition-transform"></i>
+                    <span>Download Template</span>
+                </button>
+                <button onclick="executeUploadTrigger()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-3 px-3 rounded-xl shadow-lg transition-all flex items-center justify-center space-x-2 group">
+                    <i class="fas fa-upload group-hover:scale-110 transition-transform"></i>
+                    <span>Upload File</span>
+                </button>
+            </div>
+            <div class="mt-4 pt-3 border-t border-white/5 text-center">
+                <button onclick="closeImportModal()" class="text-xs text-slate-400 hover:text-white transition-colors font-medium">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM NOTIF & CONFIRM MODALS -->
+    <div id="custom-notification-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/80 backdrop-blur-md px-4 custom-notification-modal">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl text-center custom-notification-content relative overflow-hidden">
+            <div id="notification-icon-container" class="w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-4 shadow-inner text-xl"><i id="notification-icon-element" class="fas fa-info-circle"></i></div>
+            <h3 id="notification-title" class="sporty-font text-lg font-bold text-white mb-2">Info</h3>
+            <p id="notification-message" class="text-slate-300 text-xs mb-6 leading-relaxed whitespace-pre-line">Pesan</p>
+            <button onclick="closeCustomNotification()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg transition-all text-xs tracking-wider uppercase">Mengerti</button>
+        </div>
+    </div>
+
+    <div id="custom-confirm-modal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-slate-950/80 backdrop-blur-md px-4 custom-confirm-modal">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl text-center custom-confirm-content relative overflow-hidden">
+            <div class="w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-4 shadow-inner text-xl bg-amber-500/20 text-amber-400 border border-amber-500/30"><i class="fas fa-exclamation-triangle"></i></div>
+            <h3 id="confirm-title" class="sporty-font text-lg font-bold text-white mb-2">Konfirmasi</h3>
+            <p id="confirm-message" class="text-slate-300 text-xs mb-6 leading-relaxed whitespace-pre-line">Pesan konfirmasi</p>
+            <div class="grid grid-cols-2 gap-3">
+                <button id="confirm-btn-cancel" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl border border-white/10 transition-all text-xs uppercase tracking-wider">Batal</button>
+                <button id="confirm-btn-yes" class="bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg transition-all text-xs uppercase tracking-wider">Ya, Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Pendeteksi Role (Match Commissioner / Match Operations) & Utilities -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const role = urlParams.get('role');
+            const isReadonly = role === 'operations' || role === 'commissioner' || urlParams.get('readonly') === 'true';
+
+            if (role === 'commissioner' || (isReadonly && role === 'commissioner')) {
+                const brandSubtitle = document.getElementById('navbar-subtitle');
+                if (brandSubtitle) brandSubtitle.innerText = "Match Commissioner Panel";
+                
+                const brandLink = document.getElementById('navbar-brand-link');
+                if (brandLink) brandLink.setAttribute('href', 'commissioner.html');
+
+                const navContainer = document.getElementById('navbar-menu-container');
+                if (navContainer) {
+                    const currentPage = window.location.pathname.split('/').pop();
+                    navContainer.innerHTML = `
+                        <a href="commissioner.html" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Dashboard</a>
+                        <a href="master_data.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Master Data (RO)</a>
+                        <a href="schedule.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Schedule (RO)</a>
+                        <a href="report.html?role=commissioner" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Official Report</a>
+                        <a href="topscorer.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('topscorer') ? 'bg-amber-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-amber-600/30'} text-xs uppercase tracking-wider transition-all">Top Scorer (RO)</a>
+                        <a href="discipline.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Discipline (RO)</a>
+                    `;
+                }
+            } else if (role === 'operations') {
+                const brandSubtitle = document.getElementById('navbar-subtitle');
+                if (brandSubtitle) {
+                    brandSubtitle.innerText = "Match Operations Panel";
+                }
+                const brandLink = document.getElementById('navbar-brand-link');
+                if (brandLink) {
+                    brandLink.setAttribute('href', 'operations.html');
+                }
+
+                const navContainer = document.getElementById('navbar-menu-container');
+                if (navContainer) {
+                    const currentPage = window.location.pathname.split('/').pop();
+                    
+                    navContainer.innerHTML = `
+                        <a href="operations.html" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-emerald-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Dashboard</a>
+                        <a href="master_data.html?role=operations&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-emerald-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Master Data (RO)</a>
+                        <a href="schedule.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('schedule') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Schedule</a>
+                        <a href="screening.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('screening') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Screening</a>
+                        <a href="topscorer.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('topscorer') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Top Scorer</a>
+                        <a href="discipline.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('discipline') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Discipline</a>
+                        <a href="archive.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('archive') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Archive</a>
+                    `;
+                }
+            }
+
+            // Jika dalam mode readonly, sembunyikan tombol tambah/import/aksi edit-hapus
+            if (isReadonly) {
+                const addBtn = document.querySelector('button[onclick="openAddModal()"]');
+                if (addBtn) addBtn.style.display = 'none';
+                const importBtn = document.querySelector('button[onclick="handleImport()"]');
+                if (importBtn) importBtn.style.display = 'none';
+            }
+        });
+
+        function updateRealTimeClock() {
+            const now = new Date();
+            document.getElementById('current-date').innerText = now.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+            document.getElementById('current-time').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} WIB`;
+        }
+        setInterval(updateRealTimeClock, 1000); updateRealTimeClock();
+
+        window.showCustomNotification = function(title, message, type = 'info') {
+            const modal = document.getElementById('custom-notification-modal');
+            document.getElementById('notification-title').innerText = title; document.getElementById('notification-message').innerText = message;
+            const iC = document.getElementById('notification-icon-container'), iE = document.getElementById('notification-icon-element');
+            if(type === 'error' || type === 'warning') { iC.className = "w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-4 text-xl bg-rose-500/20 text-rose-400 border border-rose-500/30"; iE.className = "fas fa-exclamation-triangle"; }
+            else if(type === 'success') { iC.className = "w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-4 text-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"; iE.className = "fas fa-check-circle"; }
+            modal.classList.add('modal-active'); setTimeout(() => modal.classList.add('custom-notification-active'), 10);
+        };
+        window.closeCustomNotification = function() {
+            const modal = document.getElementById('custom-notification-modal');
+            modal.classList.remove('custom-notification-active'); setTimeout(() => modal.classList.remove('modal-active'), 300);
+        };
+
+        window.showCustomConfirm = function(title, message, onYes) {
+            const modal = document.getElementById('custom-confirm-modal');
+            document.getElementById('confirm-title').innerText = title; document.getElementById('confirm-message').innerText = message;
+            modal.classList.add('modal-active'); setTimeout(() => modal.classList.add('custom-confirm-active'), 10);
+            
+            const btnY = document.getElementById('confirm-btn-yes'), btnC = document.getElementById('confirm-btn-cancel');
+            const newBtnY = btnY.cloneNode(true), newBtnC = btnC.cloneNode(true);
+            btnY.parentNode.replaceChild(newBtnY, btnY); btnC.parentNode.replaceChild(newBtnC, btnC);
+            
+            document.getElementById('confirm-btn-yes').onclick = function() { closeCustomConfirm(); if(onYes) onYes(); };
+            document.getElementById('confirm-btn-cancel').onclick = closeCustomConfirm;
+        };
+        window.closeCustomConfirm = function() {
+            const modal = document.getElementById('custom-confirm-modal');
+            modal.classList.remove('custom-confirm-active'); setTimeout(() => modal.classList.remove('modal-active'), 300);
+        };
+
+        window.openAddModal = function() {
+            resetForm();
+            const modal = document.getElementById('modal-form');
+            modal.classList.add('modal-active');
+            setTimeout(() => modal.classList.add('form-modal-active'), 10);
+        };
+
+        window.closeModal = function() {
+            const modal = document.getElementById('modal-form');
+            modal.classList.remove('form-modal-active');
+            setTimeout(() => modal.classList.remove('modal-active'), 300);
+        };
+
+        window.handleImport = function() {
+            const modal = document.getElementById('modal-import-confirm');
+            modal.classList.add('modal-active');
+            setTimeout(() => modal.classList.add('import-modal-active'), 10);
+        };
+
+        window.closeImportModal = function() {
+            const modal = document.getElementById('modal-import-confirm');
+            modal.classList.remove('import-modal-active');
+            setTimeout(() => modal.classList.remove('modal-active'), 300);
+        };
+
+        window.executeDownloadTemplate = function() {
+            closeImportModal();
+            const headers = "id,teamId,nameTeam,name,category,goal\n";
+            const sampleRow = "PLY-001,TM-001,SMAN 1 Kediri,Budi Santoso,Putra,5\n";
+            const blob = new Blob(["\ufeff" + headers + sampleRow], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "Template_Top_Scorer_AFKAB.csv";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        };
+
+        window.executeUploadTrigger = function() {
+            closeImportModal();
+            document.getElementById('excel-file-input').click();
+        };
+
+        window.processExcelUpload = async function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const text = e.target.result;
+                const rows = text.split('\n');
+                
+                if (rows.length <= 1) {
+                    showCustomNotification("Gagal", "File kosong atau format tidak valid!", "error");
+                    return;
+                }
+
+                let successCount = 0;
+                for (let i = 1; i < rows.length; i++) {
+                    let row = rows[i].trim();
+                    if (!row) continue;
+                    
+                    let cols = row.split(',');
+                    if (cols.length >= 6) {
+                        let payload = {
+                            id: cols[0]?.trim(),
+                            teamId: cols[1]?.trim(),
+                            nameTeam: cols[2]?.trim(),
+                            name: cols[3]?.trim(),
+                            category: cols[4]?.trim() || 'Putra',
+                            goal: parseInt(cols[5]?.trim() || 0)
+                        };
+
+                        if (payload.id) {
+                            await window.upsertToFirestore("master_topscore", payload.id, payload);
+                            await window.syncToSheets("master_topscore", payload, "update");
+                            successCount++;
+                        }
+                    }
+                }
+                showCustomNotification("Berhasil", `Berhasil mengimpor ${successCount} data top scorer!`, "success");
+                window.loadTopScorers();
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        };
+
+        window.handleExportExcel = function() {
+            if (!topScorerData || topScorerData.length === 0) {
+                showCustomNotification("Perhatian", "Tidak ada data top scorer untuk diexport!", "warning");
+                return;
+            }
+
+            let csvContent = "ID Pemain,Nama Pemain,Tim / Klub,Kategori,Jumlah Gol\n";
+            topScorerData.forEach(ts => {
+                let row = [
+                    `"${ts.id || ''}"`,
+                    `"${(ts.name || '').replace(/"/g, '""')}"`,
+                    `"${(ts.nameTeam || '').replace(/"/g, '""')}"`,
+                    `"${ts.category || 'Putra'}"`,
+                    `"${ts.goal || 0}"`
+                ];
+                csvContent += row.join(",") + "\n";
+            });
+
+            const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Laporan_Top_Scorer_${currentCategory}_AFKAB_${new Date().toISOString().slice(0,10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showCustomNotification("Berhasil", "Laporan Excel berhasil diunduh!", "success");
+        };
+
+        window.handleExportPDF = function() {
+            window.print();
+        };
+    </script>
+
+    <!-- Integrasi Firebase & Master Data -->
+    <script src="config.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module">
+        let allTeams = [];
+        let allPlayers = [];
+        let topScorerData = [];
+        let currentCategory = 'Putra';
+
+        window.switchCategory = function(cat) {
+            currentCategory = cat;
+            document.getElementById('btn-cat-putra').className = cat === 'Putra' ? "px-5 py-2 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-md" : "px-5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white";
+            document.getElementById('btn-cat-putri').className = cat === 'Putri' ? "px-5 py-2 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-md" : "px-5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white";
+            renderTable();
+        }
+
+        async function initPage() {
+            try {
+                allTeams = await window.getFromFirestore("master_team");
+                populateTeamDropdown();
+                allPlayers = await window.getFromFirestore("master_player");
+                await loadTopScorers();
+            } catch (err) {
+                console.error("Gagal inisialisasi data:", err);
+            }
+        }
+
+        function populateTeamDropdown() {
+            const select = document.getElementById('team-select');
+            select.innerHTML = '<option value="">-- Pilih Tim Dahulu --</option>';
+            const sortedTeams = allTeams.sort((a,b) => (a.name || '').localeCompare(b.name || ''));
+            sortedTeams.forEach(t => {
+                if(!t.id && !t.teamId) return;
+                select.innerHTML += `<option value="${t.id || t.teamId}" data-name="${t.name}">${t.name}</option>`;
+            });
+        }
+
+        window.handleTeamChange = function() {
+            const teamSelect = document.getElementById('team-select');
+            const teamId = teamSelect.value;
+            const teamName = teamSelect.options[teamSelect.selectedIndex].getAttribute('data-name');
+            document.getElementById('team-name').value = teamName || '';
+
+            const playerSelect = document.getElementById('player-select');
+            playerSelect.innerHTML = '<option value="">-- Pilih Pemain --</option>';
+            document.getElementById('player-name').value = '';
+
+            if (teamId) {
+                playerSelect.disabled = false;
+                const filteredPlayers = allPlayers.filter(p => p.teamId === teamId);
+                const sortedPlayers = filteredPlayers.sort((a,b) => (a.name || '').localeCompare(b.name || ''));
+                
+                if (sortedPlayers.length > 0) {
+                    sortedPlayers.forEach(p => {
+                        if(!p.id) return;
+                        const jNo = p.jerseyNo ? `[${p.jerseyNo}] ` : '';
+                        playerSelect.innerHTML += `<option value="${p.id}" data-name="${p.name}">${jNo}${p.name}</option>`;
+                    });
+                } else {
+                    playerSelect.innerHTML = '<option value="">(Belum ada pemain di tim ini)</option>';
+                    playerSelect.disabled = true;
+                }
+            } else {
+                playerSelect.disabled = true;
+            }
+        }
+
+        window.handlePlayerChange = function() {
+            const select = document.getElementById('player-select');
+            const name = select.options[select.selectedIndex].getAttribute('data-name');
+            document.getElementById('player-name').value = name || '';
+
+            const playerId = select.value;
+            const existingRecord = topScorerData.find(ts => ts.id === playerId);
+            if (existingRecord) {
+                document.getElementById('goal-input').value = existingRecord.goal;
+                if(existingRecord.category) {
+                    document.getElementById('category-select').value = existingRecord.category;
+                }
+                showCustomNotification("Informasi Pemain", `Pemain ini sudah terdaftar di Top Scorer dengan ${existingRecord.goal} gol.\nSubmit form untuk memperbarui total golnya.`, "info");
+            } else {
+                document.getElementById('goal-input').value = '';
+            }
+        }
+
+        window.loadTopScorers = async function() {
+            const icon = document.getElementById('refresh-icon');
+            if (icon) icon.classList.add('fa-spin');
+            
+            try {
+                let rawData = await window.getFromFirestore("master_topscore");
+                topScorerData = rawData.filter(ts => ts.id && ts.id !== "dummy_data" && ts.id !== "id");
+                renderTable();
+            } catch (err) {
+                console.error("Gagal meload Top Scorer:", err);
+            } finally {
+                if (icon) setTimeout(() => icon.classList.remove('fa-spin'), 500);
+            }
+        }
+
+        window.renderTable = function() {
+            const tbody = document.getElementById('table-body');
+            const keyword = document.getElementById('search-input').value.toLowerCase();
+            const urlParams = new URLSearchParams(window.location.search);
+            const isReadonly = urlParams.get('role') === 'operations' || urlParams.get('role') === 'commissioner' || urlParams.get('readonly') === 'true';
+
+            if (isReadonly) {
+                const actionHeader = document.getElementById('table-header-action');
+                if (actionHeader) actionHeader.style.display = 'none';
+            }
+            
+            let filtered = topScorerData.filter(ts => {
+                const catString = String(ts.category || 'Putra').toLowerCase();
+                
+                let matchCategory = false;
+                if (currentCategory === 'Putra') {
+                    matchCategory = catString.includes('putra');
+                } else if (currentCategory === 'Putri') {
+                    matchCategory = catString.includes('putri');
+                }
+
+                const pName = (ts.name || "").toLowerCase();
+                const tName = (ts.nameTeam || "").toLowerCase();
+                return matchCategory && (pName.includes(keyword) || tName.includes(keyword));
+            });
+
+            filtered.sort((a, b) => parseInt(b.goal || 0) - parseInt(a.goal || 0));
+
+            tbody.innerHTML = '';
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="${isReadonly ? 4 : 5}" class="py-12 text-center text-slate-500 italic">Belum ada data pencetak gol untuk kategori ${currentCategory}.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach((ts, index) => {
+                let rankClass = "bg-slate-800 text-slate-400";
+                if(index === 0) rankClass = "bg-amber-500/20 text-amber-400 border border-amber-500/50 shadow-[0_0_10px_rgba(245,158,11,0.2)]";
+                if(index === 1) rankClass = "bg-slate-300/20 text-slate-300 border border-slate-300/50";
+                if(index === 2) rankClass = "bg-orange-700/20 text-orange-400 border border-orange-700/50";
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-white/5 transition-colors border-b border-white/5";
+                
+                let actionColumnHtml = '';
+                if (!isReadonly) {
+                    actionColumnHtml = `
+                        <td class="py-3 px-4 text-center no-print">
+                            <button onclick="editTopScorer('${ts.id}')" class="bg-amber-600/80 hover:bg-amber-500 text-white p-2 rounded-lg transition-all shadow-md mr-1" title="Edit Data"><i class="fas fa-edit text-[10px]"></i></button>
+                            <button onclick="deleteTopScorer('${ts.id}')" class="bg-rose-600/80 hover:bg-rose-500 text-white p-2 rounded-lg transition-all shadow-md" title="Hapus Data"><i class="fas fa-trash-alt text-[10px]"></i></button>
+                        </td>
+                    `;
+                }
+
+                tr.innerHTML = `
+                    <td class="py-3 px-4 text-center">
+                        <div class="w-7 h-7 rounded-full flex items-center justify-center mx-auto text-[10px] font-bold ${rankClass}">${index + 1}</div>
+                    </td>
+                    <td class="py-3 px-4 font-bold text-white uppercase tracking-wider text-[11px]">${ts.name || '-'}</td>
+                    <td class="py-3 px-4 text-slate-400 text-[10px] uppercase">${ts.nameTeam || '-'}</td>
+                    <td class="py-3 px-4 text-center">
+                        <span class="sporty-font text-emerald-400 text-lg font-black drop-shadow-md">${ts.goal || 0}</span>
+                    </td>
+                    ${actionColumnHtml}
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.saveTopScorer = async function(e) {
+            e.preventDefault();
+            
+            const mode = document.getElementById('form-mode').value;
+            const teamId = document.getElementById('team-select').value;
+            const nameTeam = document.getElementById('team-name').value;
+            const playerId = document.getElementById('player-select').value;
+            const playerName = document.getElementById('player-name').value;
+            const category = document.getElementById('category-select').value;
+            const goal = document.getElementById('goal-input').value;
+
+            if (!playerId || !goal) {
+                showCustomNotification("Validasi Error", "Pastikan Tim, Pemain, dan Gol telah diisi dengan benar!", "error");
+                return;
+            }
+
+            const btnSubmit = document.getElementById('btn-submit');
+            btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...';
+            btnSubmit.disabled = true;
+
+            try {
+                const payload = {
+                    id: playerId,
+                    teamId: teamId,
+                    nameTeam: nameTeam,
+                    name: playerName,
+                    category: category,
+                    goal: parseInt(goal)
+                };
+
+                const isEdit = (mode === 'edit' || topScorerData.some(ts => ts.id === playerId));
+                
+                await window.upsertToFirestore("master_topscore", payload.id, payload);
+                await window.syncToSheets("master_topscore", payload, isEdit ? "update" : "insert");
+
+                showCustomNotification("Berhasil", "Data Top Scorer berhasil disimpan!", "success");
+                closeModal();
+                await loadTopScorers();
+
+            } catch (err) {
+                console.error(err);
+                showCustomNotification("Error Sistem", "Gagal menyimpan data.", "error");
+            } finally {
+                btnSubmit.innerHTML = '<i class="fas fa-save mr-2"></i> Simpan Data';
+                btnSubmit.disabled = false;
+            }
+        }
+
+        window.editTopScorer = function(id) {
+            const data = topScorerData.find(ts => ts.id === id);
+            if (!data) return;
+
+            openAddModal();
+            document.getElementById('form-mode').value = 'edit';
+            document.getElementById('original-id').value = data.id;
+
+            const teamSelect = document.getElementById('team-select');
+            teamSelect.value = data.teamId;
+            handleTeamChange();
+
+            setTimeout(() => {
+                const playerSelect = document.getElementById('player-select');
+                playerSelect.value = data.id;
+                document.getElementById('player-name').value = data.name;
+                document.getElementById('category-select').value = data.category || 'Putra';
+                document.getElementById('goal-input').value = data.goal;
+
+                teamSelect.disabled = true;
+                playerSelect.disabled = true;
+                teamSelect.classList.add('opacity-50', 'cursor-not-allowed');
+                
+                document.getElementById('btn-submit').innerHTML = '<i class="fas fa-edit mr-2"></i> Update Gol';
+                document.getElementById('btn-submit').classList.replace('bg-blue-600', 'bg-amber-600');
+                document.getElementById('btn-submit').classList.replace('hover:bg-blue-500', 'hover:bg-amber-500');
+            }, 100);
+        }
+
+        window.resetForm = function() {
+            document.getElementById('topscorer-form').reset();
+            document.getElementById('form-mode').value = 'add';
+            document.getElementById('original-id').value = '';
+            
+            const teamSelect = document.getElementById('team-select');
+            const playerSelect = document.getElementById('player-select');
+            
+            teamSelect.disabled = false;
+            playerSelect.disabled = true;
+            teamSelect.classList.remove('opacity-50', 'cursor-not-allowed');
+            playerSelect.innerHTML = '<option value="">-- Pilih Tim Terlebih Dahulu --</option>';
+
+            const btn = document.getElementById('btn-submit');
+            btn.innerHTML = '<i class="fas fa-save mr-2"></i> Simpan Data';
+            btn.classList.replace('bg-amber-600', 'bg-blue-600');
+            btn.classList.replace('hover:bg-amber-500', 'hover:bg-blue-500');
+        }
+
+        window.deleteTopScorer = function(id) {
+            showCustomConfirm(
+                "Konfirmasi Hapus",
+                "Apakah Anda yakin ingin menghapus data perolehan gol pemain ini secara permanen dari Database?",
+                async function() {
+                    try {
+                        await window.deleteFromFirestore("master_topscore", id);
+                        await window.syncToSheets("master_topscore", { id: id }, "delete");
+
+                        showCustomNotification("Berhasil", "Data pencetak gol dihapus.", "success");
+                        loadTopScorers();
+                    } catch (err) {
+                        showCustomNotification("Error", "Gagal menghapus data.", "error");
+                    }
+                }
+            );
+        }
+
+        setTimeout(initPage, 800);
+    </script>
+
+    <script>
+        // Role context lock: logo navigation always returns to the dashboard for the active role.
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const role = params.get('role') || 'coordinator';
+            const dashboards = {
+                coordinator: 'coordinator.html?role=coordinator',
+                operations: 'operations.html?role=operations',
+                commissioner: 'commissioner.html?role=commissioner'
+            };
+            const brandLink = document.getElementById('navbar-brand-link');
+            if (brandLink && dashboards[role]) brandLink.setAttribute('href', dashboards[role]);
+        });
+    </script>
+</body>
+</html>

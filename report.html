@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Report - AFKAB Kediri</title>
+    
+    <!-- FAVICON (Ganti path/nama file di bawah ini sesuai dengan lokasi file .webp Anda) -->
+    <link rel="icon" type="image/webp" href="01. Logo Web/002. Logo Afkab.webp">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; overflow-x: hidden; }
+        .sporty-font { font-family: 'Syne', sans-serif; }
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(9, 13, 22, 0.90) 0%, rgba(17, 30, 56, 0.90) 50%, rgba(3, 46, 34, 0.90) 100%), url('01. Logo Web/001. Background.webp');
+            background-size: cover; background-position: center; background-attachment: fixed;
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.5); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.8); }
+        .modal-active { display: flex !important; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Pengaturan Tab Eksklusif agar tidak saling tumpang tindih */
+        .tab-content { display: none !important; }
+        .tab-content.active { display: flex !important; flex-direction: column !important; }
+
+        /* Animasi Smooth untuk Custom Modal Notifikasi Profesional */
+        .custom-notification-modal { transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .custom-notification-content {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: scale(0.95); opacity: 0;
+        }
+        .custom-notification-active .custom-notification-content { transform: scale(1); opacity: 1; }
+        
+        /* Hilangkan Spinner Input Number di Form */
+        input[type="number"]::-webkit-inner-spin-button, 
+        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body class="bg-slate-950 font-sans text-slate-100 antialiased h-screen hero-bg flex flex-col overflow-hidden">
+
+    <!-- Navbar Atas (Menu Report Aktif) -->
+    <header class="w-full px-6 lg:px-10 py-3 flex items-center justify-between z-20 border-b border-white/10 backdrop-blur-md bg-slate-950/60 sticky top-0 flex-shrink-0">
+        <a href="commissioner.html" id="navbar-brand-link" class="flex items-center space-x-3 transition-all duration-300 hover:opacity-80 group">
+            <div class="w-10 h-10 flex items-center justify-center transition-transform duration-300 group-hover:rotate-6">
+                <img src="01. Logo Web/002. Logo Afkab.webp" alt="Logo Afkab Kediri" class="w-full h-full object-contain">
+            </div>
+            <div>
+                <span class="sporty-font text-base font-extrabold tracking-wider text-white group-hover:text-blue-500 transition-colors">AFKAB KEDIRI</span>
+                <span id="navbar-subtitle" class="block text-[9px] text-blue-500 font-bold uppercase tracking-widest">Match Commissioner Panel</span>
+            </div>
+        </a>
+
+        <!-- Menu Navigasi Eksklusif (Dinamis Berdasarkan Role) -->
+        <nav id="navbar-menu-container" class="hidden xl:flex items-center space-x-1 bg-slate-900/40 p-1.5 rounded-2xl border border-white/10 backdrop-blur-md">
+            <!-- Diisi secara dinamis oleh JavaScript berdasarkan parameter role -->
+        </nav>
+
+        <div class="hidden lg:flex items-center space-x-3 bg-slate-900/60 border border-white/10 px-4 py-1.5 rounded-full backdrop-blur-md text-xs text-slate-300 font-semibold shadow-inner">
+            <span id="current-date">--</span>
+            <span class="text-slate-500">|</span>
+            <span id="current-time" class="font-mono font-bold text-white">--:--:--</span>
+        </div>
+    </header>
+
+    <!-- Konten Utama -->
+    <main class="flex-1 w-full px-4 lg:px-8 py-2 flex flex-col space-y-2 relative overflow-hidden min-h-0">
+        
+        <!-- Header Halaman & Pencarian -->
+        <div id="page-header" class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-white/10 pb-2 flex-shrink-0 transition-all duration-300">
+            <div>
+                <h1 class="sporty-font text-xl lg:text-2xl font-extrabold text-white tracking-wide">Match Data Center</h1>
+                <p class="text-slate-400 text-xs mt-0.5">Kelola Laporan Pertandingan (Official Report) dan Dokumen DSP/BAP.</p>
+            </div>
+            <div class="flex items-center gap-3 p-1">
+                <button onclick="loadReportData()" class="bg-slate-800/50 hover:bg-blue-600/30 text-blue-400 px-3 py-1.5 rounded-lg border border-blue-500/30 transition-all shadow-lg flex items-center justify-center" title="Refresh Data">
+                    <i class="fas fa-sync-alt text-sm" id="refresh-icon"></i>
+                </button>
+                <div class="relative ml-auto flex-1 sm:flex-none">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                        <i class="fas fa-search text-xs"></i>
+                    </span>
+                    <input type="text" id="report-search-input" oninput="handleReportSearch()" placeholder="Cari laporan/tim..." class="w-full sm:w-64 bg-slate-900/80 border border-white/10 rounded-lg pl-10 pr-4 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all shadow-inner">
+                </div>
+            </div>
+        </div>
+
+        <!-- SUB MENU (TABS) - HANYA OFFICIAL REPORT & DOKUMEN DSP / BAP -->
+        <div class="flex items-center space-x-2 bg-slate-900/40 p-1.5 rounded-xl border border-white/10 w-fit flex-shrink-0">
+            <button id="btn-tab-official" onclick="switchReportTab('official')" class="px-5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all bg-blue-600 text-white shadow-md">
+                Official Report
+            </button>
+            <button id="btn-tab-dsp" onclick="switchReportTab('dsp')" class="px-5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all bg-transparent text-slate-400 hover:text-white hover:bg-slate-800">
+                Dokumen DSP / BAP
+            </button>
+        </div>
+
+        <!-- AREA KONTEN TAB 1: OFFICIAL REPORT -->
+        <div id="tab-official" class="tab-content active bg-slate-900/60 border border-white/10 rounded-3xl p-4 lg:p-6 backdrop-blur-xl shadow-2xl flex-1 min-h-0 overflow-hidden flex flex-col">
+            
+            <!-- BILAH TAB FILTER PEKAN -->
+            <div id="week-filter-container" class="flex items-center gap-2 overflow-x-auto pb-3 mb-3 no-scrollbar flex-shrink-0 border-b border-white/5 transition-all duration-300">
+                <button onclick="filterReportByWeek('all')" id="btn-week-all" class="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all bg-blue-600 text-white shadow-md flex-shrink-0">
+                    Semua Pekan
+                </button>
+                <button onclick="filterReportByWeek('1')" id="btn-week-1" class="px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 border border-white/10 text-slate-300 hover:text-white hover:bg-slate-800 flex-shrink-0">
+                    Pekan 1
+                </button>
+                <button onclick="filterReportByWeek('2')" id="btn-week-2" class="px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 border border-white/10 text-slate-300 hover:text-white hover:bg-slate-800 flex-shrink-0">
+                    Pekan 2
+                </button>
+                <button onclick="filterReportByWeek('3')" id="btn-week-3" class="px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 border border-white/10 text-slate-300 hover:text-white hover:bg-slate-800 flex-shrink-0">
+                    Pekan 3
+                </button>
+                <button onclick="filterReportByWeek('4')" id="btn-week-4" class="px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 border border-white/10 text-slate-300 hover:text-white hover:bg-slate-800 flex-shrink-0">
+                    Pekan 4
+                </button>
+                <button onclick="filterReportByWeek('5')" id="btn-week-5" class="px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 border border-white/10 text-slate-300 hover:text-white hover:bg-slate-800 flex-shrink-0">
+                    Pekan 5
+                </button>
+                <button onclick="filterReportByWeek('6')" id="btn-week-6" class="px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 border border-white/10 text-slate-300 hover:text-white hover:bg-slate-800 flex-shrink-0">
+                    Pekan 6
+                </button>
+                <button onclick="filterReportByWeek('7')" id="btn-week-7" class="px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 border border-white/10 text-slate-300 hover:text-white hover:bg-slate-800 flex-shrink-0">
+                    Pekan 7
+                </button>
+                <button onclick="filterReportByWeek('8')" id="btn-week-8" class="px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 border border-white/10 text-slate-300 hover:text-white hover:bg-slate-800 flex-shrink-0">
+                    Pekan 8
+                </button>
+                <button onclick="filterReportByWeek('9')" id="btn-week-9" class="px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 border border-white/10 text-slate-300 hover:text-white hover:bg-slate-800 flex-shrink-0">
+                    Pekan 9
+                </button>
+                <button onclick="filterReportByWeek('10')" id="btn-week-10" class="px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 border border-white/10 text-slate-300 hover:text-white hover:bg-slate-800 flex-shrink-0">
+                    Pekan 10
+                </button>
+            </div>
+
+            <!-- KONTEN TABEL -->
+            <div class="flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/40 relative min-h-0">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-900/90 text-slate-300 uppercase text-[10px] tracking-wider sticky top-0 z-10 border-b border-white/10 shadow-md">
+                        <tr>
+                            <th class="py-3 px-4 font-bold text-center w-16">Match</th>
+                            <th class="py-3 px-4 font-bold">Jadwal & Kategori</th>
+                            <th class="py-3 px-4 font-bold text-right w-1/4">Home</th>
+                            <th class="py-3 px-4 font-bold text-center w-20">Skor</th>
+                            <th class="py-3 px-4 font-bold text-left w-1/4">Away</th>
+                            <th class="py-3 px-4 font-bold text-center">Data Laporan</th>
+                            <th class="py-3 px-4 font-bold text-center w-48">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="official-report-container" class="divide-y divide-white/5 text-xs text-slate-200">
+                        <tr><td colspan="7" class="p-8 text-center text-slate-500"><i class="fas fa-circle-notch fa-spin"></i> Memuat data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pt-3 flex justify-between items-center text-xs text-slate-500 border-t border-white/5 mt-3 flex-shrink-0">
+                <span>Total Data: <strong class="text-slate-300" id="official-count">0</strong></span>
+                <span class="italic">Disinkronisasi dengan Database Master Screening & Report.</span>
+            </div>
+        </div>
+
+        <!-- AREA KONTEN TAB 2: DSP / BAP -->
+        <div id="tab-dsp" class="tab-content bg-slate-900/60 border border-white/10 rounded-3xl p-4 lg:p-6 backdrop-blur-xl shadow-2xl flex-1 min-h-0 overflow-hidden">
+            <div class="flex-1 overflow-y-auto rounded-2xl bg-slate-950/40 relative min-h-0">
+                
+                <!-- STATE KOSONG -->
+                <div id="bap-empty-state" class="flex flex-col items-center justify-center h-full w-full p-8 text-center">
+                    <div class="w-20 h-20 rounded-full bg-slate-800/80 border-2 border-slate-700 text-slate-400 flex items-center justify-center text-3xl mb-4 shadow-xl">
+                        <i class="fas fa-file-signature"></i>
+                    </div>
+                    <h3 class="sporty-font text-xl font-bold text-white mb-2">Formulir BAP Kosong</h3>
+                    <p class="text-slate-400 text-sm max-w-md leading-relaxed">
+                        Silakan kembali ke tab <strong class="text-blue-400">Official Report</strong> dan klik tombol <span class="bg-emerald-600/20 text-emerald-400 px-2 py-0.5 rounded uppercase text-[10px] font-bold border border-emerald-500/30">Mulai Pertandingan</span> pada salah satu jadwal pertandingan agar Match Commissioner siap mencatat dokumen DSP/BAP.
+                    </p>
+                </div>
+
+                <!-- FORM UTAMA BAP / DSP -->
+                <div id="bap-form-container" class="hidden w-full max-w-5xl mx-auto bg-white p-6 shadow-2xl text-slate-900 text-xs my-4 rounded-xl">
+                    
+                    <!-- Kop Surat -->
+                    <div class="flex justify-between items-start border-b-2 border-red-700 pb-3 mb-5">
+                        <div>
+                            <h1 class="font-extrabold text-sm uppercase text-slate-800">Asosiasi Futsal Kabupaten Kediri</h1>
+                            <p class="text-[9px] text-slate-500 font-semibold tracking-wide">LIGA FUTSAL AFKAB KEDIRI 2026</p>
+                        </div>
+                        <div class="text-right text-[10px]">
+                            <p class="text-red-700 font-bold uppercase">DSP/AFKAB/2026/P.<span id="form-doc-no">--</span></p>
+                            <p class="text-slate-500 font-bold">STATUS: <span class="text-blue-600" id="form-status-text">DRAFT</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Judul Form -->
+                    <div class="text-center mb-5">
+                        <h2 class="text-lg font-bold text-red-700 uppercase tracking-widest">Berita Acara Pertandingan</h2>
+                    </div>
+
+                    <!-- Kotak Informasi Pertandingan (Rounded Modern) -->
+                    <div class="overflow-hidden rounded-xl border border-slate-300 shadow-sm mb-5">
+                        <table class="w-full border-collapse text-[10px]">
+                            <tr>
+                                <td class="border border-slate-300 p-2 bg-slate-100 font-bold w-1/4">HARI / TANGGAL</td>
+                                <td class="border border-slate-300 p-2 w-1/4 font-semibold text-slate-700" id="form-val-date">-</td>
+                                <td class="border border-slate-300 p-2 bg-slate-100 font-bold w-1/4">KATEGORI / KOMPETISI</td>
+                                <td class="border border-slate-300 p-2 w-1/4 font-semibold text-slate-700" id="form-val-category">-</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-300 p-2 bg-slate-100 font-bold">WAKTU (KICKOFF)</td>
+                                <td class="border border-slate-300 p-0"><input type="text" id="form-val-time" class="w-full h-full p-2 outline-none font-semibold text-slate-700 bg-transparent" placeholder="00:00 WIB"></td>
+                                <td class="border border-slate-300 p-2 bg-slate-100 font-bold">VENUE / LAPANGAN</td>
+                                <td class="border border-slate-300 p-0"><input type="text" id="form-val-venue" value="Holiday Futsal" class="w-full h-full p-2 outline-none font-semibold text-slate-700 bg-transparent"></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-300 p-2 bg-slate-100 font-bold text-red-700">TIM KANDANG (HOME)</td>
+                                <td class="border border-slate-300 p-2 font-black text-red-700 uppercase" id="form-val-home">-</td>
+                                <td class="border border-slate-300 p-2 bg-slate-100 font-bold text-blue-700">TIM TANDANG (AWAY)</td>
+                                <td class="border border-slate-300 p-2 font-black text-blue-700 uppercase" id="form-val-away">-</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- SECTION 1: HASIL PERTANDINGAN (Rounded Modern) -->
+                    <div class="mb-5">
+                        <h3 class="font-bold border-l-4 border-red-700 pl-2 mb-2 text-sm text-slate-800">1. HASIL PERTANDINGAN</h3>
+                        <div class="overflow-hidden rounded-xl border border-slate-300 shadow-sm">
+                            <table class="w-full border-collapse text-center text-[11px]">
+                                <tr class="bg-slate-100">
+                                    <th class="border border-slate-300 p-2 w-1/3">Babak</th>
+                                    <th class="border border-slate-300 p-2 w-1/3 text-red-700 uppercase">Home</th>
+                                    <th class="border border-slate-300 p-2 w-1/3 text-blue-700 uppercase">Away</th>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-300 p-2 font-semibold">Babak I</td>
+                                    <td class="border border-slate-300 p-0"><input type="number" id="score-h1-home" min="0" value="0" class="w-full text-center p-2 outline-none font-bold text-slate-800 bg-transparent hover:bg-slate-50"></td>
+                                    <td class="border border-slate-300 p-0"><input type="number" id="score-h1-away" min="0" value="0" class="w-full text-center p-2 outline-none font-bold text-slate-800 bg-transparent hover:bg-slate-50"></td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-300 p-2 font-semibold">Babak II</td>
+                                    <td class="border border-slate-300 p-0"><input type="number" id="score-h2-home" min="0" value="0" class="w-full text-center p-2 outline-none font-bold text-slate-800 bg-transparent hover:bg-slate-50"></td>
+                                    <td class="border border-slate-300 p-0"><input type="number" id="score-h2-away" min="0" value="0" class="w-full text-center p-2 outline-none font-bold text-slate-800 bg-transparent hover:bg-slate-50"></td>
+                                </tr>
+                                <tr class="font-extrabold bg-slate-50">
+                                    <td class="border border-slate-300 p-2">SKOR AKHIR</td>
+                                    <td class="border border-slate-300 p-2 text-red-700 text-sm" id="score-final-home-display">0</td>
+                                    <td class="border border-slate-300 p-2 text-blue-700 text-sm" id="score-final-away-display">0</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 2: OFFICIAL TIM (Rounded Modern) -->
+                    <div class="mb-5">
+                        <h3 class="font-bold border-l-4 border-red-700 pl-2 mb-2 text-sm text-slate-800">2. OFFICIAL TEAM</h3>
+                        <div class="flex gap-4">
+                            <!-- Kolom Home -->
+                            <div class="w-1/2 overflow-hidden rounded-xl border border-slate-300 shadow-sm bg-white flex flex-col">
+                                <div class="bg-red-800 text-white font-bold p-2 flex justify-between uppercase text-[10px]">
+                                    <span id="form-off-home">-</span>
+                                    <span class="text-[9px] opacity-80">Kandang</span>
+                                </div>
+                                <table class="w-full border-collapse text-[10px] flex-1">
+                                    <tbody id="form-tbody-home-officials">
+                                        <!-- Di-load secara dinamis dengan Jabatan Akurat -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- Kolom Away -->
+                            <div class="w-1/2 overflow-hidden rounded-xl border border-slate-300 shadow-sm bg-white flex flex-col">
+                                <div class="bg-blue-800 text-white font-bold p-2 flex justify-between uppercase text-[10px]">
+                                    <span id="form-off-away">-</span>
+                                    <span class="text-[9px] opacity-80">Tandang</span>
+                                </div>
+                                <table class="w-full border-collapse text-[10px] flex-1">
+                                    <tbody id="form-tbody-away-officials">
+                                        <!-- Di-load secara dinamis dengan Jabatan Akurat -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 3: JERSEY TEAM -->
+                    <div class="mb-5">
+                        <h3 class="font-bold border-l-4 border-red-700 pl-2 mb-2 text-sm text-slate-800">3. JERSEY TEAM</h3>
+                        <div class="flex gap-4">
+                            <!-- Jersey Home -->
+                            <div class="w-1/2 border border-slate-300 rounded-xl p-3 bg-slate-50 shadow-sm">
+                                <div class="font-bold text-red-700 uppercase text-[11px] mb-2" id="jersey-box-title-home">Kandang</div>
+                                <div class="text-[11px]">
+                                    <span id="display-jersey-home" class="text-slate-800 font-bold">-</span>
+                                </div>
+                            </div>
+                            <!-- Jersey Away -->
+                            <div class="w-1/2 border border-slate-300 rounded-xl p-3 bg-slate-50 shadow-sm">
+                                <div class="font-bold text-blue-700 uppercase text-[11px] mb-2" id="jersey-box-title-away">Tandang</div>
+                                <div class="text-[11px]">
+                                    <span id="display-jersey-away" class="text-slate-800 font-bold">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 4: DAFTAR SUSUNAN PEMAIN (DSP) (Rounded Modern) -->
+                    <div class="mb-5">
+                        <h3 class="font-bold border-l-4 border-red-700 pl-2 mb-2 text-sm text-slate-800">4. DAFTAR SUSUNAN PEMAIN</h3>
+                        <div class="flex gap-4">
+                            <!-- Tabel Pemain Home -->
+                            <div class="w-1/2 overflow-hidden rounded-xl border border-slate-300 shadow-sm bg-white flex flex-col">
+                                <div class="bg-red-800 text-white font-bold p-2 flex justify-between uppercase text-[10px]">
+                                    <span id="form-dsp-home">-</span>
+                                    <span class="opacity-90 font-normal">Kandang</span>
+                                </div>
+                                <table class="w-full border-collapse text-[10px] text-center flex-1">
+                                    <thead>
+                                        <tr class="bg-slate-100 font-bold text-slate-700">
+                                            <th class="border border-slate-300 p-1.5 w-7">No</th>
+                                            <th class="border border-slate-300 p-1.5 text-left">Nama Pemain</th>
+                                            <th class="border border-slate-300 p-1.5 w-16" title="Kartu Kuning (2 Box)">KK (1|2)</th>
+                                            <th class="border border-slate-300 p-1.5 w-8" title="Kartu Merah">KM</th>
+                                            <th class="border border-slate-300 p-1.5 w-7" title="Gol">G</th>
+                                            <th class="border border-slate-300 p-1.5 w-8 text-blue-600">MVP</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="form-tbody-home-players">
+                                        <!-- Di-load dinamis dari master_screening (Selalu 14 Baris) -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- Tabel Pemain Away -->
+                            <div class="w-1/2 overflow-hidden rounded-xl border border-slate-300 shadow-sm bg-white flex flex-col">
+                                <div class="bg-blue-800 text-white font-bold p-2 flex justify-between uppercase text-[10px]">
+                                    <span id="form-dsp-away">-</span>
+                                    <span class="opacity-90 font-normal">Tandang</span>
+                                </div>
+                                <table class="w-full border-collapse text-[10px] text-center flex-1">
+                                    <thead>
+                                        <tr class="bg-slate-100 font-bold text-slate-700">
+                                            <th class="border border-slate-300 p-1.5 w-7">No</th>
+                                            <th class="border border-slate-300 p-1.5 text-left">Nama Pemain</th>
+                                            <th class="border border-slate-300 p-1.5 w-16" title="Kartu Kuning (2 Box)">KK (1|2)</th>
+                                            <th class="border border-slate-300 p-1.5 w-8" title="Kartu Merah">KM</th>
+                                            <th class="border border-slate-300 p-1.5 w-7" title="Gol">G</th>
+                                            <th class="border border-slate-300 p-1.5 w-8 text-blue-600">MVP</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="form-tbody-away-players">
+                                        <!-- Di-load dinamis dari master_screening (Selalu 14 Baris) -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Banner MVP -->
+                    <div class="mb-5 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-3 shadow-sm">
+                        <div class="flex justify-between items-center mb-1">
+                            <div class="font-extrabold text-blue-600 text-xs">
+                                MAN OF THE MATCH
+                            </div>
+                            <div class="bg-blue-600 text-white px-2 py-0.5 rounded text-[9px] font-bold uppercase shadow-sm">Official Award</div>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-blue-200/60 pt-2 mt-1">
+                            <div class="font-black text-slate-800 text-sm">
+                                <span id="selected-mvp-display" class="text-red-700">Pilih Pemain MVP</span>
+                            </div>
+                            <div class="bg-red-800 text-white px-2 py-1 rounded-full text-[9px] font-bold uppercase shadow-sm border border-red-900">MVP of The Match</div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 5: TIMEOUT & PELANGGARAN (Rounded Modern) -->
+                    <div class="mb-5">
+                        <h3 class="font-bold border-l-4 border-red-700 pl-2 mb-2 text-sm text-slate-800">5. TIME OUT AND FOUL</h3>
+                        <div class="overflow-hidden rounded-xl border border-slate-300 shadow-sm">
+                            <table class="w-full border-collapse text-center text-[10px]">
+                                <tr class="bg-slate-100 font-bold text-slate-700">
+                                    <th class="border border-slate-300 p-2" rowspan="2">Tim / Babak</th>
+                                    <th class="border border-slate-300 p-1" colspan="2">Babak I</th>
+                                    <th class="border border-slate-300 p-1" colspan="2">Babak II</th>
+                                </tr>
+                                <tr class="bg-slate-50 text-[9px] text-slate-600 font-bold">
+                                    <th class="border border-slate-300 p-1 text-blue-600">Time Out</th>
+                                    <th class="border border-slate-300 p-1">Foul (1 - 6)</th>
+                                    <th class="border border-slate-300 p-1 text-blue-600">Time Out</th>
+                                    <th class="border border-slate-300 p-1">Foul (1 - 6)</th>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-300 p-2 font-bold text-left uppercase text-red-700" id="form-foul-home">-</td>
+                                    <td class="border border-slate-300 p-1 bg-blue-50/50"><input type="checkbox" id="to-h1-home" class="w-4 h-4 cursor-pointer"></td>
+                                    <td class="border border-slate-300 p-1">
+                                        <div class="flex justify-center gap-1.5 items-center font-mono text-[9px] text-slate-400 font-bold">
+                                            <label><input type="checkbox" class="foul-home-h1 mr-0.5 cursor-pointer" value="1">1</label>
+                                            <label><input type="checkbox" class="foul-home-h1 mr-0.5 cursor-pointer" value="2">2</label>
+                                            <label><input type="checkbox" class="foul-home-h1 mr-0.5 cursor-pointer" value="3">3</label>
+                                            <label><input type="checkbox" class="foul-home-h1 mr-0.5 cursor-pointer" value="4">4</label>
+                                            <label><input type="checkbox" class="foul-home-h1 mr-0.5 cursor-pointer" value="5">5</label>
+                                            <label><input type="checkbox" class="foul-home-h1 mr-0.5 cursor-pointer" value="6">6</label>
+                                        </div>
+                                    </td>
+                                    <td class="border border-slate-300 p-1 bg-blue-50/50"><input type="checkbox" id="to-h2-home" class="w-4 h-4 cursor-pointer"></td>
+                                    <td class="border border-slate-300 p-1">
+                                        <div class="flex justify-center gap-1.5 items-center font-mono text-[9px] text-slate-400 font-bold">
+                                            <label><input type="checkbox" class="foul-home-h2 mr-0.5 cursor-pointer" value="1">1</label>
+                                            <label><input type="checkbox" class="foul-home-h2 mr-0.5 cursor-pointer" value="2">2</label>
+                                            <label><input type="checkbox" class="foul-home-h2 mr-0.5 cursor-pointer" value="3">3</label>
+                                            <label><input type="checkbox" class="foul-home-h2 mr-0.5 cursor-pointer" value="4">4</label>
+                                            <label><input type="checkbox" class="foul-home-h2 mr-0.5 cursor-pointer" value="5">5</label>
+                                            <label><input type="checkbox" class="foul-home-h2 mr-0.5 cursor-pointer" value="6">6</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-300 p-2 font-bold text-left uppercase text-blue-700" id="form-foul-away">-</td>
+                                    <td class="border border-slate-300 p-1 bg-blue-50/50"><input type="checkbox" id="to-h1-away" class="w-4 h-4 cursor-pointer"></td>
+                                    <td class="border border-slate-300 p-1">
+                                        <div class="flex justify-center gap-1.5 items-center font-mono text-[9px] text-slate-400 font-bold">
+                                            <label><input type="checkbox" class="foul-away-h1 mr-0.5 cursor-pointer" value="1">1</label>
+                                            <label><input type="checkbox" class="foul-away-h1 mr-0.5 cursor-pointer" value="2">2</label>
+                                            <label><input type="checkbox" class="foul-away-h1 mr-0.5 cursor-pointer" value="3">3</label>
+                                            <label><input type="checkbox" class="foul-away-h1 mr-0.5 cursor-pointer" value="4">4</label>
+                                            <label><input type="checkbox" class="foul-away-h1 mr-0.5 cursor-pointer" value="5">5</label>
+                                            <label><input type="checkbox" class="foul-away-h1 mr-0.5 cursor-pointer" value="6">6</label>
+                                        </div>
+                                    </td>
+                                    <td class="border border-slate-300 p-1 bg-blue-50/50"><input type="checkbox" id="to-h2-away" class="w-4 h-4 cursor-pointer"></td>
+                                    <td class="border border-slate-300 p-1">
+                                        <div class="flex justify-center gap-1.5 items-center font-mono text-[9px] text-slate-400 font-bold">
+                                            <label><input type="checkbox" class="foul-away-h2 mr-0.5 cursor-pointer" value="1">1</label>
+                                            <label><input type="checkbox" class="foul-away-h2 mr-0.5 cursor-pointer" value="2">2</label>
+                                            <label><input type="checkbox" class="foul-away-h2 mr-0.5 cursor-pointer" value="3">3</label>
+                                            <label><input type="checkbox" class="foul-away-h2 mr-0.5 cursor-pointer" value="4">4</label>
+                                            <label><input type="checkbox" class="foul-away-h2 mr-0.5 cursor-pointer" value="5">5</label>
+                                            <label><input type="checkbox" class="foul-away-h2 mr-0.5 cursor-pointer" value="6">6</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 6: TTD & PENGESAHAN (Rounded Modern) -->
+                    <div class="mb-2">
+                        <h3 class="font-bold border-l-4 border-red-700 pl-2 mb-2 text-sm text-slate-800">6. MATCH VERIFICATION</h3>
+                        <div class="overflow-hidden rounded-xl border border-slate-300 shadow-sm">
+                            <table class="w-full border-collapse text-center text-[10px]">
+                                <tr class="bg-slate-100 font-bold text-slate-700">
+                                    <th class="border border-slate-300 p-2 w-1/4">Official Team Home</th>
+                                    <th class="border border-slate-300 p-2 w-1/4">Official Team Away</th>
+                                    <th class="border border-slate-300 p-2 w-1/4">Referee</th>
+                                    <th class="border border-slate-300 p-2 w-1/4">Match Commissioner</th>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-300 p-2 h-20 align-bottom font-bold uppercase text-[9px]" id="form-ttd-home">-</td>
+                                    <td class="border border-slate-300 p-2 h-20 align-bottom font-bold uppercase text-[9px]" id="form-ttd-away">-</td>
+                                    <td class="border border-slate-300 p-2 h-20 align-bottom font-bold uppercase text-[9px]">
+                                        <input type="text" id="form-referee-name" class="w-full text-center outline-none bg-transparent font-bold text-slate-800" placeholder="Ketik Nama Wasit...">
+                                    </td>
+                                    <td class="border border-slate-300 p-2 h-20 align-bottom text-slate-400 italic">Diverifikasi oleh (Admin/Operator)</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TOMBOL AKSI FORM -->
+                    <div id="form-action-buttons" class="mt-8 flex justify-end gap-3 border-t-2 border-slate-100 pt-5">
+                        <button type="button" onclick="cancelBAPForm()" class="px-6 py-2.5 bg-slate-200 text-slate-700 font-bold rounded-lg hover:bg-slate-300 transition-colors uppercase tracking-wider text-xs">
+                            BATAL
+                        </button>
+                        <button type="button" onclick="saveBAPForm()" class="px-6 py-2.5 bg-red-700 text-white font-bold rounded-lg hover:bg-red-800 shadow-xl transition-transform active:scale-95 uppercase tracking-wider text-xs">
+                            SIMPAN & PUBLISH BAP
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- CUSTOM MODAL NOTIFIKASI PROFESIONAL -->
+    <div id="custom-notification-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/80 backdrop-blur-md px-4 custom-notification-modal">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl text-center custom-notification-content relative overflow-hidden">
+            <div id="notification-icon-container" class="w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-4 shadow-inner text-xl">
+                <i id="notification-icon-element" class="fas fa-info-circle"></i>
+            </div>
+            <h3 id="notification-title" class="sporty-font text-lg font-bold text-white mb-2">Informasi Sistem</h3>
+            <p id="notification-message" class="text-slate-300 text-xs mb-6 leading-relaxed whitespace-pre-line">Pesan notifikasi di sini...</p>
+            <button onclick="closeCustomNotification()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg transition-all text-xs tracking-wider uppercase">
+                Mengerti
+            </button>
+        </div>
+    </div>
+
+    <!-- CUSTOM MODAL KONFIRMASI HAPUS -->
+    <div id="custom-confirm-modal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-slate-950/80 backdrop-blur-md px-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl text-center relative overflow-hidden">
+            <div class="w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-4 shadow-inner text-xl bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                <i class="fas fa-trash-alt"></i>
+            </div>
+            <h3 class="sporty-font text-lg font-bold text-white mb-2">Konfirmasi Hapus</h3>
+            <p id="confirm-message" class="text-slate-300 text-xs mb-6 leading-relaxed">Apakah Anda yakin ingin menghapus data report ini?</p>
+            <div class="flex gap-2">
+                <button onclick="closeCustomConfirm(false)" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl transition-all text-xs uppercase">Batal</button>
+                <button id="confirm-yes-btn" class="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg transition-all text-xs uppercase">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Pendeteksi Role (Match Coordinator / Match Commissioner) & Utilities -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const role = urlParams.get('role') || 'coordinator';
+
+            // Report hanya tersedia bagi Match Coordinator dan Match Commissioner.
+            // Jika ada tautan lama yang membawa role Operations, kembalikan ke area role-nya sendiri.
+            if (role === 'operations') {
+                window.location.replace('operations.html?role=operations');
+                return;
+            }
+
+            const isCommissioner = (role === 'commissioner');
+            const roleQuery = isCommissioner ? '?role=commissioner' : '?role=coordinator';
+            const readonlyQuery = isCommissioner ? '?role=commissioner&readonly=true' : '?role=coordinator';
+
+            if (!isCommissioner) {
+                const brandSubtitle = document.getElementById('navbar-subtitle');
+                if (brandSubtitle) {
+                    brandSubtitle.innerText = "Match Coordinator";
+                    brandSubtitle.classList.remove('text-amber-400');
+                    brandSubtitle.classList.add('text-blue-500');
+                }
+                const brandLink = document.getElementById('navbar-brand-link');
+                if (brandLink) {
+                    brandLink.setAttribute('href', 'coordinator.html' + roleQuery);
+                }
+
+                const navContainer = document.getElementById('navbar-menu-container');
+                if (navContainer) {
+                    const currentPage = window.location.pathname.split('/').pop();
+                    
+                    navContainer.innerHTML = `
+                        <a href="coordinator.html${roleQuery}" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Dashboard</a>
+                        <a href="master_data.html${roleQuery}" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Master Data</a>
+                        <a href="schedule.html${roleQuery}" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('schedule') ? 'bg-blue-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-blue-600/30'} text-xs uppercase tracking-wider transition-all">Schedule</a>
+                        <a href="screening.html${roleQuery}" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('screening') ? 'bg-blue-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-blue-600/30'} text-xs uppercase tracking-wider transition-all">Screening</a>
+                        <a href="report.html${roleQuery}" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('report') ? 'bg-blue-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-blue-600/30'} text-xs uppercase tracking-wider transition-all">Report</a>
+                        <a href="topscorer.html${roleQuery}" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('topscorer') ? 'bg-blue-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-blue-600/30'} text-xs uppercase tracking-wider transition-all">Top Scorer</a>
+                        <a href="discipline.html${roleQuery}" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('discipline') ? 'bg-blue-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-blue-600/30'} text-xs uppercase tracking-wider transition-all">Discipline</a>
+                        <a href="archive.html${roleQuery}" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('archive') ? 'bg-blue-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-blue-600/30'} text-xs uppercase tracking-wider transition-all">Archive</a>
+                    `;
+                }
+            } else {
+                const brandSubtitle = document.getElementById('navbar-subtitle');
+                if (brandSubtitle) {
+                    brandSubtitle.innerText = "Match Commissioner Panel";
+                    brandSubtitle.classList.remove('text-blue-500');
+                    brandSubtitle.classList.add('text-amber-400');
+                }
+                
+                const brandLink = document.getElementById('navbar-brand-link');
+                if (brandLink) brandLink.setAttribute('href', 'commissioner.html' + roleQuery);
+
+                const navContainer = document.getElementById('navbar-menu-container');
+                if (navContainer) {
+                    const currentPage = window.location.pathname.split('/').pop();
+                    navContainer.innerHTML = `
+                        <a href="commissioner.html${roleQuery}" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Dashboard</a>
+                        <a href="master_data.html${readonlyQuery}" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Master Data (RO)</a>
+                        <a href="schedule.html${readonlyQuery}" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Schedule (RO)</a>
+                        <a href="report.html${roleQuery}" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('report') ? 'bg-amber-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-amber-600/30'} text-xs uppercase tracking-wider transition-all">Official Report</a>
+                        <a href="topscorer.html${readonlyQuery}" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Top Scorer (RO)</a>
+                        <a href="discipline.html${readonlyQuery}" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Discipline (RO)</a>
+                    `;
+                }
+            }
+        });
+
+        // Fungsi helper untuk memformat tanggal ke format DD-MM-YYYY
+        function formatToIDDate(dateStr) {
+            if (!dateStr) return '-';
+            let cleanStr = String(dateStr).trim();
+            let parts = cleanStr.split('-');
+            if (parts.length === 3 && parts[0].length === 4) {
+                return `${parts[2]}-${parts[1]}-${parts[0]}`;
+            }
+            return cleanStr;
+        }
+
+        // Real-time Clock
+        function updateRealTimeClock() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+            const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} WIB`;
+            document.getElementById('current-date').innerText = dateStr;
+            document.getElementById('current-time').innerText = timeStr;
+        }
+        setInterval(updateRealTimeClock, 1000);
+        updateRealTimeClock();
+
+        // Hitung total skor otomatis
+        function updateScoresDisplay() {
+            const h1Home = parseInt(document.getElementById('score-h1-home')?.value || 0);
+            const h1Away = parseInt(document.getElementById('score-h1-away')?.value || 0);
+            const h2Home = parseInt(document.getElementById('score-h2-home')?.value || 0);
+            const h2Away = parseInt(document.getElementById('score-h2-away')?.value || 0);
+
+            const totalHome = h1Home + h2Home;
+            const totalAway = h1Away + h2Away;
+
+            const dispHome = document.getElementById('score-final-home-display');
+            const dispAway = document.getElementById('score-final-away-display');
+
+            if (dispHome) dispHome.innerText = totalHome;
+            if (dispAway) dispAway.innerText = totalAway;
+        }
+
+        document.addEventListener('input', function(e) {
+            if (['score-h1-home', 'score-h1-away', 'score-h2-home', 'score-h2-away'].includes(e.target.id)) {
+                updateScoresDisplay();
+            }
+        });
+
+        window.showCustomNotification = function(title, message, type = 'info') {
+            const modal = document.getElementById('custom-notification-modal');
+            const titleEl = document.getElementById('notification-title');
+            const msgEl = document.getElementById('notification-message');
+            const iconContainer = document.getElementById('notification-icon-container');
+            const iconElement = document.getElementById('notification-icon-element');
+
+            titleEl.innerText = title;
+            msgEl.innerText = message;
+
+            if (type === 'error' || type === 'warning') {
+                iconContainer.className = "w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-4 shadow-inner text-xl bg-rose-500/20 text-rose-400 border border-rose-500/30";
+                iconElement.className = "fas fa-exclamation-triangle";
+            } else if (type === 'success') {
+                iconContainer.className = "w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-4 shadow-inner text-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+                iconElement.className = "fas fa-check-circle";
+            } else {
+                iconContainer.className = "w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-4 shadow-inner text-xl bg-blue-500/20 text-blue-400 border border-blue-500/30";
+                iconElement.className = "fas fa-info-circle";
+            }
+
+            modal.classList.add('modal-active');
+            setTimeout(() => {
+                modal.classList.add('custom-notification-active');
+            }, 10);
+        };
+
+        window.closeCustomNotification = function() {
+            const modal = document.getElementById('custom-notification-modal');
+            modal.classList.remove('custom-notification-active');
+            setTimeout(() => {
+                modal.classList.remove('modal-active');
+            }, 300);
+        };
+
+        let confirmCallback = null;
+        window.showCustomConfirm = function(message, onYes) {
+            document.getElementById('confirm-message').innerText = message;
+            document.getElementById('custom-confirm-modal').classList.add('modal-active');
+            confirmCallback = onYes;
+        }
+
+        window.closeCustomConfirm = function(isYes) {
+            document.getElementById('custom-confirm-modal').classList.remove('modal-active');
+            if (isYes && typeof confirmCallback === 'function') {
+                confirmCallback();
+            }
+        }
+
+        document.getElementById('confirm-yes-btn').onclick = function() {
+            closeCustomConfirm(true);
+        };
+
+        window.switchReportTab = function(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById('btn-tab-official').className = "px-5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all bg-transparent text-slate-400 hover:text-white hover:bg-slate-800";
+            document.getElementById('btn-tab-dsp').className = "px-5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all bg-transparent text-slate-400 hover:text-white hover:bg-slate-800";
+            
+            const targetTab = document.getElementById('tab-' + tabName);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+            
+            const activeBtn = document.getElementById('btn-tab-' + tabName);
+            if (activeBtn) {
+                activeBtn.className = "px-5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all bg-blue-600 text-white shadow-md";
+            }
+            
+            const pageHeader = document.getElementById('page-header');
+            const weekFilterContainer = document.getElementById('week-filter-container');
+
+            if (tabName === 'dsp') {
+                if (pageHeader) pageHeader.classList.add('hidden');
+                if (weekFilterContainer) weekFilterContainer.classList.add('hidden');
+            } else {
+                if (pageHeader) pageHeader.classList.remove('hidden');
+                if (weekFilterContainer) weekFilterContainer.classList.remove('hidden');
+            }
+
+            handleReportSearch();
+        }
+    </script>
+
+    <!-- Dependencies Firebase -->
+    <script src="config.js"></script>
+    <script type="module" src="app.js"></script>
+
+    <!-- Logika Fetch Data Report & Integrasi Otomatis Master Screening & Filter Pekan -->
+    <script type="module">
+        let allSchedules = [];
+        let allReports = [];
+        let allScreenings = [];
+        let allPlayers = []; 
+        let allOfficials = []; // Koleksi master_official dari database
+        let allJerseys = []; // Koleksi master_jersey dari database
+        let currentActiveMatchId = null; 
+        let currentSelectedWeek = 'all'; // Variabel untuk menyimpan filter pekan yang aktif
+
+        window.loadReportData = async function(forceRefresh = true) {
+            const icon = document.getElementById('refresh-icon');
+            if (icon) icon.classList.add('fa-spin');
+
+            try {
+                if (typeof window.getFromFirestore !== 'function') return;
+
+                // Baca ulang dari Firestore saat halaman dibuka/refresh supaya cache lama tidak membuat data semu.
+                allSchedules = await window.getFromFirestore("master_schedule", forceRefresh).catch(() => []);
+                const rawReports = await window.getFromFirestore("master_report", forceRefresh).catch(() => []);
+                // Abaikan dokumen placeholder/test yang bukan laporan pertandingan sungguhan.
+                allReports = rawReports.filter(r => {
+                    const recordId = String(r.id ?? r.docId ?? '').trim().toLowerCase();
+                    return recordId && recordId !== 'dummy_data' && recordId !== 'id' && !recordId.includes('null');
+                });
+                const rawScreenings = await window.getFromFirestore("master_screening", forceRefresh).catch(() => []);
+                allScreenings = rawScreenings.filter(r => {
+                    const recordId = String(r.id ?? r.docId ?? '').trim().toLowerCase();
+                    return recordId && recordId !== 'dummy_data' && recordId !== 'id' && !recordId.includes('null');
+                });
+                allPlayers = await window.getFromFirestore("master_player", forceRefresh).catch(() => []);
+                allOfficials = await window.getFromFirestore("master_official", forceRefresh).catch(() => []);
+                allJerseys = await window.getFromFirestore("master_jersey", forceRefresh).catch(() => []);
+
+                handleReportSearch();
+                showCustomNotification("Berhasil", "Data berhasil disinkronisasi ulang dari database!", "success");
+
+            } catch (error) {
+                console.error("Gagal load data report:", error);
+                showCustomNotification("Gagal Sistem", "Gagal memuat data dari database: " + error.message, "error");
+            } finally {
+                if (icon) setTimeout(() => icon.classList.remove('fa-spin'), 500);
+            }
+        }
+
+        // ==========================================
+        // FUNGSI KLIK TAB FILTER PEKAN
+        // ==========================================
+        window.filterReportByWeek = function(weekNum) {
+            currentSelectedWeek = weekNum;
+
+            for (let i = 1; i <= 10; i++) {
+                const btn = document.getElementById(`btn-week-${i}`);
+                if (btn) {
+                    btn.className = "px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 border border-white/10 text-slate-300 hover:text-white hover:bg-slate-800 flex-shrink-0";
+                }
+            }
+            const allBtn = document.getElementById('btn-week-all');
+            if (allBtn) {
+                allBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 border border-white/10 text-slate-300 hover:text-white hover:bg-slate-800 flex-shrink-0";
+            }
+
+            if (weekNum === 'all') {
+                if (allBtn) allBtn.className = "px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all bg-blue-600 text-white shadow-md flex-shrink-0";
+            } else {
+                const targetBtn = document.getElementById(`btn-week-${weekNum}`);
+                if (targetBtn) {
+                    targetBtn.className = "px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all bg-blue-600 text-white shadow-md flex-shrink-0";
+                }
+            }
+
+            handleReportSearch();
+        }
+
+        // ==========================================
+        // FUNGSI SINKRONISASI PEMILIHAN MVP KE BANNER BAP
+        // ==========================================
+        window.handleMvpSelection = function(radioEl) {
+            const tr = radioEl.closest('tr');
+            const playerName = tr.dataset.playerName || '-';
+            const teamName = tr.dataset.teamName || '';
+            const jerseyNo = tr.dataset.jerseyNo || '-';
+
+            const displayEl = document.getElementById('selected-mvp-display');
+            if (displayEl) {
+                let teamInfo = teamName && teamName !== '-' ? ` <span class="text-slate-500 font-normal text-xs">(${teamName})</span>` : '';
+                displayEl.innerHTML = `${jerseyNo} - ${playerName}${teamInfo}`;
+            }
+        }
+
+        // ==========================================
+        // LOGIKA UI KARTU (CHECKBOX GANDA & OTOMATISASI KARTU MERAH)
+        // ==========================================
+        window.handleCardUI = function(element, type) {
+            const tr = element.closest('tr');
+            const kk1 = tr.querySelector('.kk1-box');
+            const kk2 = tr.querySelector('.kk2-box');
+            const km = tr.querySelector('.km-box');
+
+            if (type === 'kk1') {
+                if (!kk1.checked) {
+                    kk2.checked = false;
+                    if (km.dataset.auto === "true") {
+                        km.checked = false;
+                        km.dataset.auto = "false";
+                    }
+                }
+            } else if (type === 'kk2') {
+                if (kk2.checked) {
+                    kk1.checked = true;
+                    km.checked = true;
+                    km.dataset.auto = "true"; 
+                } else {
+                    if (km.dataset.auto === "true") {
+                        km.checked = false;
+                        km.dataset.auto = "false";
+                    }
+                }
+            } else if (type === 'km') {
+                if (km.checked && !kk2.checked) {
+                    km.dataset.auto = "false";
+                }
+            }
+        }
+
+        // ==========================================
+        // RENDER OFFICIAL TIM (MENCARI KE MASTER_OFFICIAL ATAU SCREENING)
+        // ==========================================
+        function renderOfficialRows(scrTeam, tbodyId, textColorClass) {
+            const tbody = document.getElementById(tbodyId);
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            let officials = [];
+            if (scrTeam) {
+                const rawOffs = scrTeam.officials || [
+                    scrTeam.official1, scrTeam.official2, scrTeam.official3, scrTeam.official4, scrTeam.official5
+                ].filter(Boolean);
+
+                rawOffs.forEach((item, idx) => {
+                    let offId = typeof item === 'object' ? (item.id || item.officialId || item.name || item.nama) : item;
+                    let offName = typeof item === 'object' ? (item.name || item.nama || offId) : offId;
+                    let offPos = typeof item === 'object' ? (item.position || item.posisi || item.jabatan) : '';
+                    let offIdStr = String(offId).trim();
+
+                    // MENCARI DI master_official (Scan ID dan Seluruh Isi Value untuk Menghindari ID tertimpa Document ID)
+                    let officialObj = allOfficials.find(o => 
+                        String(o.id) === offIdStr || 
+                        String(o.officialId) === offIdStr || 
+                        Object.values(o).some(val => String(val).trim() === offIdStr)
+                    );
+
+                    if (!officialObj && typeof offId === 'string') {
+                        officialObj = allOfficials.find(o => (o.name || o.nama || '').trim().toLowerCase() === offIdStr.toLowerCase());
+                    }
+
+                    if (officialObj) {
+                        offName = officialObj.name || officialObj.nama || offName;
+                        offPos = offPos || officialObj.position || officialObj.posisi || officialObj.jabatan || '';
+                    }
+
+                    if (!offPos || offPos === '-') {
+                        if (idx === 0) offPos = 'Head Coach';
+                        else if (idx === 1) offPos = 'Assistant Coach - I';
+                        else if (idx === 2) offPos = 'Assistant Coach - II';
+                        else if (idx === 3) offPos = 'Manager';
+                        else offPos = 'Official';
+                    }
+
+                    if (offName && offName !== '-' && String(offName).trim() !== '') {
+                        officials.push({ name: offName, position: offPos });
+                    }
+                });
+            }
+
+            if (officials.length === 0) {
+                officials = [
+                    { name: '-', position: 'Head Coach' },
+                    { name: '-', position: 'Assistant Coach - I' }
+                ];
+            } else if (officials.length === 1) {
+                officials.push({ name: '-', position: 'Assistant Coach - I' });
+            }
+
+            officials.forEach((off, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="border border-slate-300 p-1.5 text-center w-8">${idx + 1}.</td>
+                    <td class="border border-slate-300 p-1.5 font-bold">${off.name}</td>
+                    <td class="border border-slate-300 p-1.5 ${textColorClass} text-right italic font-semibold">${off.position}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ==========================================
+        // RENDER 14 BARIS PEMAIN (MENCARI KE MASTER_PLAYER BERDASARKAN ID)
+        // ==========================================
+        function renderPlayerRows(playerIds, tbodyId, isLocked = false, teamIdStr = '', teamNameStr = '', savedMvpId = '', savedGoalsMap = {}, savedCardsMap = {}) {
+            const tbody = document.getElementById(tbodyId);
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            const MAX_ROWS = 14;
+            const validPlayerIds = playerIds || [];
+
+            for (let i = 0; i < MAX_ROWS; i++) {
+                const item = validPlayerIds[i];
+                const tr = document.createElement('tr');
+
+                if (!item) {
+                    tr.className = "bg-slate-100 text-slate-400";
+                    tr.innerHTML = `
+                        <td class="border border-slate-300 p-1 font-bold text-slate-400 bg-slate-200/60">-</td>
+                        <td class="border border-slate-300 p-1 text-left italic">-</td>
+                        <td class="border border-slate-300 p-1">
+                            <div class="flex justify-center gap-1.5 items-center">
+                                <input type="checkbox" disabled class="w-3.5 h-3.5 opacity-40 cursor-not-allowed">
+                                <input type="checkbox" disabled class="w-3.5 h-3.5 opacity-40 cursor-not-allowed">
+                            </div>
+                        </td>
+                        <td class="border border-slate-300 p-1">
+                            <div class="flex justify-center items-center">
+                                <input type="checkbox" disabled class="w-3.5 h-3.5 opacity-40 cursor-not-allowed">
+                            </div>
+                        </td>
+                        <td class="border border-slate-300 p-0"><input type="number" disabled class="w-full text-center outline-none bg-transparent cursor-not-allowed"></td>
+                        <td class="border border-slate-300 p-1">
+                            <input type="radio" disabled class="w-3 h-3 opacity-40 cursor-not-allowed">
+                        </td>
+                    `;
+                } else {
+                    let pId = typeof item === 'object' ? (item.id || item.playerId || item.name || item.nama) : item;
+                    let pIdStr = String(pId).trim();
+                    let searchName = typeof item === 'object' ? (item.name || item.nama || pId) : pId;
+                    
+                    if (typeof searchName === 'string') {
+                        searchName = searchName.trim().toLowerCase();
+                    }
+
+                    // PENCARIAN PRESISI KE MASTER_PLAYER (Scan ke setiap value properti untuk mencegah ID tertimpa doc.id Firestore)
+                    let playerObj = allPlayers.find(p => {
+                        return String(p.id) === pIdStr || 
+                               String(p.playerId) === pIdStr ||
+                               Object.values(p).some(val => String(val).trim() === pIdStr);
+                    });
+                    
+                    if (!playerObj && teamIdStr) {
+                        playerObj = allPlayers.find(p => String(p.teamId) === String(teamIdStr) && (String(p.name || '').trim().toLowerCase() === searchName || String(p.nama || '').trim().toLowerCase() === searchName));
+                    }
+                    
+                    if (!playerObj) {
+                        playerObj = allPlayers.find(p => String(p.name || '').trim().toLowerCase() === searchName || String(p.nama || '').trim().toLowerCase() === searchName);
+                    }
+
+                    let jerseyNo = '-';
+                    if (playerObj) {
+                        jerseyNo = playerObj.jerseyNo || playerObj.jerseyNumber || playerObj.noPunggung || playerObj.nomorPunggung || playerObj.jersey || playerObj.punggung || '-';
+                    } else if (typeof item === 'object') {
+                        jerseyNo = item.jersey || item.jerseyNo || item.noPunggung || item.nomorPunggung || '-';
+                    }
+
+                    const pName = playerObj ? (playerObj.name || playerObj.nama) : (typeof item === 'object' ? (item.name || item.nama || pId) : pId);
+                    const finalTeamId = playerObj ? playerObj.teamId : teamIdStr;
+                    const finalTeamName = playerObj ? (playerObj.nameTeam || teamNameStr) : teamNameStr;
+                    
+                    const categoryStr = playerObj ? (playerObj.category || '') : (typeof item === 'object' ? (item.category || '') : '');
+                    const categoryUpper = categoryStr.toUpperCase();
+                    
+                    let rowBgClass = "bg-white text-slate-900";
+                    let badgeHtml = '';
+
+                    // Menampilkan Badge Kategori Secara Dinamis (U-19, U-17, dsb.)
+                    if (categoryUpper.includes('U-') || playerObj?.isU19) {
+                        rowBgClass = "bg-emerald-50/90 text-emerald-950 font-medium";
+                        let displayCat = categoryUpper.includes('U-') ? categoryUpper : 'U-19';
+                        badgeHtml = `<span class="bg-emerald-600 text-white text-[8px] px-1.5 py-0.5 rounded font-bold shadow-sm border border-emerald-700 flex-shrink-0">${displayCat}</span>`;
+                    }
+                    
+                    const disabledAttr = isLocked ? 'disabled' : '';
+                    const realPlayerId = playerObj ? (playerObj.id || playerObj.playerId || pId) : pId;
+                    const isMvpChecked = savedMvpId && String(savedMvpId) === String(realPlayerId) ? 'checked' : '';
+                    const existingGoalVal = savedGoalsMap[realPlayerId] || savedGoalsMap[pName] || '';
+                    const playerCardInfo = savedCardsMap[realPlayerId] || savedCardsMap[pName] || { kk1: false, kk2: false, km: false };
+
+                    tr.className = rowBgClass;
+                    tr.dataset.playerId = realPlayerId || '';
+                    tr.dataset.playerName = pName || '';
+                    tr.dataset.teamId = finalTeamId || '';
+                    tr.dataset.teamName = finalTeamName || '';
+                    tr.dataset.jerseyNo = jerseyNo || '-';
+                    
+                    tr.innerHTML = `
+                        <td class="border border-slate-300 p-1 font-bold text-red-700 bg-slate-50">${jerseyNo}</td>
+                        <td class="border border-slate-300 p-1 text-left font-semibold">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="truncate">${pName}</span>
+                                ${badgeHtml}
+                            </div>
+                        </td>
+                        <td class="border border-slate-300 p-1">
+                            <div class="flex justify-center gap-1.5 items-center">
+                                <input type="checkbox" title="KK 1" class="w-3.5 h-3.5 accent-yellow-500 cursor-pointer kk1-box" ${playerCardInfo.kk1 ? 'checked' : ''} ${disabledAttr} onchange="handleCardUI(this, 'kk1')">
+                                <input type="checkbox" title="KK 2" class="w-3.5 h-3.5 accent-yellow-500 cursor-pointer kk2-box" ${playerCardInfo.kk2 ? 'checked' : ''} ${disabledAttr} onchange="handleCardUI(this, 'kk2')">
+                            </div>
+                        </td>
+                        <td class="border border-slate-300 p-1">
+                            <div class="flex justify-center items-center">
+                                <input type="checkbox" title="Kartu Merah" class="w-3.5 h-3.5 accent-red-600 cursor-pointer km-box" ${playerCardInfo.km ? 'checked' : ''} ${disabledAttr} onchange="handleCardUI(this, 'km')">
+                            </div>
+                        </td>
+                        <td class="border border-slate-300 p-0"><input type="number" min="0" value="${existingGoalVal}" ${disabledAttr} class="w-full text-center outline-none bg-transparent hover:bg-slate-100 transition-colors player-goal"></td>
+                        <td class="border border-slate-300 p-1">
+                            <input type="radio" name="mvp_radio" value="${realPlayerId}" ${disabledAttr} ${isMvpChecked} class="cursor-pointer w-3 h-3 accent-blue-600" onchange="handleMvpSelection(this)">
+                        </td>
+                    `;
+
+                    if (isMvpChecked) {
+                        const displayEl = document.getElementById('selected-mvp-display');
+                        if (displayEl) {
+                            let teamInfo = finalTeamName ? ` <span class="text-slate-500 font-normal text-xs">(${finalTeamName})</span>` : '';
+                            displayEl.innerHTML = `${jerseyNo} - ${pName}${teamInfo}`;
+                        }
+                    }
+                }
+                tbody.appendChild(tr);
+            }
+        }
+
+        // ==========================================
+        // FUNGSI RENDER OFFICIAL REPORT
+        // ==========================================
+        function renderOfficialReport(dataToRender) {
+            const container = document.getElementById('official-report-container');
+            container.innerHTML = '';
+            
+            dataToRender.sort((a, b) => parseInt(a.matchNo || 0) - parseInt(b.matchNo || 0));
+            document.getElementById('official-count').innerText = dataToRender.length;
+
+            if(dataToRender.length === 0) {
+                container.innerHTML = `<tr><td colspan="7" class="p-12 text-center text-slate-500 italic">Belum ada pertandingan pada pekan ini yang berstatus 'Published' di Screening.</td></tr>`;
+                return;
+            }
+
+            dataToRender.forEach(sch => {
+                const reportData = allReports.find(r => String(r.id) === String(sch.id));
+                const homeScore = reportData && reportData.scoreFinalHome !== undefined ? reportData.scoreFinalHome : '-';
+                const awayScore = reportData && reportData.scoreFinalAway !== undefined ? reportData.scoreFinalAway : '-';
+                
+                const statusLaporan = reportData 
+                    ? `<span class="text-emerald-400 font-bold text-[10px]"><i class="fas fa-check-circle mr-1"></i>Tersimpan & Ter-lock</span>` 
+                    : `<span class="text-blue-400 font-bold text-[10px]"><i class="fas fa-exclamation-circle mr-1"></i>Belum Diisi</span>`;
+
+                const actionButtonText = reportData ? 'Lihat' : 'Mulai';
+                const actionButtonClass = reportData ? 'bg-blue-600 hover:bg-blue-500' : 'bg-emerald-600 hover:bg-emerald-500';
+
+                const formattedDate = formatToIDDate(sch.date);
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/60 transition-colors border-b border-white/5";
+                
+                tr.innerHTML = `
+                    <td class="py-4 px-4 text-center">
+                        <span class="bg-blue-600 text-white font-bold w-8 h-8 rounded-lg flex items-center justify-center mx-auto shadow">${sch.matchNo || '-'}</span>
+                    </td>
+                    <td class="py-4 px-4">
+                        <div class="font-bold text-white"><i class="far fa-calendar-alt text-blue-400 w-4"></i> ${formattedDate}</div>
+                        <div class="text-[10px] font-mono text-slate-400 mt-1 uppercase">${sch.category || '-'}</div>
+                    </td>
+                    <td class="py-4 px-4 text-right w-1/4">
+                        <div class="font-extrabold text-white text-sm truncate uppercase tracking-wider">${sch.nameHomeTeam || '-'}</div>
+                    </td>
+                    <td class="py-4 px-1 text-center w-20">
+                        <div class="bg-slate-950 border border-white/10 rounded-lg px-2 py-1 font-mono text-lg font-black text-white flex justify-center space-x-2 shadow-inner">
+                            <span>${homeScore}</span><span class="text-slate-500">-</span><span>${awayScore}</span>
+                        </div>
+                    </td>
+                    <td class="py-4 px-4 text-left w-1/4">
+                        <div class="font-extrabold text-white text-sm truncate uppercase tracking-wider">${sch.nameAwayTeam || '-'}</div>
+                    </td>
+                    <td class="py-4 px-4 text-center">
+                        ${statusLaporan}
+                    </td>
+                    <td class="py-4 px-4 text-center w-48">
+                        <div class="flex items-center justify-center gap-1.5">
+                            <button onclick="openInputReport('${sch.id}')" class="${actionButtonClass} text-white px-2.5 py-2 rounded-lg text-[10px] font-bold shadow-md transition-all uppercase tracking-wider flex items-center justify-center space-x-1 flex-1">
+                                <i class="fas fa-file-alt"></i><span>${actionButtonText}</span>
+                            </button>
+                            <button onclick="deleteOfficialReport('${sch.id}')" class="bg-rose-600/80 hover:bg-rose-600 text-white px-2.5 py-2 rounded-lg text-[10px] font-bold shadow-md transition-all uppercase tracking-wider flex items-center justify-center space-x-1" title="Hapus Dokumen Report">
+                                <i class="fas fa-trash-alt"></i><span>Hapus</span>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                container.appendChild(tr);
+            });
+        }
+
+        // ==========================================
+        // PENCARIAN & FILTER OFFICIAL REPORT (SCREENING PUBLISHED + PEKAN)
+        // ==========================================
+        window.handleReportSearch = function() {
+            const keyword = document.getElementById('report-search-input').value.toLowerCase().trim();
+
+            let combinedMap = new Map();
+
+            allScreenings.forEach(scr => {
+                if (scr.status && String(scr.status).toLowerCase() === 'published') {
+                    const matchId = String(scr.id);
+                    const sch = allSchedules.find(s => String(s.id) === matchId) || {};
+
+                    combinedMap.set(matchId, {
+                        id: matchId,
+                        matchNo: scr.matchNo || sch.matchNo || '-',
+                        date: scr.date || sch.date || '-',
+                        category: scr.category || sch.category || '-',
+                        week: scr.week || sch.week || '1',
+                        homeTeamId: scr.homeTeamId || sch.homeTeamId || '',
+                        nameHomeTeam: scr.nameHomeTeam || sch.nameHomeTeam || scr.homeTeamName || '-',
+                        awayTeamId: scr.awayTeamId || sch.awayTeamId || '',
+                        nameAwayTeam: scr.nameAwayTeam || sch.nameAwayTeam || scr.awayTeamName || '-',
+                        status: scr.status
+                    });
+                }
+            });
+
+            // PENTING: Official Report hanya boleh menampilkan pertandingan yang
+            // memiliki dokumen Screening berstatus Published. Data lama di
+            // master_report tidak boleh menambahkan pertandingan yang belum
+            // dipublikasikan dari menu Screening.
+            let validDataList = Array.from(combinedMap.values());
+
+            let weekFilteredList = validDataList.filter(item => {
+                if (currentSelectedWeek === 'all') return true;
+                const itemWeek = String(item.week || '').replace(/[^0-9]/g, '');
+                return itemWeek === String(currentSelectedWeek);
+            });
+
+            let filteredSchedules = weekFilteredList.filter(item => {
+                const matchNo = String(item.matchNo || '').toLowerCase();
+                const home = String(item.nameHomeTeam || '').toLowerCase();
+                const away = String(item.nameAwayTeam || '').toLowerCase();
+                const category = String(item.category || '').toLowerCase();
+                const date = String(item.date || '').toLowerCase();
+                return matchNo.includes(keyword) || home.includes(keyword) || away.includes(keyword) || category.includes(keyword) || date.includes(keyword);
+            });
+            
+            renderOfficialReport(filteredSchedules);
+        }
+
+        // ==========================================
+        // FUNGSI UTAMA OPEN INPUT REPORT (YANG TELAH DISINKRONKAN DENGAN MASTER SCREENING)
+        // ==========================================
+        window.openInputReport = function(matchId) {
+            currentActiveMatchId = matchId; 
+            let matchData = allSchedules.find(m => String(m.id) === String(matchId));
+            const reportData = allReports.find(r => String(r.id) === String(matchId));
+            
+            // LOGIKA PENCARIAN SCREENING YANG SPESIFIK & PRESISI UNTUK MENGHINDARI SALAH DOKUMEN
+            let screeningData = allScreenings.find(s => String(s.id) === String(matchId));
+            
+            // Jika ID persis tidak ketemu, gunakan kombinasi nomor match dan nama tim home
+            if (!screeningData) {
+                screeningData = allScreenings.find(s => 
+                    String(s.matchNo) === String(matchData?.matchNo) && 
+                    (String(s.nameHomeTeam).toLowerCase() === String(matchData?.nameHomeTeam).toLowerCase() || String(s.homeTeamId) === String(matchData?.homeTeamId))
+                );
+            }
+
+            if (!screeningData && !reportData) {
+                showCustomNotification(
+                    "Akses Ditolak", 
+                    "Data Screening untuk pertandingan ini belum ada. Harap lakukan screening terlebih dahulu di menu Screening.", 
+                    "error"
+                );
+                return;
+            }
+            
+            if (!matchData && reportData) {
+                matchData = {
+                    id: reportData.id,
+                    matchNo: reportData.matchNo,
+                    date: reportData.date,
+                    time: reportData.time || '00:00 WIB',
+                    category: reportData.category,
+                    homeTeamId: reportData.homeTeamId,
+                    nameHomeTeam: reportData.nameHomeTeam,
+                    awayTeamId: reportData.awayTeamId,
+                    nameAwayTeam: reportData.nameAwayTeam,
+                    status: reportData.status || 'Published'
+                };
+            }
+
+            const isLocked = reportData ? true : false;
+            
+            if (matchData) {
+                switchReportTab('dsp');
+
+                document.getElementById('bap-empty-state').classList.add('hidden');
+                document.getElementById('bap-form-container').classList.remove('hidden');
+
+                document.getElementById('form-doc-no').innerText = matchData.matchNo || '-';
+                document.getElementById('form-val-date').innerText = formatToIDDate(matchData.date);
+                
+                const kickoffTime = matchData.time || matchData.kickoff || '09:00 WIB';
+                document.getElementById('form-val-time').value = kickoffTime;
+
+                document.getElementById('form-val-category').innerText = matchData.category || '-';
+                document.getElementById('form-val-home').innerText = matchData.nameHomeTeam || '-';
+                document.getElementById('form-val-away').innerText = matchData.nameAwayTeam || '-';
+                
+                document.getElementById('form-off-home').innerText = matchData.nameHomeTeam || '-';
+                document.getElementById('form-off-away').innerText = matchData.nameAwayTeam || '-';
+                
+                document.getElementById('form-dsp-home').innerText = matchData.nameHomeTeam || '-';
+                document.getElementById('form-dsp-away').innerText = matchData.nameAwayTeam || '-';
+                
+                document.getElementById('form-foul-home').innerText = matchData.nameHomeTeam || '-';
+                document.getElementById('form-foul-away').innerText = matchData.nameAwayTeam || '-';
+                
+                document.getElementById('score-h1-home').value = reportData?.scoreH1Home || 0;
+                document.getElementById('score-h1-away').value = reportData?.scoreH1Away || 0;
+                document.getElementById('score-h2-home').value = reportData?.scoreH2Home || 0;
+                document.getElementById('score-h2-away').value = reportData?.scoreH2Away || 0;
+                updateScoresDisplay();
+
+                const scoreInputs = ['score-h1-home', 'score-h1-away', 'score-h2-home', 'score-h2-away'];
+                scoreInputs.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        if (isLocked) {
+                            el.setAttribute('disabled', 'true');
+                            el.classList.add('cursor-not-allowed', 'opacity-80');
+                        } else {
+                            el.removeAttribute('disabled');
+                            el.classList.remove('cursor-not-allowed', 'opacity-80');
+                        }
+                    }
+                });
+
+                let parsedFouls = {};
+                try {
+                    parsedFouls = typeof reportData?.foulsData === 'string' ? JSON.parse(reportData.foulsData) : (reportData?.foulsData || {});
+                } catch(e) { parsedFouls = {}; }
+
+                const toObj = parsedFouls.timeOut || {};
+                document.getElementById('to-h1-home').checked = !!toObj.homeH1;
+                document.getElementById('to-h2-home').checked = !!toObj.homeH2;
+                document.getElementById('to-h1-away').checked = !!toObj.awayH1;
+                document.getElementById('to-h2-away').checked = !!toObj.awayH2;
+
+                document.querySelectorAll('.foul-home-h1, .foul-home-h2, .foul-away-h1, .foul-away-h2').forEach(cb => cb.checked = false);
+                if (parsedFouls.foulList) {
+                    parsedFouls.foulList.forEach(f => {
+                        const cb = document.querySelector(`.${f.className}[value="${f.val}"]`);
+                        if (cb) cb.checked = true;
+                    });
+                }
+
+                const timeoutFoulCheckboxes = document.querySelectorAll('#to-h1-home, #to-h2-home, #to-h1-away, #to-h2-away, .foul-home-h1, .foul-home-h2, .foul-away-h1, .foul-away-h2');
+                timeoutFoulCheckboxes.forEach(cb => {
+                    if (isLocked) {
+                        cb.setAttribute('disabled', 'true');
+                        cb.classList.add('cursor-not-allowed', 'opacity-60');
+                    } else {
+                        cb.removeAttribute('disabled');
+                        cb.classList.remove('cursor-not-allowed', 'opacity-60');
+                    }
+                });
+
+                const mvpDisplay = document.getElementById('selected-mvp-display');
+                if (mvpDisplay) mvpDisplay.innerText = "Pilih Pemain MVP";
+
+                // EKSTRAKSI STRUKTUR SCREENING DARI FIRESTORE SECARA AMAN
+                const rawScr = screeningData?.screeningData ? (typeof screeningData.screeningData === 'string' ? JSON.parse(screeningData.screeningData) : screeningData.screeningData) : screeningData;
+                const scrHome = rawScr?.home || screeningData?.home || {};
+                const scrAway = rawScr?.away || screeningData?.away || {};
+
+                let headCoachHome = scrHome.official1 || scrHome.officialHome1 || '-';
+                let headCoachAway = scrAway.official1 || scrAway.officialAway1 || '-';
+
+                document.getElementById('form-ttd-home').innerText = typeof headCoachHome === 'object' ? (headCoachHome.name || headCoachHome.nama || '-') : headCoachHome;
+                document.getElementById('form-ttd-away').innerText = typeof headCoachAway === 'object' ? (headCoachAway.name || headCoachAway.nama || '-') : headCoachAway;
+
+                document.getElementById('jersey-box-title-home').innerText = matchData.nameHomeTeam || 'Kandang';
+                document.getElementById('jersey-box-title-away').innerText = matchData.nameAwayTeam || 'Tandang';
+
+                const homeJerseyObj = allJerseys.find(j => j.teamId === matchData.homeTeamId || (j.teamName && matchData.nameHomeTeam && j.teamName.toLowerCase() === matchData.nameHomeTeam.toLowerCase()));
+                const awayJerseyObj = allJerseys.find(j => j.teamId === matchData.awayTeamId || (j.teamName && matchData.nameAwayTeam && j.teamName.toLowerCase() === matchData.nameAwayTeam.toLowerCase()));
+
+                const resolvedHomeJersey = homeJerseyObj ? (homeJerseyObj.jerseyHome || homeJerseyObj.jersey || '-') : (scrHome.jersey || scrHome.kostum || '-');
+                let resolvedAwayJersey = awayJerseyObj ? (awayJerseyObj.jerseyAway || awayJerseyObj.jersey || '-') : (scrAway.jersey || scrAway.kostum || '-');
+
+                if (!resolvedAwayJersey || resolvedAwayJersey === '-' || resolvedAwayJersey.trim() === '') {
+                    resolvedAwayJersey = resolvedHomeJersey; 
+                }
+
+                document.getElementById('display-jersey-home').innerText = resolvedHomeJersey;
+                document.getElementById('display-jersey-away').innerText = resolvedAwayJersey;
+
+                if (reportData && reportData.verifiedBy) {
+                    document.getElementById('form-referee-name').value = reportData.verifiedBy;
+                } else {
+                    document.getElementById('form-referee-name').value = '';
+                }
+
+                const statusTextEl = document.getElementById('form-status-text');
+                const actionButtonsEl = document.getElementById('form-action-buttons');
+                
+                if (isLocked) {
+                    statusTextEl.innerText = "PUBLISHED & LOCKED (ARCHIVED)";
+                    statusTextEl.className = "text-emerald-500 font-bold";
+                    if(actionButtonsEl) actionButtonsEl.style.display = "none";
+                    document.getElementById('form-referee-name').setAttribute('disabled', 'true');
+                } else {
+                    statusTextEl.innerText = "DRAFT";
+                    statusTextEl.className = "text-blue-600 font-bold";
+                    if(actionButtonsEl) actionButtonsEl.style.display = "flex";
+                    document.getElementById('form-referee-name').removeAttribute('disabled');
+                }
+
+                const savedMvpId = reportData ? reportData.mvpPlayerId : '';
+                let savedGoalsMap = reportData?.playerGoals || {};
+                let savedCardsMap = reportData?.playerCards || {};
+
+                // Render Official & Players menggunakan data asli dari koleksi master_screening
+                renderOfficialRows(scrHome, 'form-tbody-home-officials', 'text-red-700');
+                renderOfficialRows(scrAway, 'form-tbody-away-officials', 'text-blue-700');
+
+                renderPlayerRows(scrHome.players || [], 'form-tbody-home-players', isLocked, matchData.homeTeamId, matchData.nameHomeTeam, savedMvpId, savedGoalsMap, savedCardsMap);
+                renderPlayerRows(scrAway.players || [], 'form-tbody-away-players', isLocked, matchData.awayTeamId, matchData.nameAwayTeam, savedMvpId, savedGoalsMap, savedCardsMap);
+
+                showCustomNotification(
+                    isLocked ? "Dokumen Terkunci (Arsip)" : "Pertandingan Dimulai", 
+                    isLocked ? "Dokumen BAP ini sudah dipublikasikan dan terkunci." : `Match Commissioner siap mencatat dokumen DSP/BAP untuk:\n\nHome: ${matchData.nameHomeTeam}\nAway: ${matchData.nameAwayTeam}`, 
+                    "success"
+                );
+            }
+        }
+
+        window.deleteOfficialReport = function(matchId) {
+            const matchKey = String(matchId);
+            const matchData = allSchedules.find(m => String(m.id) === matchKey) || {};
+            const screeningData = allScreenings.find(s => String(s.id) === matchKey) || {};
+            const reportData = allReports.find(r => String(r.id ?? r.docId) === matchKey);
+            const homeName = screeningData.nameHomeTeam || screeningData.homeTeamName || matchData.nameHomeTeam || 'HOME';
+            const awayName = screeningData.nameAwayTeam || screeningData.awayTeamName || matchData.nameAwayTeam || 'AWAY';
+            const teamPair = `${homeName} vs ${awayName}`;
+
+            showCustomConfirm(
+                `Hapus ${teamPair}? Data Official Report atau arsip yang memang tidak ada di Firestore akan dilewati. Data Screening sumber akan dihapus jika ditemukan, cache akan diperbarui, dan status jadwal akan dikembalikan menjadi Saved. Tindakan ini tidak dapat dibatalkan.`,
+                async function() {
+                    try {
+                        if (typeof window.deleteFromFirestore !== 'function') {
+                            throw new Error('Fungsi hapus Firestore tidak tersedia. Muat ulang halaman dan coba lagi.');
+                        }
+
+                        // Penghapusan bersifat idempoten: jika laporan belum pernah dibuat,
+                        // dokumen tidak ditemukan bukan alasan untuk membatalkan penghapusan.
+                        const reportDelete = await window.deleteFromFirestore('master_report', matchKey);
+                        if (!reportDelete?.success) {
+                            throw new Error(reportDelete?.message || 'Akses ke dokumen Report ditolak atau terjadi kesalahan Firestore.');
+                        }
+
+                        // Arsip bersifat opsional; bila tidak ada, lanjutkan saja.
+                        const archiveDelete = await window.deleteFromFirestore('master_archive', `ARC-${matchKey}`);
+                        if (!archiveDelete?.success) {
+                            throw new Error(archiveDelete?.message || 'Terjadi kesalahan saat membersihkan arsip terkait.');
+                        }
+
+                        // Reversi total gol dari laporan yang dihapus agar Top Scorer tidak menyimpan tambahan gol usang.
+                        if (reportData && reportData.playerGoals && typeof reportData.playerGoals === 'object') {
+                            const topscorers = await window.getFromFirestore('master_topscore', true).catch(() => []);
+                            for (const [playerId, goalsValue] of Object.entries(reportData.playerGoals)) {
+                                const goalsToRevert = Math.max(0, parseInt(goalsValue || 0, 10) || 0);
+                                if (!goalsToRevert) continue;
+                                const existing = topscorers.find(ts => String(ts.id) === String(playerId));
+                                if (!existing) continue;
+                                const updated = {
+                                    ...existing,
+                                    id: String(playerId),
+                                    goal: Math.max(0, (parseInt(existing.goal || 0, 10) || 0) - goalsToRevert)
+                                };
+                                await window.upsertToFirestore('master_topscore', String(playerId), updated);
+                                if (typeof window.syncToSheets === 'function') {
+                                    await window.syncToSheets('master_topscore', updated, 'update');
+                                }
+                            }
+                        }
+
+                        // Kembalikan jadwal ke keadaan siap diproses dan jangan tinggalkan status Finished.
+                        let scheduleToReset = allSchedules.find(m => String(m.id) === matchKey);
+                        if (!scheduleToReset) {
+                            const freshSchedules = await window.getFromFirestore('master_schedule', true).catch(() => []);
+                            scheduleToReset = freshSchedules.find(m => String(m.id) === matchKey);
+                        }
+                        if (scheduleToReset) {
+                            const resetPayload = { ...scheduleToReset, id: matchKey, status: 'Saved' };
+                            const resetResult = await window.upsertToFirestore('master_schedule', matchKey, resetPayload);
+                            if (!resetResult?.success) throw new Error('Gagal mengembalikan status jadwal di Firestore.');
+                            if (typeof window.syncToSheets === 'function') {
+                                await window.syncToSheets('master_schedule', resetPayload, 'update');
+                            }
+                        }
+
+                        // Hapus sumber baris Report (Screening Published) bila ditemukan.
+                        // Jika sudah tidak ada di Firestore, tetap lanjutkan: refresh paksa di
+                        // bawah akan menghapus baris usang dari tampilan berdasarkan data nyata.
+                        const screeningDelete = await window.deleteFromFirestore('master_screening', matchKey);
+                        if (!screeningDelete?.success) {
+                            throw new Error(screeningDelete?.message || 'Terjadi kesalahan saat menghapus data Screening.');
+                        }
+
+                        // Sinkronisasi aksi penghapusan ke Google Sheets jika dual-database digunakan.
+                        if (typeof window.syncToSheets === 'function') {
+                            await window.syncToSheets('master_report', { id: matchKey }, 'delete');
+                            await window.syncToSheets('master_screening', { id: matchKey }, 'delete');
+                            await window.syncToSheets('master_archive', { id: `ARC-${matchKey}`, matchId: matchKey }, 'delete');
+                        }
+
+                        await window.loadReportData(true);
+                        showCustomNotification('Berhasil Dihapus', `Proses penghapusan ${teamPair} selesai. Dokumen yang tidak ada dilewati dan daftar sudah disegarkan dari Firestore.`, 'success');
+                    } catch (error) {
+                        console.error('Gagal menghapus data Official Report:', error);
+                        showCustomNotification('Penghapusan Gagal', `Data belum dinyatakan terhapus. ${error.message || 'Terjadi kesalahan saat menghapus data.'}`, 'error');
+                    }
+                }
+            );
+        }
+
+        window.cancelBAPForm = function() {
+            currentActiveMatchId = null;
+            document.getElementById('bap-form-container').classList.add('hidden');
+            document.getElementById('bap-empty-state').classList.remove('hidden');
+            switchReportTab('official');
+        }
+
+        window.saveBAPForm = async function() {
+            if (!currentActiveMatchId) {
+                showCustomNotification("Peringatan", "Tidak ada pertandingan aktif yang sedang dicatat di form!", "warning");
+                return;
+            }
+
+            try {
+                const matchData = allSchedules.find(m => String(m.id) === String(currentActiveMatchId)) || {};
+                const screeningData = allScreenings.find(s => s.id === currentActiveMatchId || s.matchNo == matchData.matchNo) || {};
+
+                const h1Home = parseInt(document.getElementById('score-h1-home')?.value || 0);
+                const h1Away = parseInt(document.getElementById('score-h1-away')?.value || 0);
+                const h2Home = parseInt(document.getElementById('score-h2-home')?.value || 0);
+                const h2Away = parseInt(document.getElementById('score-h2-away')?.value || 0);
+                
+                const finalHome = h1Home + h2Home;
+                const finalAway = h1Away + h2Away;
+
+                const mvpRadio = document.querySelector('input[name="mvp_radio"]:checked');
+                const mvpPlayerId = mvpRadio ? mvpRadio.value : '';
+
+                const docNo = document.getElementById('form-doc-no')?.innerText || matchData.matchNo || '';
+                const homeJerseyVal = document.getElementById('display-jersey-home')?.innerText || '';
+                const awayJerseyVal = document.getElementById('display-jersey-away')?.innerText || '';
+                const refereeName = document.getElementById('form-referee-name')?.value || '';
+                const formattedDate = formatToIDDate(matchData.date);
+
+                let foulListArray = [];
+                document.querySelectorAll('.foul-home-h1, .foul-home-h2, .foul-away-h1, .foul-away-h2').forEach(cb => {
+                    if (cb.checked) {
+                        let cls = '';
+                        if (cb.classList.contains('foul-home-h1')) cls = 'foul-home-h1';
+                        else if (cb.classList.contains('foul-home-h2')) cls = 'foul-home-h2';
+                        else if (cb.classList.contains('foul-away-h1')) cls = 'foul-away-h1';
+                        else if (cb.classList.contains('foul-away-h2')) cls = 'foul-away-h2';
+                        foulListArray.push({ className: cls, val: cb.value });
+                    }
+                });
+
+                const foulsDataObj = {
+                    timeOut: {
+                        homeH1: document.getElementById('to-h1-home')?.checked || false,
+                        homeH2: document.getElementById('to-h2-home')?.checked || false,
+                        awayH1: document.getElementById('to-h1-away')?.checked || false,
+                        awayH2: document.getElementById('to-h2-away')?.checked || false
+                    },
+                    foulList: foulListArray
+                };
+
+                const allRows = document.querySelectorAll('#form-tbody-home-players tr, #form-tbody-away-players tr');
+                const currentDisciplineData = await window.getFromFirestore("master_discipline").catch(() => []);
+                const currentTopscoreData = await window.getFromFirestore("master_topscore").catch(() => []);
+                
+                let playerGoalsMap = {};
+                let playerCardsMap = {};
+
+                for (let row of allRows) {
+                    const pId = row.dataset.playerId;
+                    if (!pId) continue;
+
+                    const kk1 = row.querySelector('.kk1-box')?.checked || false;
+                    const kk2 = row.querySelector('.kk2-box')?.checked || false;
+                    const km = row.querySelector('.km-box')?.checked || false;
+                    
+                    playerCardsMap[pId] = { kk1, kk2, km };
+
+                    if (kk1 || kk2 || km) {
+                        let existing = currentDisciplineData.find(d => String(d.id) === String(pId)) || {};
+                        let yellowCount = parseInt(existing.yellowCardCount || 0);
+                        let redCount = parseInt(existing.redCardCount || 0);
+                        let isSuspended = false;
+                        let suspensionDuration = 0;
+
+                        if (kk1 && !kk2) {
+                            yellowCount += 1;
+                        }
+                        if (kk2) {
+                            yellowCount += 2; 
+                        }
+
+                        if (km && !kk2) {
+                            redCount += 1;
+                            isSuspended = true;
+                            suspensionDuration = 2;
+                        } else if (km && kk2) {
+                            redCount += 1;
+                            isSuspended = true;
+                            suspensionDuration = 1;
+                        } else if (yellowCount >= 2) {
+                            isSuspended = true;
+                            suspensionDuration = 1; 
+                        }
+
+                        const disciplinePayload = {
+                            id: String(pId),
+                            playerId: String(pId),
+                            name: String(row.dataset.playerName || pId),
+                            teamId: String(row.dataset.teamId || ''),
+                            nameTeam: String(row.dataset.teamName || ''),
+                            category: matchData.category || 'Putra',
+                            yellowCardCount: parseInt(yellowCount, 10),
+                            redCardCount: parseInt(redCount, 10), 
+                            isSuspended: Boolean(isSuspended),
+                            suspensionDuration: parseInt(suspensionDuration, 10)
+                        };
+
+                        if (typeof window.upsertToFirestore === 'function') {
+                            await window.upsertToFirestore("master_discipline", disciplinePayload.id, disciplinePayload);
+                        }
+                        if (typeof window.syncToSheets === 'function') {
+                            await window.syncToSheets("master_discipline", disciplinePayload, "update");
+                        }
+                    }
+
+                    const goalInput = row.querySelector('.player-goal');
+                    const matchGoals = parseInt(goalInput?.value || 0, 10);
+
+                    if (matchGoals > 0) {
+                        playerGoalsMap[pId] = matchGoals;
+                        
+                        let existingTopscore = currentTopscoreData.find(ts => String(ts.id) === String(pId)) || {};
+                        let currentTotalGoals = parseInt(existingTopscore.goal || 0, 10);
+                        let newTotalGoals = currentTotalGoals + matchGoals;
+
+                        const topscorePayload = {
+                            id: String(pId),
+                            teamId: String(row.dataset.teamId || ''),
+                            nameTeam: String(row.dataset.teamName || ''),
+                            name: String(row.dataset.playerName || pId),
+                            category: matchData.category || 'Putra',
+                            goal: newTotalGoals
+                        };
+
+                        if (typeof window.upsertToFirestore === 'function') {
+                            await window.upsertToFirestore("master_topscore", topscorePayload.id, topscorePayload);
+                        }
+                        if (typeof window.syncToSheets === 'function') {
+                            await window.syncToSheets("master_topscore", topscorePayload, "update");
+                        }
+                    }
+                }
+
+                const rawScreeningObj = screeningData.screeningData ? (typeof screeningData.screeningData === 'string' ? JSON.parse(screeningData.screeningData) : screeningData.screeningData) : screeningData;
+
+                const reportPayload = {
+                    id: currentActiveMatchId,
+                    matchNo: matchData.matchNo || '',
+                    category: matchData.category || '',
+                    week: matchData.week || '1',
+                    date: formattedDate,
+                    time: document.getElementById('form-val-time')?.value || matchData.time || '',
+                    venueId: matchData.venueId || '',
+                    homeTeamId: matchData.homeTeamId || '',
+                    nameHomeTeam: matchData.nameHomeTeam || '',
+                    awayTeamId: matchData.awayTeamId || '',
+                    nameAwayTeam: matchData.nameAwayTeam || '',
+                    status: "Published",
+                    docNo: docNo,
+                    homeJersey: homeJerseyVal,
+                    awayJersey: awayJerseyVal,
+                    screeningData: JSON.stringify(rawScreeningObj),
+                    verifiedBy: refereeName,
+                    scoreH1Home: h1Home,
+                    scoreH1Away: h1Away,
+                    scoreH2Home: h2Home,
+                    scoreH2Away: h2Away,
+                    scoreFinalHome: finalHome,
+                    scoreFinalAway: finalAway,
+                    foulsData: JSON.stringify(foulsDataObj),
+                    mvpPlayerId: mvpPlayerId,
+                    playerGoals: playerGoalsMap,
+                    playerCards: playerCardsMap
+                };
+
+                if (typeof window.upsertToFirestore === 'function') {
+                    await window.upsertToFirestore("master_report", currentActiveMatchId, reportPayload);
+                } else if (typeof window.saveToFirestore === 'function') {
+                    await window.saveToFirestore("master_report", reportPayload, currentActiveMatchId);
+                }
+
+                if (typeof window.syncToSheets === 'function') {
+                    await window.syncToSheets("master_report", reportPayload, "insert");
+                }
+
+                const archivePayload = {
+                    id: `ARC-${currentActiveMatchId}`,
+                    matchId: currentActiveMatchId,
+                    docNo: `DSP/AFKAB/2026/P.${docNo}`,
+                    date: formattedDate,
+                    matchInfo: `${matchData.nameHomeTeam || 'HOME'} vs ${matchData.nameAwayTeam || 'AWAY'}`,
+                    finalScore: `${finalHome} - ${finalAway}`,
+                    status: "Selesai / Published"
+                };
+
+                if (typeof window.upsertToFirestore === 'function') {
+                    await window.upsertToFirestore("master_archive", archivePayload.id, archivePayload);
+                }
+                if (typeof window.syncToSheets === 'function') {
+                    await window.syncToSheets("master_archive", archivePayload, "insert");
+                }
+
+                matchData.status = 'Finished';
+                if (typeof window.upsertToFirestore === 'function') {
+                    await window.upsertToFirestore("master_schedule", currentActiveMatchId, matchData);
+                }
+                if (typeof window.syncToSheets === 'function') {
+                    await window.syncToSheets("master_schedule", matchData, "update");
+                }
+
+                showCustomNotification(
+                    "Berhasil Dipublikasikan & Diarsipkan", 
+                    "Dokumen DSP/BAP berhasil disimpan dan terintegrasi secara otomatis.", 
+                    "success"
+                );
+
+                setTimeout(() => {
+                    cancelBAPForm();
+                    loadReportData(); 
+                }, 1500);
+
+            } catch (error) {
+                console.error("Gagal menyimpan BAP:", error);
+                showCustomNotification("Gagal Menyimpan", "Terjadi kesalahan saat menyimpan ke database: " + error.message, "error");
+            }
+        }
+
+        setTimeout(loadReportData, 800);
+    </script>
+
+    <script>
+        // Role context lock: logo navigation always returns to the dashboard for the active role.
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const role = params.get('role') || 'coordinator';
+            const dashboards = {
+                coordinator: 'coordinator.html?role=coordinator',
+                operations: 'operations.html?role=operations',
+                commissioner: 'commissioner.html?role=commissioner'
+            };
+            const brandLink = document.getElementById('navbar-brand-link');
+            if (brandLink && dashboards[role]) brandLink.setAttribute('href', dashboards[role]);
+        });
+    </script>
+</body>
+</html>

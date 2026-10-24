@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Commissioner - AFKAB Kediri</title>
+    
+    <!-- FAVICON (Ganti path/nama file di bawah ini sesuai dengan lokasi file .webp Anda) -->
+    <link rel="icon" type="image/webp" href="01. Logo Web/002. Logo Afkab.webp">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; overflow: hidden; }
+        .sporty-font { font-family: 'Syne', sans-serif; }
+        
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(9, 13, 22, 0.85) 0%, rgba(17, 30, 56, 0.85) 50%, rgba(3, 46, 34, 0.85) 100%), 
+                        url('01. Logo Web/001. Background.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 font-sans text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950">
+
+    <div class="h-screen w-screen flex flex-col justify-between hero-bg relative overflow-hidden">
+        
+        <!-- Navbar Atas -->
+        <header class="w-full px-6 lg:px-10 py-3 flex items-center justify-between z-20 border-b border-white/10 backdrop-blur-md bg-slate-950/60 flex-shrink-0">
+            <!-- Bagian Kiri: Logo & Judul -->
+            <a href="commissioner.html?role=commissioner" class="flex items-center space-x-3 transition-all duration-300 ease-in-out hover:opacity-80 transform hover:scale-[1.02] group" title="Kembali ke Beranda / Logout">
+                <div class="w-10 h-10 flex items-center justify-center transition-transform duration-300 group-hover:rotate-6">
+                    <img src="01. Logo Web/002. Logo Afkab.webp" alt="Logo Afkab Kediri" class="w-full h-full object-contain">
+                </div>
+                <div>
+                    <span id="navbar-brand-link" class="sporty-font text-base font-extrabold tracking-wider text-white group-hover:text-amber-400 transition-colors duration-300">AFKAB KEDIRI</span>
+                    <span id="navbar-subtitle" class="block text-[9px] text-amber-400 font-bold uppercase tracking-widest">Match Commissioner</span>
+                </div>
+            </a>
+
+            <!-- Bagian Tengah: Menu Navigasi Match Commissioner -->
+            <nav id="navbar-menu-container" class="hidden xl:flex items-center space-x-1 bg-slate-900/40 p-1.5 rounded-2xl border border-white/10 backdrop-blur-md">
+                <a href="commissioner.html?role=commissioner" class="px-3.5 py-1.5 rounded-xl bg-amber-600 text-white font-bold text-xs uppercase tracking-wider transition-all duration-300 shadow-md">Dashboard</a>
+                
+                <!-- 1. Master Data (Read-Only) -->
+                <a href="master_data.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all duration-300 flex items-center space-x-1.5">
+                    <span>Master Data</span>
+                    <span class="text-[9px] font-bold bg-amber-600/40 text-amber-300 px-1.5 py-0.5 rounded">RO</span>
+                </a>
+
+                <!-- 2. Schedule (Read-Only) -->
+                <a href="schedule.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all duration-300 flex items-center space-x-1.5">
+                    <span>Schedule</span>
+                    <span class="text-[9px] font-bold bg-amber-600/40 text-amber-300 px-1.5 py-0.5 rounded">RO</span>
+                </a>
+
+                <!-- 3. Official Report (Full Access) -->
+                <a href="report.html?role=commissioner" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all duration-300">Report</a>
+
+                <!-- 4. Top Scorer (Read-Only) -->
+                <a href="topscorer.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all duration-300 flex items-center space-x-1.5">
+                    <span>Top Scorer</span>
+                    <span class="text-[9px] font-bold bg-amber-600/40 text-amber-300 px-1.5 py-0.5 rounded">RO</span>
+                </a>
+
+                <!-- 5. Discipline (Read-Only) -->
+                <a href="discipline.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all duration-300 flex items-center space-x-1.5">
+                    <span>Discipline</span>
+                    <span class="text-[9px] font-bold bg-amber-600/40 text-amber-300 px-1.5 py-0.5 rounded">RO</span>
+                </a>
+            </nav>
+
+            <!-- Bagian Kanan: Widget Tanggal & Jam Real-Time -->
+            <div class="flex items-center space-x-3">
+                <div class="hidden sm:flex items-center space-x-3 bg-slate-900/60 border border-white/10 px-4 py-1.5 rounded-full backdrop-blur-md text-xs text-slate-300 shadow-lg">
+                    <span id="realtime-date" class="font-medium text-slate-200">--</span>
+                    <span class="text-white/30">|</span>
+                    <span id="realtime-clock" class="font-bold text-white tracking-wider">--:--:--</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Konten Utama -->
+        <main class="flex-1 flex items-center justify-center px-8 lg:px-12 py-6 z-10 overflow-hidden">
+            <div class="w-full max-w-5xl space-y-6">
+                <div class="bg-slate-900/50 border border-white/10 rounded-3xl p-8 backdrop-blur-xl shadow-2xl transition-all duration-500 hover:border-amber-500/50">
+                    <span class="text-amber-400 font-bold text-xs uppercase tracking-widest block mb-1">Match Commissioner Panel</span>
+                    <h2 class="sporty-font text-2xl sm:text-3xl font-extrabold text-white tracking-wide">Selamat Datang di Panel Kendali Utama</h2>
+                    <p class="text-slate-300 text-xs sm:text-sm mt-2 font-light">Panel pengawas pertandingan aktif. Akses penuh pada Official Report, dengan menu lainnya disesuaikan.</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer Bawah -->
+        <footer class="w-full px-8 lg:px-12 py-3 border-t border-white/10 backdrop-blur-md bg-slate-950/50 flex items-center justify-center text-[11px] text-slate-400 z-20 flex-shrink-0">
+            <div>
+                <p class="font-light">Asosiasi Futsal Kabupaten Kediri © 2026 • All Rights Reserved</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Script Jam Real-Time -->
+    <script>
+        function updateRealTimeClock() {
+            const now = new Date();
+            const optionsDate = { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' };
+            const dateString = now.toLocaleDateString('id-ID', optionsDate);
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds} WIB`;
+            
+            const dateEl = document.getElementById('realtime-date');
+            const clockEl = document.getElementById('realtime-clock');
+            if (dateEl) dateEl.innerText = dateString;
+            if (clockEl) clockEl.innerText = timeString;
+        }
+        setInterval(updateRealTimeClock, 1000);
+        updateRealTimeClock();
+    </script>
+
+    <!-- Script Konfigurasi & Core Engine -->
+    <script src="config.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>

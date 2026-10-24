@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Schedule - AFKAB Kediri</title>
+    
+    <!-- FAVICON (Ganti path/nama file di bawah ini sesuai dengan lokasi file .webp Anda) -->
+    <link rel="icon" type="image/webp" href="01. Logo Web/002. Logo Afkab.webp">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; overflow-x: hidden; }
+        .sporty-font { font-family: 'Syne', sans-serif; }
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(9, 13, 22, 0.90) 0%, rgba(17, 30, 56, 0.90) 50%, rgba(3, 46, 34, 0.90) 100%), url('01. Logo Web/001. Background.webp');
+            background-size: cover; background-position: center; background-attachment: fixed;
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.5); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.8); }
+        .modal-active { display: flex !important; }
+        
+        /* Custom Smooth Dropdown Animation */
+        .custom-dropdown-list {
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+            transform-origin: top;
+        }
+        .dropdown-hidden {
+            opacity: 0;
+            transform: scaleY(0.95);
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .dropdown-visible {
+            opacity: 1;
+            transform: scaleY(1);
+            visibility: visible;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 font-sans text-slate-100 antialiased selection:bg-blue-500 selection:text-slate-950 h-screen hero-bg flex flex-col overflow-hidden">
+
+    <!-- Navbar Atas -->
+    <header class="w-full px-6 lg:px-10 py-3 flex items-center justify-between z-20 border-b border-white/10 backdrop-blur-md bg-slate-950/60 sticky top-0 flex-shrink-0">
+        <a href="index.html" id="navbar-brand-link" class="flex items-center space-x-3 transition-all duration-300 hover:opacity-80 group">
+            <div class="w-10 h-10 flex items-center justify-center transition-transform duration-300 group-hover:rotate-6">
+                <img src="01. Logo Web/002. Logo Afkab.webp" alt="Logo Afkab Kediri" class="w-full h-full object-contain">
+            </div>
+            <div>
+                <span class="sporty-font text-base font-extrabold tracking-wider text-white group-hover:text-blue-400 transition-colors">AFKAB KEDIRI</span>
+                <span id="navbar-subtitle" class="block text-[9px] text-blue-400 font-bold uppercase tracking-widest">Match Schedule Panel</span>
+            </div>
+        </a>
+
+        <!-- Menu Navigasi -->
+        <nav id="navbar-menu-container" class="hidden xl:flex items-center space-x-1 bg-slate-900/40 p-1.5 rounded-2xl border border-white/10 backdrop-blur-md">
+            <a href="coordinator.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Dashboard</a>
+            <a href="master_data.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Master Data</a>
+            <a href="schedule.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl bg-blue-600 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md">Schedule</a>
+            <a href="screening.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Screening</a>
+            <a href="report.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Report</a>
+            <a href="topscorer.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Top Scorer</a>
+            <a href="discipline.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Discipline</a>
+            <a href="archive.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Archive</a>
+        </nav>
+
+        <!-- Widget Real-Time -->
+        <div class="hidden lg:flex items-center space-x-3 bg-slate-900/60 border border-white/10 px-4 py-1.5 rounded-full backdrop-blur-md text-xs text-slate-300 font-semibold shadow-inner">
+            <span id="current-date">--</span>
+            <span class="text-slate-500">|</span>
+            <span id="current-time" class="font-mono font-bold text-white">--:--:--</span>
+        </div>
+    </header>
+
+    <!-- Konten Utama -->
+    <main class="flex-1 w-full px-3 lg:px-6 py-4 flex flex-col space-y-4 relative overflow-hidden min-h-0">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-white/10 pb-3 flex-shrink-0">
+            <div>
+                <h1 class="sporty-font text-2xl lg:text-3xl font-extrabold text-white tracking-wide">Jadwal Pertandingan</h1>
+                <p class="text-slate-400 text-xs lg:text-sm mt-0.5">Manajemen jadwal kompetisi, status laga, dan penetapan venue.</p>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-1.5 p-1">
+                <button onclick="openScheduleModal()" class="bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-500/30 px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center">
+                    <i class="fas fa-plus mr-1.5"></i> Tambah Jadwal
+                </button>
+                <button onclick="handleRefresh()" class="bg-slate-800/50 hover:bg-blue-600/30 text-blue-400 px-2.5 py-1.5 rounded-lg border border-blue-500/30 transition-all">
+                    <i class="fas fa-sync-alt text-xs" id="refresh-icon"></i>
+                </button>
+                <!-- Kolom Search Interaktif -->
+                <div class="relative ml-auto flex-1 sm:flex-none">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                        <i class="fas fa-search text-xs"></i>
+                    </span>
+                    <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Cari jadwal/tim..." class="w-full sm:w-56 bg-slate-900/80 border border-white/10 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all">
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB NAVIGASI PEKAN (Semua Pekan & Pekan 1 - 10) -->
+        <div class="w-full overflow-x-auto pb-2 pt-1 flex-shrink-0">
+            <div id="week-tabs-container" class="flex items-center space-x-2 min-w-max">
+                <button onclick="filterByWeek('Semua')" class="week-tab px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all bg-blue-600 text-white shadow-md" data-week="Semua">
+                    Semua Pekan
+                </button>
+                <button onclick="filterByWeek('Pekan-1')" class="week-tab px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-white/10" data-week="Pekan-1">Pekan 1</button>
+                <button onclick="filterByWeek('Pekan-2')" class="week-tab px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-white/10" data-week="Pekan-2">Pekan 2</button>
+                <button onclick="filterByWeek('Pekan-3')" class="week-tab px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-white/10" data-week="Pekan-3">Pekan 3</button>
+                <button onclick="filterByWeek('Pekan-4')" class="week-tab px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-white/10" data-week="Pekan-4">Pekan 4</button>
+                <button onclick="filterByWeek('Pekan-5')" class="week-tab px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-white/10" data-week="Pekan-5">Pekan 5</button>
+                <button onclick="filterByWeek('Pekan-6')" class="week-tab px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-white/10" data-week="Pekan-6">Pekan 6</button>
+                <button onclick="filterByWeek('Pekan-7')" class="week-tab px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-white/10" data-week="Pekan-7">Pekan 7</button>
+                <button onclick="filterByWeek('Pekan-8')" class="week-tab px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-white/10" data-week="Pekan-8">Pekan 8</button>
+                <button onclick="filterByWeek('Pekan-9')" class="week-tab px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-white/10" data-week="Pekan-9">Pekan 9</button>
+                <button onclick="filterByWeek('Pekan-10')" class="week-tab px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-white/10" data-week="Pekan-10">Pekan 10</button>
+            </div>
+        </div>
+
+        <!-- Tabel Data Jadwal -->
+        <div class="bg-slate-900/60 border border-white/10 rounded-3xl p-4 lg:p-6 backdrop-blur-xl shadow-2xl flex-1 flex flex-col min-h-0 overflow-hidden">
+            <div class="flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/40 relative min-h-0">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-900/90 text-slate-300 uppercase text-[10px] tracking-wider sticky top-0 z-10 border-b border-white/10 shadow-md">
+                        <tr>
+                            <th class="py-3 px-4 font-bold text-center w-16">Match</th>
+                            <th class="py-3 px-4 font-bold">Waktu & Pekan</th>
+                            <th class="py-3 px-4 font-bold">Kategori & Venue</th>
+                            <th class="py-3 px-4 font-bold text-right w-1/4">Home</th>
+                            <th class="py-3 px-4 font-bold text-center w-12">VS</th>
+                            <th class="py-3 px-4 font-bold text-left w-1/4">Away</th>
+                            <th class="py-3 px-4 font-bold text-center">Status</th>
+                            <th class="py-3 px-4 font-bold text-center w-24">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-cards-container" class="divide-y divide-white/5 text-xs text-slate-200">
+                        <tr>
+                            <td colspan="8" class="p-12 text-center text-slate-500">
+                                <i class="fas fa-circle-notch fa-spin text-blue-500 text-2xl mb-2"></i>
+                                <p>Memuat jadwal dari database...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="pt-3 flex justify-between items-center text-xs text-slate-500 border-t border-white/5 mt-3 flex-shrink-0">
+                <span>Menampilkan <strong class="text-slate-300" id="data-count">0</strong> jadwal pertandingan.</span>
+                <span class="italic">Disinkronisasi secara real-time dengan Firebase.</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODAL POPUP: Form Schedule -->
+    <div id="modal-add-schedule" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4 overflow-y-auto pt-10 pb-10">
+        <div class="bg-slate-900 border border-white/10 rounded-3xl p-6 w-full max-w-4xl shadow-2xl relative transform scale-95 transition-transform duration-300 my-auto" id="modal-schedule-content">
+            <button onclick="closeScheduleModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white bg-slate-800 hover:bg-rose-500 w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="flex items-center space-x-3 mb-6">
+                <h3 id="modal-title-text" class="sporty-font text-xl font-bold text-white">Tambah Jadwal Baru</h3>
+            </div>
+
+            <form id="form-schedule" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ID Jadwal (Auto)</label>
+                        <input type="text" id="s_id" required readonly placeholder="P1-001" class="w-full bg-slate-950/40 border border-white/10 rounded-xl px-3 py-2 text-sm text-blue-400 font-mono font-bold cursor-not-allowed focus:outline-none">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Nomor Match (Auto)</label>
+                        <input type="number" id="s_matchNo" required readonly placeholder="1" class="w-full bg-slate-950/40 border border-white/10 rounded-xl px-3 py-2 text-sm text-blue-400 font-mono font-bold cursor-not-allowed focus:outline-none">
+                    </div>
+                    
+                    <!-- CUSTOM DROPDOWN: PEKAN (WEEK) -->
+                    <div class="space-y-1 relative">
+                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Pekan (Week)</label>
+                        <input type="hidden" id="s_week" value="Pekan-1">
+                        <div onclick="toggleCustomDropdown('dropdown-week', event)" class="w-full bg-slate-950/80 border border-white/10 hover:border-blue-500/50 rounded-xl px-3.5 py-2.5 text-sm text-white font-medium cursor-pointer flex items-center justify-between transition-all shadow-md">
+                            <span id="selected-s_week">Pekan-1</span>
+                            <i class="fas fa-chevron-down text-blue-400 text-xs transition-transform duration-300" id="icon-dropdown-week"></i>
+                        </div>
+                        <div id="dropdown-week" class="custom-dropdown-list dropdown-hidden absolute left-0 right-0 top-full mt-1.5 bg-slate-900 border border-white/15 rounded-2xl shadow-2xl z-30 max-h-52 overflow-y-auto p-1.5 backdrop-blur-xl">
+                            <div onclick="selectCustomOption('s_week', 'Pekan-1', 'Pekan-1', 'dropdown-week')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">Pekan-1</div>
+                            <div onclick="selectCustomOption('s_week', 'Pekan-2', 'Pekan-2', 'dropdown-week')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">Pekan-2</div>
+                            <div onclick="selectCustomOption('s_week', 'Pekan-3', 'Pekan-3', 'dropdown-week')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">Pekan-3</div>
+                            <div onclick="selectCustomOption('s_week', 'Pekan-4', 'Pekan-4', 'dropdown-week')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">Pekan-4</div>
+                            <div onclick="selectCustomOption('s_week', 'Pekan-5', 'Pekan-5', 'dropdown-week')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">Pekan-5</div>
+                            <div onclick="selectCustomOption('s_week', 'Pekan-6', 'Pekan-6', 'dropdown-week')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">Pekan-6</div>
+                            <div onclick="selectCustomOption('s_week', 'Pekan-7', 'Pekan-7', 'dropdown-week')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">Pekan-7</div>
+                            <div onclick="selectCustomOption('s_week', 'Pekan-8', 'Pekan-8', 'dropdown-week')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">Pekan-8</div>
+                            <div onclick="selectCustomOption('s_week', 'Pekan-9', 'Pekan-9', 'dropdown-week')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">Pekan-9</div>
+                            <div onclick="selectCustomOption('s_week', 'Pekan-10', 'Pekan-10', 'dropdown-week')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">Pekan-10</div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">No Dokumen Referensi (Auto)</label>
+                        <input type="text" id="s_docNo" required readonly placeholder="DSP/AFKAB/2026/P1-001" class="w-full bg-slate-950/40 border border-white/10 rounded-xl px-3 py-2 text-sm text-blue-400 font-mono font-bold cursor-not-allowed focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tanggal</label>
+                        <input type="date" id="s_date" required class="w-full bg-slate-950/50 border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500 transition-all [color-scheme:dark]">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Waktu (Jam)</label>
+                        <input type="time" id="s_time" required class="w-full bg-slate-950/50 border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500 transition-all [color-scheme:dark]">
+                    </div>
+                    <!-- Hidden input untuk menampung status -->
+                    <input type="hidden" id="s_status" value="Saved">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- CUSTOM DROPDOWN: KATEGORI LAGA -->
+                    <div class="space-y-1 relative">
+                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Kategori Laga</label>
+                        <input type="hidden" id="s_category" value="SMA/SMK/MA - Putra">
+                        <div onclick="toggleCustomDropdown('dropdown-category', event)" class="w-full bg-slate-950/80 border border-white/10 hover:border-blue-500/50 rounded-xl px-3.5 py-2.5 text-sm text-white font-medium cursor-pointer flex items-center justify-between transition-all shadow-md">
+                            <span id="selected-s_category">SMA/SMK/MA - Putra</span>
+                            <i class="fas fa-chevron-down text-blue-400 text-xs transition-transform duration-300" id="icon-dropdown-category"></i>
+                        </div>
+                        <div id="dropdown-category" class="custom-dropdown-list dropdown-hidden absolute left-0 right-0 top-full mt-1.5 bg-slate-900 border border-white/15 rounded-2xl shadow-2xl z-30 p-1.5 backdrop-blur-xl">
+                            <div onclick="selectCustomOption('s_category', 'SMA/SMK/MA - Putra', 'SMA/SMK/MA - Putra', 'dropdown-category')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">SMA/SMK/MA - Putra</div>
+                            <div onclick="selectCustomOption('s_category', 'SMA/SMK/MA - Putri', 'SMA/SMK/MA - Putri', 'dropdown-category')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">SMA/SMK/MA - Putri</div>
+                            <div onclick="selectCustomOption('s_category', 'Club - Putra', 'Club - Putra', 'dropdown-category')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">Club - Putra</div>
+                            <div onclick="selectCustomOption('s_category', 'Club - Putri', 'Club - Putri', 'dropdown-category')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">Club - Putri</div>
+                        </div>
+                    </div>
+
+                    <!-- CUSTOM DROPDOWN: PILIH VENUE -->
+                    <div class="space-y-1 relative">
+                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Pilih Venue</label>
+                        <input type="hidden" id="s_venueId" value="">
+                        <div onclick="toggleCustomDropdown('dropdown-venue', event)" class="w-full bg-slate-950/80 border border-white/10 hover:border-blue-500/50 rounded-xl px-3.5 py-2.5 text-sm text-white font-medium cursor-pointer flex items-center justify-between transition-all shadow-md">
+                            <span id="selected-s_venueId" class="text-slate-400">-- Pilih Venue --</span>
+                            <i class="fas fa-chevron-down text-blue-400 text-xs transition-transform duration-300" id="icon-dropdown-venue"></i>
+                        </div>
+                        <div id="dropdown-venue" class="custom-dropdown-list dropdown-hidden absolute left-0 right-0 top-full mt-1.5 bg-slate-900 border border-white/15 rounded-2xl shadow-2xl z-30 max-h-48 overflow-y-auto p-1.5 backdrop-blur-xl">
+                            <div id="venue-options-container" class="space-y-1">
+                                <div class="px-3 py-2 text-xs text-slate-500 italic">Memuat Venue...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                    <!-- Home Team -->
+                    <div class="bg-blue-900/10 border border-blue-500/20 p-4 rounded-2xl space-y-3 shadow-lg">
+                        <h4 class="text-xs font-bold text-blue-400 border-b border-blue-500/20 pb-2">HOME TEAM</h4>
+                        <!-- CUSTOM DROPDOWN: PILIH TIM HOME -->
+                        <div class="space-y-1 relative">
+                            <label class="text-[10px] text-slate-400 font-bold uppercase">Pilih Tim Home</label>
+                            <input type="hidden" id="s_homeTeamId" value="">
+                            <div onclick="toggleCustomDropdown('dropdown-hometeam', event)" class="w-full bg-slate-950/80 border border-white/10 hover:border-blue-500/50 rounded-xl px-3.5 py-2.5 text-sm text-white font-medium cursor-pointer flex items-center justify-between transition-all shadow-md">
+                                <span id="selected-s_homeTeamId" class="text-slate-400 truncate pr-2">-- Pilih Tim Home --</span>
+                                <i class="fas fa-chevron-down text-blue-400 text-xs transition-transform duration-300 flex-shrink-0" id="icon-dropdown-hometeam"></i>
+                            </div>
+                            <div id="dropdown-hometeam" class="custom-dropdown-list dropdown-hidden absolute left-0 right-0 top-full mt-1.5 bg-slate-900 border border-white/15 rounded-2xl shadow-2xl z-30 max-h-48 overflow-y-auto p-1.5 backdrop-blur-xl">
+                                <div id="hometeam-options-container" class="space-y-1">
+                                    <div class="px-3 py-2 text-xs text-slate-500 italic">Memuat Tim...</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-slate-400 font-bold uppercase">Nama Tim Home</label>
+                            <input type="text" id="s_nameHomeTeam" readonly class="w-full bg-slate-950/30 border border-white/5 rounded-xl px-3 py-2 text-sm text-slate-400 cursor-not-allowed">
+                        </div>
+                    </div>
+
+                    <!-- Away Team -->
+                    <div class="bg-rose-900/10 border border-rose-500/20 p-4 rounded-2xl space-y-3 shadow-lg">
+                        <h4 class="text-xs font-bold text-rose-400 border-b border-rose-500/20 pb-2">AWAY TEAM</h4>
+                        <!-- CUSTOM DROPDOWN: PILIH TIM AWAY -->
+                        <div class="space-y-1 relative">
+                            <label class="text-[10px] text-slate-400 font-bold uppercase">Pilih Tim Away</label>
+                            <input type="hidden" id="s_awayTeamId" value="">
+                            <div onclick="toggleCustomDropdown('dropdown-awayteam', event)" class="w-full bg-slate-950/80 border border-white/10 hover:border-rose-500/50 rounded-xl px-3.5 py-2.5 text-sm text-white font-medium cursor-pointer flex items-center justify-between transition-all shadow-md">
+                                <span id="selected-s_awayTeamId" class="text-slate-400 truncate pr-2">-- Pilih Tim Away --</span>
+                                <i class="fas fa-chevron-down text-rose-400 text-xs transition-transform duration-300 flex-shrink-0" id="icon-dropdown-awayteam"></i>
+                            </div>
+                            <div id="dropdown-awayteam" class="custom-dropdown-list dropdown-hidden absolute left-0 right-0 top-full mt-1.5 bg-slate-900 border border-white/15 rounded-2xl shadow-2xl z-30 max-h-48 overflow-y-auto p-1.5 backdrop-blur-xl">
+                                <div id="awayteam-options-container" class="space-y-1">
+                                    <div class="px-3 py-2 text-xs text-slate-500 italic">Memuat Tim...</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-slate-400 font-bold uppercase">Nama Tim Away</label>
+                            <input type="text" id="s_nameAwayTeam" readonly class="w-full bg-slate-950/30 border border-white/5 rounded-xl px-3 py-2 text-sm text-slate-400 cursor-not-allowed">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-white/10 mt-4 flex items-center justify-between">
+                    <div id="modal-status-message" class="text-sm font-semibold flex-1 mr-4"></div>
+                    <button type="submit" id="btn-submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg transition-all flex items-center space-x-2">
+                        <i class="fas fa-save"></i>
+                        <span>Simpan Jadwal</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL POPUP NOTIFIKASI KUSTOM / INFO -->
+    <div id="modal-custom-alert" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4">
+        <div class="bg-slate-900 border border-white/10 rounded-3xl p-6 w-full max-w-sm shadow-2xl relative transform scale-95 transition-all duration-300 text-center" id="alert-modal-content">
+            <div id="alert-icon-container" class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-4 shadow-inner">
+                <i id="alert-icon" class="fas fa-info-circle"></i>
+            </div>
+            <h3 id="alert-title" class="sporty-font text-xl font-bold text-white mb-2">Informasi</h3>
+            <p id="alert-message" class="text-slate-300 text-sm mb-6 leading-relaxed">Pesan notifikasi.</p>
+            <button onclick="closeCustomAlert()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all">Mengerti / OK</button>
+        </div>
+    </div>
+
+    <!-- MODAL POPUP KONFIRMASI HAPUS KUSTOM -->
+    <div id="modal-custom-confirm" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4">
+        <div class="bg-slate-900 border border-white/10 rounded-3xl p-6 w-full max-w-md shadow-2xl relative transform scale-95 transition-all duration-300 text-center" id="confirm-modal-content">
+            <div class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-4 shadow-inner bg-rose-500/20 text-rose-400">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 id="confirm-title" class="sporty-font text-xl font-bold text-white mb-2">Konfirmasi Hapus</h3>
+            <p id="confirm-message" class="text-slate-300 text-sm mb-6 leading-relaxed">Apakah Anda yakin ingin menghapus data ini?</p>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="closeCustomConfirm(false)" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold py-3 px-3 rounded-xl border border-white/10 transition-all">Batal</button>
+                <button id="btn-confirm-yes" class="bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold py-3 px-3 rounded-xl shadow-lg transition-all">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Kustom Jam Real-Time & Role Operations Handler -->
+    <script>
+        // Skrip Pendeteksi Role Operations / Commissioner Dinamis
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const role = urlParams.get('role');
+            const isReadonly = role === 'operations' || role === 'commissioner' || urlParams.get('readonly') === 'true';
+
+            if (isReadonly) {
+                if (role === 'commissioner') {
+                    const brandSubtitle = document.getElementById('navbar-subtitle');
+                    if (brandSubtitle) brandSubtitle.innerText = "Match Commissioner (Read-Only)";
+                    const brandLink = document.getElementById('navbar-brand-link');
+                    if (brandLink) brandLink.setAttribute('href', 'commissioner.html');
+
+                    // Sembunyikan Tombol Tambah Jadwal
+                    const btnAdd = document.querySelector('button[onclick="openScheduleModal()"]');
+                    if (btnAdd) btnAdd.style.display = 'none';
+
+                    const navContainer = document.getElementById('navbar-menu-container');
+                    if (navContainer) {
+                        navContainer.innerHTML = `
+                            <a href="commissioner.html" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Dashboard</a>
+                            <a href="master_data.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Master Data (RO)</a>
+                            <a href="schedule.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl bg-amber-600 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md">Schedule (RO)</a>
+                            <a href="report.html?role=commissioner" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Official Report</a>
+                            <a href="topscorer.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Top Scorer (RO)</a>
+                            <a href="discipline.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Discipline (RO)</a>
+                        `;
+                    }
+                } else if (role === 'operations') {
+                    const brandSubtitle = document.getElementById('navbar-subtitle');
+                    if (brandSubtitle) brandSubtitle.innerText = "Match Operations Panel";
+                    const brandLink = document.getElementById('navbar-brand-link');
+                    if (brandLink) brandLink.setAttribute('href', 'operations.html');
+
+                    const navContainer = document.getElementById('navbar-menu-container');
+                    if (navContainer) {
+                        const currentPage = window.location.pathname.split('/').pop();
+                        navContainer.innerHTML = `
+                            <a href="operations.html" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-emerald-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Dashboard</a>
+                            <a href="master_data.html?role=operations&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-emerald-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Master Data (RO)</a>
+                            <a href="schedule.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('schedule') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Schedule</a>
+                            <a href="screening.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('screening') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Screening</a>
+                            <a href="topscorer.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('topscorer') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Top Scorer</a>
+                            <a href="discipline.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('discipline') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Discipline</a>
+                            <a href="archive.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('archive') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Archive</a>
+                        `;
+                    }
+                }
+            }
+        });
+
+        function updateRealTimeClock() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+            const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} WIB`;
+            document.getElementById('current-date').innerText = dateStr;
+            document.getElementById('current-time').innerText = timeStr;
+        }
+        setInterval(updateRealTimeClock, 1000);
+        updateRealTimeClock();
+
+        // LOGIKA INTERAKTIF CUSTOM DROPDOWN & ANIMASI SMOOTH
+        window.toggleCustomDropdown = function(dropdownId, event) {
+            event.stopPropagation();
+            document.querySelectorAll('.custom-dropdown-list').forEach(el => {
+                if(el.id !== dropdownId) {
+                    el.classList.remove('dropdown-visible');
+                    el.classList.add('dropdown-hidden');
+                    const otherIcon = document.getElementById('icon-' + el.id);
+                    if(otherIcon) otherIcon.style.transform = 'rotate(0deg)';
+                }
+            });
+
+            const target = document.getElementById(dropdownId);
+            const icon = document.getElementById('icon-' + dropdownId);
+            
+            if (target.classList.contains('dropdown-hidden')) {
+                target.classList.remove('dropdown-hidden');
+                target.classList.add('dropdown-visible');
+                if(icon) icon.style.transform = 'rotate(180deg)';
+            } else {
+                target.classList.remove('dropdown-visible');
+                target.classList.add('dropdown-hidden');
+                if(icon) icon.style.transform = 'rotate(0deg)';
+            }
+        };
+
+        window.selectCustomOption = function(hiddenInputId, value, labelText, dropdownId, isTeam = false) {
+            document.getElementById(hiddenInputId).value = value;
+            const labelSpan = document.getElementById('selected-' + hiddenInputId);
+            labelSpan.innerText = labelText;
+            labelSpan.classList.remove('text-slate-400');
+            labelSpan.classList.add('text-white');
+
+            const target = document.getElementById(dropdownId);
+            const icon = document.getElementById('icon-' + dropdownId);
+            if(target) {
+                target.classList.remove('dropdown-visible');
+                target.classList.add('dropdown-hidden');
+            }
+            if(icon) icon.style.transform = 'rotate(0deg)';
+
+            if (hiddenInputId === 's_week' && typeof window.generateAutoIdAndMatch === 'function') {
+                window.generateAutoIdAndMatch();
+            }
+
+            // FILTER ULANG TIM BERDASARKAN KATEGORI KETIKA KATEGORI DIPILIH
+            if (hiddenInputId === 's_category') {
+                if (typeof window.filterTeamsByCategory === 'function') {
+                    window.filterTeamsByCategory(value);
+                }
+            }
+
+            if (hiddenInputId === 's_homeTeamId' || hiddenInputId === 's_awayTeamId') {
+                if (typeof window.autoFillTeamName === 'function') {
+                    window.autoFillTeamName(isTeam);
+                }
+            }
+        };
+
+        window.addEventListener('click', () => {
+            document.querySelectorAll('.custom-dropdown-list').forEach(el => {
+                el.classList.remove('dropdown-visible');
+                el.classList.add('dropdown-hidden');
+                const icon = document.getElementById('icon-' + el.id);
+                if(icon) icon.style.transform = 'rotate(0deg)';
+            });
+        });
+
+        // Modals Logic
+        function showCustomAlert(title, message, type = 'success') {
+            const m = document.getElementById('modal-custom-alert');
+            const c = document.getElementById('alert-modal-content');
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-message').innerText = message;
+            
+            const iC = document.getElementById('alert-icon-container');
+            const i = document.getElementById('alert-icon');
+            if (type === 'success') { iC.className = "w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-4 shadow-inner bg-emerald-500/20 text-emerald-400"; i.className = "fas fa-check-circle"; } 
+            else if (type === 'error') { iC.className = "w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-4 shadow-inner bg-rose-500/20 text-rose-400"; i.className = "fas fa-exclamation-triangle"; } 
+            else { iC.className = "w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-4 shadow-inner bg-blue-500/20 text-blue-400"; i.className = "fas fa-info-circle"; }
+            
+            m.classList.add('modal-active');
+            setTimeout(() => { c.classList.remove('scale-95'); c.classList.add('scale-100'); }, 10);
+        }
+        function closeCustomAlert() {
+            const m = document.getElementById('modal-custom-alert');
+            const c = document.getElementById('alert-modal-content');
+            c.classList.remove('scale-100'); c.classList.add('scale-95');
+            setTimeout(() => { m.classList.remove('modal-active'); }, 300);
+        }
+
+        let confirmCb = null;
+        function showCustomConfirm(title, message, onYes) {
+            const m = document.getElementById('modal-custom-confirm');
+            const c = document.getElementById('confirm-modal-content');
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-message').innerText = message;
+            confirmCb = onYes;
+            document.getElementById('btn-confirm-yes').onclick = () => closeCustomConfirm(true);
+            m.classList.add('modal-active');
+            setTimeout(() => { c.classList.remove('scale-95'); c.classList.add('scale-100'); }, 10);
+        }
+        function closeCustomConfirm(isYes) {
+            const m = document.getElementById('modal-custom-confirm');
+            const c = document.getElementById('confirm-modal-content');
+            c.classList.remove('scale-100'); c.classList.add('scale-95');
+            setTimeout(() => { 
+                m.classList.remove('modal-active'); 
+                if (isYes && typeof confirmCb === 'function') confirmCb();
+                confirmCb = null;
+            }, 300);
+        }
+    </script>
+
+    <!-- Dependencies: Firebase Config & Engine -->
+    <script src="config.js"></script>
+    <script type="module" src="app.js"></script>
+
+    <script type="module">
+        let allSchedules = [];
+        let allTeamsMap = {}; 
+        let allVenuesMap = {}; 
+        let allTeamsGlobal = []; 
+        let isEditMode = false;
+        let activeWeekFilter = 'Semua';
+
+        // Auto Load Data on Page Load
+        setTimeout(async () => {
+            await fetchDependencies();
+            await loadSchedules();
+        }, 1000);
+
+        async function fetchDependencies() {
+            try {
+                if(typeof window.getFromFirestore !== 'function') return;
+                
+                const teams = await window.getFromFirestore("master_team");
+                const venues = await window.getFromFirestore("master_venue");
+
+                allTeamsGlobal = teams || [];
+                const venCont = document.getElementById('venue-options-container');
+                venCont.innerHTML = '';
+
+                teams.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+                teams.forEach(t => {
+                    if(!t.id) return;
+                    allTeamsMap[t.id] = t.name;
+                });
+
+                venues.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+                venues.forEach(v => {
+                    if(!v.id || v.id.toLowerCase() === 'venueid') return;
+
+                    allVenuesMap[v.id] = v.name;
+                    const vText = `${v.id} - ${v.name}`;
+                    venCont.innerHTML += `<div onclick="selectCustomOption('s_venueId', '${v.id}', '${vText}', 'dropdown-venue')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">${vText}</div>`;
+                });
+
+                const defaultCategory = document.getElementById('s_category').value;
+                filterTeamsByCategory(defaultCategory);
+
+            } catch (err) {
+                console.error("Gagal load relasi:", err);
+            }
+        }
+
+        window.filterTeamsByCategory = function(selectedCategory) {
+            const homeCont = document.getElementById('hometeam-options-container');
+            const awayCont = document.getElementById('awayteam-options-container');
+
+            homeCont.innerHTML = '';
+            awayCont.innerHTML = '';
+
+            const filteredTeams = allTeamsGlobal.filter(t => {
+                const tCat = String(t.jenjang || t.category || "").trim().toLowerCase();
+                const sCat = String(selectedCategory || "").trim().toLowerCase();
+                return tCat === sCat;
+            });
+
+            if (filteredTeams.length === 0) {
+                homeCont.innerHTML = `<div class="px-3 py-2 text-xs text-slate-500 italic">Tidak ada tim untuk kategori ini</div>`;
+                awayCont.innerHTML = `<div class="px-3 py-2 text-xs text-slate-500 italic">Tidak ada tim untuk kategori ini</div>`;
+            } else {
+                filteredTeams.forEach(t => {
+                    const teamCatDisplay = t.jenjang || t.category || selectedCategory;
+                    const optText = `${t.id} - ${t.name} (${teamCatDisplay})`;
+                    homeCont.innerHTML += `<div onclick="selectCustomOption('s_homeTeamId', '${t.id}', '${optText}', 'dropdown-hometeam', 'home')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-blue-600 hover:text-white font-medium cursor-pointer transition-all">${optText}</div>`;
+                    awayCont.innerHTML += `<div onclick="selectCustomOption('s_awayTeamId', '${t.id}', '${optText}', 'dropdown-awayteam', 'away')" class="px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-rose-600 hover:text-white font-medium cursor-pointer transition-all">${optText}</div>`;
+                });
+            }
+
+            document.getElementById('s_homeTeamId').value = '';
+            document.getElementById('selected-s_homeTeamId').innerText = '-- Pilih Tim Home --';
+            document.getElementById('selected-s_homeTeamId').className = 'text-slate-400 truncate pr-2';
+            document.getElementById('s_nameHomeTeam').value = '';
+
+            document.getElementById('s_awayTeamId').value = '';
+            document.getElementById('selected-s_awayTeamId').innerText = '-- Pilih Tim Away --';
+            document.getElementById('selected-s_awayTeamId').className = 'text-slate-400 truncate pr-2';
+            document.getElementById('s_nameAwayTeam').value = '';
+        }
+
+        window.autoFillTeamName = function(type) {
+            const selId = type === 'home' ? document.getElementById('s_homeTeamId').value : document.getElementById('s_awayTeamId').value;
+            const targetInput = type === 'home' ? document.getElementById('s_nameHomeTeam') : document.getElementById('s_nameAwayTeam');
+            targetInput.value = allTeamsMap[selId] || '';
+        }
+
+        window.loadSchedules = async function() {
+            const container = document.getElementById('schedule-cards-container');
+            container.innerHTML = `<tr><td colspan="8" class="p-12 text-center text-slate-500"><i class="fas fa-circle-notch fa-spin text-blue-500 text-2xl mb-2"></i><p>Menyinkronkan jadwal dari Firebase...</p></td></tr>`;
+            try {
+                let rawData = await window.getFromFirestore("master_schedule");
+                
+                let filteredRaw = rawData.filter(sch => {
+                    const idL = (sch.id || "").toLowerCase();
+                    const weekStr = Array.isArray(sch.week) ? sch.week.join(" ").toLowerCase() : (sch.week || "").toLowerCase();
+                    
+                    const isDummyId = ["id", "dummy", "sample"].includes(idL);
+                    const isDummyWeek = weekStr.includes("pekan-1, pekan-2") || weekStr.split(",").length > 2;
+
+                    return !isDummyId && !isDummyWeek;
+                });
+
+                let uniqueMap = new Map();
+                filteredRaw.forEach(sch => {
+                    const uniqueKey = sch.id || `${Array.isArray(sch.week) ? sch.week[0] : sch.week}-${sch.matchNo}`;
+                    
+                    if (!uniqueMap.has(uniqueKey)) {
+                        uniqueMap.set(uniqueKey, sch);
+                    } else {
+                        let existing = uniqueMap.get(uniqueKey);
+                        const getStatusPriority = (status) => {
+                            if (status === 'Published') return 3;
+                            if (status === 'Ongoing') return 2;
+                            return 1;
+                        };
+                        if (getStatusPriority(sch.status) > getStatusPriority(existing.status)) {
+                            uniqueMap.set(uniqueKey, sch);
+                        }
+                    }
+                });
+
+                let data = Array.from(uniqueMap.values());
+                data.sort((a, b) => parseInt(a.matchNo || 0) - parseInt(b.matchNo || 0));
+                
+                allSchedules = data;
+                applyFilters();
+            } catch (err) {
+                container.innerHTML = `<tr><td colspan="8" class="p-12 text-center text-rose-500"><i class="fas fa-exclamation-triangle text-2xl mb-2"></i><p>Gagal memuat jadwal.</p></td></tr>`;
+            }
+        }
+
+        window.filterByWeek = function(weekName) {
+            activeWeekFilter = weekName;
+            
+            document.querySelectorAll('.week-tab').forEach(btn => {
+                if(btn.getAttribute('data-week') === weekName) {
+                    btn.className = "week-tab px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all bg-blue-600 text-white shadow-md";
+                } else {
+                    btn.className = "week-tab px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all bg-slate-900/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-white/10";
+                }
+            });
+
+            applyFilters();
+        }
+
+        window.applyFilters = function() {
+            const searchVal = (document.getElementById('searchInput').value || "").toLowerCase().trim();
+
+            const filtered = allSchedules.filter(s => {
+                let matchWeek = true;
+                if (activeWeekFilter !== 'Semua') {
+                    if (Array.isArray(s.week)) {
+                        matchWeek = s.week.includes(activeWeekFilter);
+                    } else {
+                        matchWeek = (s.week || '').toLowerCase() === activeWeekFilter.toLowerCase();
+                    }
+                }
+
+                let matchSearch = (s.nameHomeTeam||'').toLowerCase().includes(searchVal) || 
+                                  (s.nameAwayTeam||'').toLowerCase().includes(searchVal) || 
+                                  (s.id||'').toLowerCase().includes(searchVal) || 
+                                  (s.matchNo||'').toString().includes(searchVal) ||
+                                  (s.date||'').includes(searchVal);
+
+                return matchWeek && matchSearch;
+            });
+
+            filtered.sort((a, b) => {
+                const getWeekNum = (w) => {
+                    const str = Array.isArray(w) ? (w[0] || '') : (w || '');
+                    const match = str.match(/\d+/);
+                    return match ? parseInt(match[0], 10) : 999;
+                };
+
+                const weekA = getWeekNum(a.week);
+                const weekB = getWeekNum(b.week);
+
+                if (weekA !== weekB) {
+                    return weekA - weekB;
+                }
+
+                return parseInt(a.matchNo || 0, 10) - parseInt(b.matchNo || 0, 10);
+            });
+
+            renderSchedules(filtered);
+        }
+
+        window.renderSchedules = function(data) {
+            const container = document.getElementById('schedule-cards-container');
+            document.getElementById('data-count').innerText = data.length;
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const role = urlParams.get('role');
+            const isReadonly = role === 'operations' || role === 'commissioner' || urlParams.get('readonly') === 'true';
+
+            if (data.length === 0) {
+                container.innerHTML = `<tr><td colspan="8" class="p-12 text-center text-slate-500 italic"><i class="fas fa-calendar-times text-3xl mb-2 opacity-20"></i><br>Belum ada jadwal pertandingan untuk pekan ini.</td></tr>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            data.forEach(sch => {
+                const schStr = encodeURIComponent(JSON.stringify(sch));
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/60 transition-colors border-b border-white/5";
+                
+                let statusBadge = '';
+                let dbStatus = sch.status || 'Saved';
+                
+                if(dbStatus === 'Ongoing') {
+                    statusBadge = `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full text-[10px] font-bold shadow-[0_0_8px_rgba(16,185,129,0.3)] animate-pulse">ONGOING</span>`;
+                } else if(dbStatus === 'Finished') {
+                    statusBadge = `<span class="bg-rose-500/20 text-rose-400 border border-rose-500/30 px-3 py-1 rounded-full text-[10px] font-bold">FINISHED</span>`;
+                } else {
+                    statusBadge = `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3 py-1 rounded-full text-[10px] font-bold uppercase">${dbStatus}</span>`;
+                }
+
+                const vName = allVenuesMap[sch.venueId] || sch.venueId || "-";
+                const weekDisplay = Array.isArray(sch.week) ? sch.week.join(", ") : (sch.week || '-');
+
+                let actionTdHtml = '';
+                if (!isReadonly) {
+                    actionTdHtml = `
+                        <div class="flex items-center justify-center space-x-1.5">
+                            <button onclick="editSchedule('${schStr}')" class="bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white p-2 rounded-lg border border-blue-500/30 transition-all text-xs" title="Edit Laga"><i class="fas fa-pen"></i></button>
+                            <button onclick="confirmDeleteSchedule('${sch.id}', '${sch.matchNo}')" class="bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white p-2 rounded-lg border border-rose-500/30 transition-all text-xs" title="Hapus Laga"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    `;
+                } else {
+                    actionTdHtml = `<span class="text-[10px] text-slate-500 italic">Read-Only</span>`;
+                }
+
+                tr.innerHTML = `
+                    <td class="py-4 px-4 text-center">
+                        <span class="bg-blue-600 text-white font-bold w-8 h-8 rounded-lg flex items-center justify-center mx-auto shadow">${sch.matchNo || '-'}</span>
+                    </td>
+                    <td class="py-4 px-4">
+                        <div class="font-bold text-white"><i class="far fa-calendar-alt text-blue-400 w-4"></i> ${sch.date || '-'} <span class="text-[9px] bg-white/10 px-1.5 py-0.5 rounded ml-1">${weekDisplay}</span></div>
+                        <div class="text-[10px] font-mono text-slate-400 mt-1"><i class="far fa-clock text-blue-400 w-4"></i> ${sch.time || '-'} WIB</div>
+                    </td>
+                    <td class="py-4 px-4">
+                        <div class="font-bold text-blue-300 text-[11px] uppercase">${sch.category || '-'}</div>
+                        <div class="text-[10px] text-slate-400 mt-1 truncate" title="${vName}"><i class="fas fa-map-marker-alt text-rose-400 w-3"></i> ${vName}</div>
+                    </td>
+                    <td class="py-4 px-4 text-right">
+                        <div class="font-extrabold text-white text-sm truncate" title="${sch.nameHomeTeam}">${sch.nameHomeTeam || '-'}</div>
+                        <div class="text-[9px] font-mono text-slate-500">${sch.homeTeamId || '-'}</div>
+                    </td>
+                    <td class="py-4 px-1 text-center">
+                        <span class="sporty-font text-amber-500 font-black italic text-lg drop-shadow-md">VS</span>
+                    </td>
+                    <td class="py-4 px-4 text-left">
+                        <div class="font-extrabold text-white text-sm truncate" title="${sch.nameAwayTeam}">${sch.nameAwayTeam || '-'}</div>
+                        <div class="text-[9px] font-mono text-slate-500">${sch.awayTeamId || '-'}</div>
+                    </td>
+                    <td class="py-4 px-4 text-center">${statusBadge}</td>
+                    <td class="py-4 px-4 text-center">${actionTdHtml}</td>
+                `;
+                container.appendChild(tr);
+            });
+        }
+
+        window.handleSearch = function(query) {
+            applyFilters();
+        }
+
+        window.handleRefresh = function() {
+            const icon = document.getElementById('refresh-icon');
+            icon.classList.add('fa-spin');
+            window.loadSchedules().then(() => {
+                setTimeout(() => { icon.classList.remove('fa-spin'); showCustomAlert("Berhasil", "Jadwal diperbarui.", "success"); }, 500);
+            });
+        }
+
+        const modal = document.getElementById('modal-add-schedule');
+        const content = document.getElementById('modal-schedule-content');
+        const form = document.getElementById('form-schedule');
+
+        window.generateAutoIdAndMatch = function() {
+            if (isEditMode) return; 
+            const selectedWeek = document.getElementById('s_week').value; 
+            const weekNumMatch = selectedWeek.match(/\d+/);
+            const weekNum = weekNumMatch ? weekNumMatch[0] : '1';
+            
+            const schedulesInWeek = allSchedules.filter(s => {
+                if (Array.isArray(s.week)) return s.week.includes(selectedWeek);
+                return (s.week || '').toLowerCase() === selectedWeek.toLowerCase();
+            });
+
+            const nextNumber = schedulesInWeek.length + 1;
+            const formattedNum = String(nextNumber).padStart(3, '0');
+            const generatedId = `P${weekNum}-${formattedNum}`;
+            
+            document.getElementById('s_id').value = generatedId;
+            document.getElementById('s_matchNo').value = nextNumber;
+            document.getElementById('s_docNo').value = `DSP/AFKAB/2026/${generatedId}`;
+        }
+
+        window.openScheduleModal = function() {
+            isEditMode = false;
+            form.reset();
+            document.getElementById('modal-title-text').innerText = "Tambah Jadwal Baru";
+            document.getElementById('s_status').value = 'Saved';
+            
+            const modalDefaultWeek = activeWeekFilter === 'Semua' ? 'Pekan-1' : activeWeekFilter;
+            selectCustomOption('s_week', modalDefaultWeek, modalDefaultWeek, 'dropdown-week');
+            selectCustomOption('s_category', 'SMA/SMK/MA - Putra', 'SMA/SMK/MA - Putra', 'dropdown-category');
+            
+            document.getElementById('s_venueId').value = '';
+            document.getElementById('selected-s_venueId').innerText = '-- Pilih Venue --';
+            document.getElementById('selected-s_venueId').className = 'text-slate-400';
+
+            generateAutoIdAndMatch();
+
+            modal.classList.add('modal-active');
+            setTimeout(() => { content.classList.remove('scale-95'); content.classList.add('scale-100'); }, 10);
+        }
+
+        window.closeScheduleModal = function() {
+            content.classList.remove('scale-100'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.remove('modal-active'); }, 300);
+            document.getElementById('modal-status-message').textContent = '';
+        }
+
+        window.editSchedule = function(jsonStr) {
+            const sch = JSON.parse(decodeURIComponent(jsonStr));
+            isEditMode = true;
+            document.getElementById('modal-title-text').innerText = "Edit Jadwal Laga (Match " + sch.matchNo + ")";
+
+            document.getElementById('s_id').value = sch.id || '';
+            document.getElementById('s_matchNo').value = sch.matchNo || '';
+            document.getElementById('s_docNo').value = sch.docNo || `DSP/AFKAB/2026/${sch.id || ''}`;
+            document.getElementById('s_date').value = sch.date || '';
+            document.getElementById('s_time').value = sch.time || '';
+            
+            const wVal = Array.isArray(sch.week) ? (sch.week[0] || 'Pekan-1') : (sch.week || 'Pekan-1');
+            selectCustomOption('s_week', wVal, wVal, 'dropdown-week');
+
+            const cVal = sch.category || 'SMA/SMK/MA - Putra';
+            selectCustomOption('s_category', cVal, cVal, 'dropdown-category');
+
+            const vVal = sch.venueId || '';
+            const vText = allVenuesMap[vVal] ? `${vVal} - ${allVenuesMap[vVal]}` : '-- Pilih Venue --';
+            selectCustomOption('s_venueId', vVal, vText, 'dropdown-venue');
+
+            const hVal = sch.homeTeamId || '';
+            const hText = allTeamsMap[hVal] ? `${hVal} - ${allTeamsMap[hVal]}` : '-- Pilih Tim Home --';
+            selectCustomOption('s_homeTeamId', hVal, hText, 'dropdown-hometeam', 'home');
+
+            const aVal = sch.awayTeamId || '';
+            const aText = allTeamsMap[aVal] ? `${aVal} - ${allTeamsMap[aVal]}` : '-- Pilih Tim Away --';
+            selectCustomOption('s_awayTeamId', aVal, aText, 'dropdown-awayteam', 'away');
+            
+            document.getElementById('s_status').value = sch.status || 'Saved';
+            document.getElementById('s_nameHomeTeam').value = sch.nameHomeTeam || '';
+            document.getElementById('s_nameAwayTeam').value = sch.nameAwayTeam || '';
+
+            modal.classList.add('modal-active');
+            setTimeout(() => { content.classList.remove('scale-95'); content.classList.add('scale-100'); }, 10);
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btnSubmit = document.getElementById('btn-submit');
+            const statusMsg = document.getElementById('modal-status-message');
+            
+            btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Menyimpan...</span>';
+            btnSubmit.classList.add('opacity-70', 'cursor-not-allowed');
+            statusMsg.textContent = "Menyimpan ke Dual Database...";
+            statusMsg.className = "text-sm font-semibold flex-1 mr-4 text-blue-400";
+
+            const dataObj = {
+                id: document.getElementById('s_id').value,
+                matchNo: document.getElementById('s_matchNo').value,
+                category: document.getElementById('s_category').value,
+                week: document.getElementById('s_week').value,
+                date: document.getElementById('s_date').value,
+                time: document.getElementById('s_time').value,
+                venueId: document.getElementById('s_venueId').value,
+                homeTeamId: document.getElementById('s_homeTeamId').value,
+                nameHomeTeam: document.getElementById('s_nameHomeTeam').value,
+                awayTeamId: document.getElementById('s_awayTeamId').value,
+                nameAwayTeam: document.getElementById('s_nameAwayTeam').value,
+                status: document.getElementById('s_status').value,
+                docNo: document.getElementById('s_docNo').value
+            };
+
+            try {
+                if (typeof window.upsertToFirestore === 'function') {
+                    await window.upsertToFirestore("master_schedule", dataObj.id, dataObj);
+                } else if (isEditMode) {
+                    await window.updateInFirestore("master_schedule", dataObj.id, dataObj);
+                } else {
+                    await window.saveToFirestore("master_schedule", dataObj);
+                }
+                
+                await window.syncToSheets("master_schedule", dataObj, isEditMode ? "update" : "insert");
+                
+                statusMsg.textContent = "✅ Jadwal berhasil disimpan!";
+                statusMsg.className = "text-sm font-semibold flex-1 mr-4 text-emerald-400";
+                
+                window.loadSchedules();
+                setTimeout(() => { closeScheduleModal(); }, 1200);
+
+            } catch (err) {
+                console.error("Gagal save schedule:", err);
+                statusMsg.textContent = "❌ Gagal memproses data.";
+                statusMsg.className = "text-sm font-semibold flex-1 mr-4 text-rose-400";
+            } finally {
+                btnSubmit.innerHTML = '<i class="fas fa-save"></i><span>Simpan Jadwal</span>';
+                btnSubmit.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        });
+
+        window.confirmDeleteSchedule = function(id, matchNo) {
+            showCustomConfirm("Konfirmasi Hapus", `Hapus jadwal Match ke-${matchNo} (ID: ${id}) secara permanen?`, async () => {
+                showCustomAlert("Memproses", "Menghapus dari dual-database...", "info");
+                try {
+                    await window.deleteFromFirestore("master_schedule", id);
+                    await window.syncToSheets("master_schedule", { id: id }, "delete");
+                    showCustomAlert("Berhasil", `Jadwal Match ${matchNo} telah dihapus.`, "success");
+                    window.loadSchedules();
+                } catch (err) {
+                    showCustomAlert("Gagal", "Gagal menghapus jadwal.", "error");
+                }
+            });
+        }
+    </script>
+
+    <script>
+        // Role context lock: logo navigation always returns to the dashboard for the active role.
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const role = params.get('role') || 'coordinator';
+            const dashboards = {
+                coordinator: 'coordinator.html?role=coordinator',
+                operations: 'operations.html?role=operations',
+                commissioner: 'commissioner.html?role=commissioner'
+            };
+            const brandLink = document.getElementById('navbar-brand-link');
+            if (brandLink && dashboards[role]) brandLink.setAttribute('href', dashboards[role]);
+        });
+    </script>
+</body>
+</html>

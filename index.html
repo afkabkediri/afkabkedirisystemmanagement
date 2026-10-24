@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AFKAB Kediri - Supporting System Management</title>
+    
+    <!-- FAVICON (Ganti path/nama file di bawah ini sesuai dengan lokasi file .webp Anda) -->
+    <link rel="icon" type="image/webp" href="01. Logo Web/002. Logo Afkab.webp">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Syne & Outfit untuk Tampilan yang Profesional, Keren, dan Aestetik -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; overflow: hidden; }
+        .sporty-font { font-family: 'Syne', sans-serif; }
+        
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(9, 13, 22, 0.85) 0%, rgba(17, 30, 56, 0.85) 50%, rgba(3, 46, 34, 0.85) 100%), 
+                        url('01. Logo Web/001. Background.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: flex;
+            width: max-content;
+            animation: marquee 35s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 font-sans text-slate-100 antialiased selection:bg-emerald-500 selection:text-slate-950">
+
+    <div id="login-view" class="h-screen w-screen flex flex-col justify-between hero-bg relative overflow-hidden">
+        
+        <!-- Navbar Atas -->
+        <header class="w-full px-8 lg:px-12 py-3 flex items-center justify-between z-20 border-b border-white/10 backdrop-blur-md bg-slate-950/40 flex-shrink-0">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 flex items-center justify-center">
+                    <img src="01. Logo Web/002. Logo Afkab.webp" alt="Logo Afkab Kediri" class="w-full h-full object-contain">
+                </div>
+                <div>
+                    <span class="sporty-font text-base font-extrabold tracking-wider text-white">AFKAB KEDIRI</span>
+                    <span class="block text-[9px] text-emerald-400 font-bold uppercase tracking-widest">Supporting System</span>
+                </div>
+            </div>
+
+            <!-- Widget Tanggal & Waktu Real-Time -->
+            <div class="hidden sm:flex items-center space-x-3 bg-slate-900/60 border border-white/10 px-4 py-1.5 rounded-full backdrop-blur-md text-xs text-slate-300">
+                <span id="realtime-date" class="font-medium text-slate-200">--</span>
+                <span class="text-white/30">|</span>
+                <span id="realtime-clock" class="font-bold text-white tracking-wider">--:--:--</span>
+            </div>
+        </header>
+
+        <!-- Konten Utama -->
+        <main class="flex-1 flex items-center justify-center px-6 lg:px-12 py-4 z-10 overflow-hidden">
+            <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-[1700px]">
+                
+                <!-- Kolom Kiri -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="space-y-3">
+                        <h1 class="sporty-font text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                            PANJALU JAYATI <br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">Supporting System</span>
+                        </h1>
+                        <p class="text-slate-300 text-xs sm:text-sm max-w-xl leading-relaxed font-light">
+                            Sistem digital terintegrasi untuk mendukung proses manajemen kompetisi, verifikasi pemain, rekapitulasi gol, hingga sanksi disiplin dengan cepat, akurat, dan transparan.
+                        </p>
+                    </div>
+
+                    <!-- Running Ticker Logo Tim -->
+                    <div class="pt-2 overflow-hidden relative">
+                        <div class="w-full overflow-hidden relative py-4 bg-slate-900/30 backdrop-blur-md rounded-2xl border border-white/10">
+                            <div class="animate-marquee flex items-center space-x-16">
+                                <div class="flex items-center space-x-16">
+                                    <img src="02. Logo Team/Putra Logo - AFQ.webp" alt="AFQ" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Amarta.webp" alt="Amarta" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Anak Manis.webp" alt="Anak Manis" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Balakosa.webp" alt="Balakosa" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - BBB.webp" alt="BBB" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Erlangga.webp" alt="Erlangga" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Ghost.webp" alt="Ghost" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Joker.webp" alt="Joker" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - KDN.webp" alt="KDN" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Paramony.webp" alt="Paramony" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - RD Farm.webp" alt="RD Farm" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Samurai.webp" alt="Samurai" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Sedulur.webp" alt="Sedulur" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Volcanoes.webp" alt="Volcanoes" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putri Logo - SAKA.webp" alt="SAKA" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putri Logo - SMAGUR.webp" alt="SMAGUR" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putri Logo - SMANSA.webp" alt="SMANSA" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putri Logo - SMAPA.webp" alt="SMAPA" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putri Logo - SMEKSAPUR.webp" alt="SMEKSAPUR" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putri Logo - SMK BM.webp" alt="SMK BM" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putri Logo - SMK CB.webp" alt="SMK CB" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                </div>
+                                <div class="flex items-center space-x-16">
+                                    <img src="02. Logo Team/Putra Logo - AFQ.webp" alt="AFQ" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Amarta.webp" alt="Amarta" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Anak Manis.webp" alt="Anak Manis" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Balakosa.webp" alt="Balakosa" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - BBB.webp" alt="BBB" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Erlangga.webp" alt="Erlangga" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Ghost.webp" alt="Ghost" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Joker.webp" alt="Joker" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - KDN.webp" alt="KDN" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Paramony.webp" alt="Paramony" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - RD Farm.webp" alt="RD Farm" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Samurai.webp" alt="Samurai" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Sedulur.webp" alt="Sedulur" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putra Logo - Volcanoes.webp" alt="Volcanoes" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putri Logo - SAKA.webp" alt="SAKA" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putri Logo - SMAGUR.webp" alt="SMAGUR" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putri Logo - SMANSA.webp" alt="SMANSA" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putri Logo - SMAPA.webp" alt="SMAPA" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putri Logo - SMEKSAPUR.webp" alt="SMEKSAPUR" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putri Logo - SMK BM.webp" alt="SMK BM" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                    <img src="02. Logo Team/Putri Logo - SMK CB.webp" alt="SMK CB" class="w-20 h-20 object-contain filter drop-shadow-lg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kolom Kanan: 3 Tombol Pilihan Role -->
+                <div class="lg:col-span-5 flex justify-center lg:justify-end">
+                    <div class="w-full max-w-lg space-y-4">
+                        
+                        <!-- Role 1: Match Coordinator -->
+                        <a href="#" onclick="selectRole('coordinator')" class="group flex items-center p-4 bg-slate-900/40 hover:bg-blue-600/80 border border-white/10 hover:border-blue-500 rounded-3xl transition-all shadow-xl hover:shadow-2xl backdrop-blur-md transform hover:-translate-y-1">
+                            <div class="w-20 h-20 flex items-center justify-center p-1 flex-shrink-0">
+                                <img src="01. Logo Web/003. Match Coordinator.webp" alt="Match Coordinator" class="w-full h-full object-contain filter drop-shadow-lg group-hover:scale-110 transition-transform">
+                            </div>
+                            <div class="ml-5 flex-1 whitespace-nowrap overflow-hidden px-2">
+                                <h4 class="sporty-font text-lg sm:text-xl font-extrabold text-white group-hover:text-white transition-colors tracking-wide">Match Coordinator</h4>
+                            </div>
+                        </a>
+
+                        <!-- Role 2: Match Operations -->
+                        <a href="#" onclick="selectRole('operations')" class="group flex items-center p-4 bg-slate-900/40 hover:bg-emerald-600/80 border border-white/10 hover:border-emerald-500 rounded-3xl transition-all shadow-xl hover:shadow-2xl backdrop-blur-md transform hover:-translate-y-1">
+                            <div class="w-20 h-20 flex items-center justify-center p-1 flex-shrink-0">
+                                <img src="01. Logo Web/004. Match Operations.webp" alt="Match Operations" class="w-full h-full object-contain filter drop-shadow-lg group-hover:scale-110 transition-transform">
+                            </div>
+                            <div class="ml-5 flex-1 whitespace-nowrap overflow-hidden px-2">
+                                <h4 class="sporty-font text-lg sm:text-xl font-extrabold text-white group-hover:text-white transition-colors tracking-wide">Match Operations</h4>
+                            </div>
+                        </a>
+
+                        <!-- Role 3: Match Commissioner -->
+                        <a href="#" onclick="selectRole('commissioner')" class="group flex items-center p-4 bg-slate-900/40 hover:bg-amber-600/80 border border-white/10 hover:border-amber-500 rounded-3xl transition-all shadow-xl hover:shadow-2xl backdrop-blur-md transform hover:-translate-y-1">
+                            <div class="w-20 h-20 flex items-center justify-center p-1 flex-shrink-0">
+                                <img src="01. Logo Web/005. Match Commissioner.webp" alt="Match Commissioner" class="w-full h-full object-contain filter drop-shadow-lg group-hover:scale-110 transition-transform">
+                            </div>
+                            <div class="ml-5 flex-1 whitespace-nowrap overflow-hidden px-2">
+                                <h4 class="sporty-font text-lg sm:text-xl font-extrabold text-white group-hover:text-white transition-colors tracking-wide">Match Commissioner</h4>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- Footer Bawah -->
+        <footer class="w-full px-8 lg:px-12 py-3 border-t border-white/10 backdrop-blur-md bg-slate-950/50 flex items-center justify-center text-[11px] text-slate-400 z-20 flex-shrink-0">
+            <div>
+                <p class="font-light">Asosiasi Futsal Kabupaten Kediri © 2026 • All Rights Reserved</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Script JavaScript untuk Jam Real-Time & Navigasi File Role -->
+    <script>
+        function updateRealTimeClock() {
+            const now = new Date();
+            const optionsDate = { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' };
+            const dateString = now.toLocaleDateString('id-ID', optionsDate);
+            
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds} WIB`;
+            
+            const dateEl = document.getElementById('realtime-date');
+            const clockEl = document.getElementById('realtime-clock');
+            if (dateEl) dateEl.innerText = dateString;
+            if (clockEl) clockEl.innerText = timeString;
+        }
+
+        setInterval(updateRealTimeClock, 1000);
+        updateRealTimeClock();
+
+        function selectRole(role) {
+            if (role === 'coordinator') {
+                window.location.href = 'coordinator.html';
+            } else if (role === 'operations') {
+                window.location.href = 'operations.html';
+            } else if (role === 'commissioner') {
+                window.location.href = 'commissioner.html';
+            }
+        }
+    </script>
+    <script src="config.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>

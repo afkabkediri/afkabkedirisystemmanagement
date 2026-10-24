@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="id" class="h-screen overflow-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Archive - AFKAB Kediri</title>
+    
+    <!-- FAVICON (Ganti path/nama file di bawah ini sesuai dengan lokasi file .webp Anda) -->
+    <link rel="icon" type="image/webp" href="01. Logo Web/002. Logo Afkab.webp">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; overflow: hidden; }
+        .sporty-font { font-family: 'Syne', sans-serif; }
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(9, 13, 22, 0.90) 0%, rgba(17, 30, 56, 0.90) 50%, rgba(3, 46, 34, 0.90) 100%), url('01. Logo Web/001. Background.webp');
+            background-size: cover; background-position: center; background-attachment: fixed;
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.5); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.8); }
+        .modal-active { display: flex !important; }
+
+        /* Animasi Custom Modal Notifikasi & Konfirmasi */
+        .custom-notification-modal, .custom-confirm-modal { transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .custom-notification-content, .custom-confirm-content { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1); transform: scale(0.95); opacity: 0; }
+        .custom-notification-active .custom-notification-content, .custom-confirm-active .custom-confirm-content { transform: scale(1); opacity: 1; }
+
+        /* CSS KHUSUS CETAK A4 1 LEMBAR - FULL PUTIH TANPA BORDER ABU-ABU */
+        @media print {
+            body { background: white !important; }
+            body * { visibility: hidden; }
+            #archive-report-modal, #archive-report-modal * { visibility: visible; }
+            #archive-report-modal {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100vw;
+                height: auto;
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+            }
+            .no-print { display: none !important; }
+            @page { size: A4 portrait; margin: 4mm; }
+            #print-area-bap {
+                width: 100% !important;
+                max-width: none !important;
+                padding: 2px !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                background: white !important;
+                transform: scale(0.92);
+                transform-origin: top center;
+            }
+            .custom-scrollbar { overflow: visible !important; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            /* Konversi warna text tailwind ke hex solid untuk cetak PDF */
+            .border-slate-300 { border-color: #cbd5e1 !important; }
+            .text-red-700 { color: #b91c1c !important; }
+            .text-blue-700 { color: #1d4ed8 !important; }
+            .text-slate-400 { color: #94a3b8 !important; }
+            .text-slate-500 { color: #64748b !important; }
+            .text-slate-800 { color: #1e293b !important; }
+            .bg-amber-500 { background-color: #f59e0b !important; }
+            .bg-red-600 { background-color: #dc2626 !important; }
+            .bg-emerald-500\/10 { background-color: #ecfdf5 !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 font-sans text-slate-100 antialiased h-screen hero-bg flex flex-col overflow-hidden">
+
+    <!-- Navbar Atas -->
+    <header class="w-full px-6 lg:px-10 py-3 flex items-center justify-between z-20 border-b border-white/10 backdrop-blur-md bg-slate-950/60 sticky top-0 flex-shrink-0 no-print">
+        <a href="index.html" id="navbar-brand-link" class="flex items-center space-x-3 transition-all duration-300 hover:opacity-80 group">
+            <div class="w-10 h-10 flex items-center justify-center transition-transform duration-300 group-hover:rotate-6">
+                <img src="01. Logo Web/002. Logo Afkab.webp" alt="Logo Afkab Kediri" class="w-full h-full object-contain">
+            </div>
+            <div>
+                <span class="sporty-font text-base font-extrabold tracking-wider text-white group-hover:text-blue-400 transition-colors">AFKAB KEDIRI</span>
+                <span id="navbar-subtitle" class="block text-[9px] text-amber-400 font-bold uppercase tracking-widest">Match Archive Panel</span>
+            </div>
+        </a>
+
+        <!-- Menu Navigasi -->
+        <nav id="navbar-menu-container" class="hidden xl:flex items-center space-x-1 bg-slate-900/40 p-1.5 rounded-2xl border border-white/10 backdrop-blur-md">
+            <a href="coordinator.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Dashboard</a>
+            <a href="master_data.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Master Data</a>
+            <a href="schedule.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Schedule</a>
+            <a href="screening.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Screening</a>
+            <a href="report.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Report</a>
+            <a href="topscorer.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Top Scorer</a>
+            <a href="discipline.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Discipline</a>
+            <a href="archive.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl bg-blue-600 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md">Archive</a>
+        </nav>
+
+        <div class="hidden lg:flex items-center space-x-3 bg-slate-900/60 border border-white/10 px-4 py-1.5 rounded-full backdrop-blur-md text-xs text-slate-300 font-semibold shadow-inner">
+            <span id="current-date">--</span>
+            <span class="text-slate-500">|</span>
+            <span id="current-time" class="font-mono font-bold text-white">--:--:--</span>
+        </div>
+    </header>
+
+    <!-- Konten Utama -->
+    <main class="flex-1 w-full px-4 lg:px-8 py-5 flex flex-col max-w-screen-2xl mx-auto gap-3 overflow-hidden no-print">
+        
+        <!-- Header & Baris Utiliti -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900/60 border border-white/10 p-4 rounded-2xl backdrop-blur-xl shadow-lg flex-shrink-0">
+            <div>
+                <h1 class="sporty-font text-2xl font-bold text-white tracking-wide">Arsip Dokumen Pertandingan (DSP & BAP)</h1>
+                <p class="text-slate-400 text-xs mt-0.5">Pusat database arsip laporan pertandingan resmi yang telah selesai.</p>
+            </div>
+
+            <!-- Utiliti Pencarian & Refresh -->
+            <div class="flex items-center gap-2.5 w-full md:w-auto">
+                <button onclick="loadArchives()" class="bg-slate-800 hover:bg-slate-700 text-blue-400 border border-white/10 p-2.5 rounded-xl text-xs transition-all shadow-md" title="Refresh Data">
+                    <i class="fas fa-sync-alt" id="refresh-icon"></i>
+                </button>
+                <div class="relative flex-1 sm:w-64">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400"><i class="fas fa-search text-xs"></i></span>
+                    <input type="text" id="search-input" oninput="renderArchiveTable()" placeholder="Cari No Dokumen / Tim..." class="w-full bg-slate-950/80 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-all shadow-inner">
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabel Data Arsip -->
+        <div class="bg-slate-900/60 border border-white/10 rounded-3xl p-6 backdrop-blur-xl shadow-2xl flex-1 flex flex-col min-h-0 overflow-hidden">
+            <div class="flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/40 custom-scrollbar relative">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-900/95 text-slate-300 uppercase text-[10px] tracking-wider sticky top-0 z-20 border-b border-white/10 shadow-md">
+                        <tr>
+                            <th class="py-3 px-4 font-bold text-center w-14 bg-slate-900">#</th>
+                            <th class="py-3 px-4 font-bold bg-slate-900">No. Dokumen (Doc No)</th>
+                            <th class="py-3 px-4 font-bold bg-slate-900">Tanggal</th>
+                            <th class="py-3 px-4 font-bold bg-slate-900">Informasi Pertandingan</th>
+                            <th class="py-3 px-4 font-bold text-center w-32 bg-slate-900">Skor Akhir</th>
+                            <th class="py-3 px-4 font-bold text-center w-36 bg-slate-900">Status</th>
+                            <th class="py-3 px-4 font-bold text-center w-32 bg-slate-900">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-white/5 text-xs text-slate-200">
+                        <!-- Data Arsip Dimuat Disini -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- FULL SCREEN MODAL ARSIP BAP (TERSIMPAN & TER-LOCK) - FULL SCREEN VIEW -->
+    <div id="archive-report-modal" class="fixed inset-0 z-[150] hidden flex-col bg-slate-950/95 backdrop-blur-md overflow-hidden">
+        <!-- Header Aksi Modal (Sticky Top) -->
+        <div class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center no-print border-b border-slate-700 shadow-md z-50 flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <span class="bg-emerald-600 text-white text-[10px] font-bold px-2.5 py-1 rounded uppercase tracking-wider shadow-inner">Tersimpan & Ter-lock</span>
+                <span class="font-bold text-sm">Form Berita Acara Pertandingan (BAP)</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="printArchiveReport()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-bold uppercase text-xs transition-all shadow-md flex items-center gap-1.5">
+                    <i class="fas fa-print"></i> Cetak Dokumen
+                </button>
+                <button onclick="closeArchiveReportModal()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 px-4 py-2 rounded-lg font-bold uppercase text-xs transition-all shadow-sm">
+                    Tutup
+                </button>
+            </div>
+        </div>
+
+        <!-- Area Konten Modal (Background Putih Bersih Tanpa Frame Abu-abu) -->
+        <div class="flex-1 overflow-y-auto p-2 lg:p-4 bg-white flex justify-center custom-scrollbar">
+            <div id="print-area-bap" class="max-w-4xl w-full bg-white rounded-xl p-3 lg:p-3 space-y-1.5 shadow-none text-slate-900 text-[11px] my-auto">
+                <!-- Kop Surat -->
+                <div class="flex justify-between items-start border-b-2 border-red-700 pb-1.5">
+                    <div>
+                        <h1 class="font-extrabold text-sm uppercase text-slate-800">Asosiasi Futsal Kabupaten Kediri</h1>
+                        <p class="text-[9px] text-slate-500 font-semibold tracking-wide">LIGA FUTSAL AFKAB KEDIRI 2026</p>
+                    </div>
+                    <div class="text-right text-[10px]">
+                        <p class="text-red-700 font-bold uppercase">DSP/AFKAB/2026/P.<span id="modal-doc-no">--</span></p>
+                        <p class="text-slate-500 font-bold">STATUS: <span class="text-emerald-600 font-extrabold">PUBLISHED & LOCKED (ARCHIVED)</span></p>
+                    </div>
+                </div>
+
+                <!-- Judul -->
+                <div class="text-center mb-0.5 mt-0.5">
+                    <h2 class="text-base font-black text-red-700 uppercase tracking-widest">BERITA ACARA PERTANDINGAN</h2>
+                </div>
+
+                <!-- Info Pertandingan -->
+                <div class="overflow-hidden rounded-lg border border-slate-300 shadow-sm">
+                    <table class="w-full border-collapse text-[10px]">
+                        <tr>
+                            <td class="border border-slate-300 p-1 font-bold w-1/4">HARI / TANGGAL</td>
+                            <td class="border border-slate-300 p-1 w-1/4 font-semibold text-slate-700" id="modal-val-date">-</td>
+                            <td class="border border-slate-300 p-1 font-bold w-1/4">KATEGORI / KOMPETISI</td>
+                            <td class="border border-slate-300 p-1 w-1/4 font-semibold text-slate-700" id="modal-val-category">-</td>
+                        </tr>
+                        <tr>
+                            <td class="border border-slate-300 p-1 font-bold">WAKTU (KICKOFF)</td>
+                            <td class="border border-slate-300 p-1 font-semibold text-slate-700" id="modal-val-time">-</td>
+                            <td class="border border-slate-300 p-1 font-bold">VENUE / LAPANGAN</td>
+                            <td class="border border-slate-300 p-1 font-semibold text-slate-700">Holiday Futsal</td>
+                        </tr>
+                        <tr>
+                            <td class="border border-slate-300 p-1 font-bold text-red-700">TIM KANDANG (HOME)</td>
+                            <td class="border border-slate-300 p-1 font-black text-red-700 uppercase" id="modal-val-home">-</td>
+                            <td class="border border-slate-300 p-1 font-bold text-blue-700">TIM TANDANG (AWAY)</td>
+                            <td class="border border-slate-300 p-1 font-black text-blue-700 uppercase" id="modal-val-away">-</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- 1. Skor -->
+                <div>
+                    <h3 class="font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">1. HASIL PERTANDINGAN</h3>
+                    <div class="overflow-hidden rounded-lg border border-slate-300 shadow-sm">
+                        <table class="w-full border-collapse text-center text-[10px]">
+                            <tr class="font-bold bg-slate-50">
+                                <td class="border border-slate-300 p-1 w-1/3">Babak</td>
+                                <td class="border border-slate-300 p-1 w-1/3 text-red-700 uppercase">HOME</td>
+                                <td class="border border-slate-300 p-1 w-1/3 text-blue-700 uppercase">AWAY</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-300 p-1 font-semibold">Babak I</td>
+                                <td class="border border-slate-300 p-1 font-bold text-slate-800" id="modal-h1-home">0</td>
+                                <td class="border border-slate-300 p-1 font-bold text-slate-800" id="modal-h1-away">0</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-300 p-1 font-semibold">Babak II</td>
+                                <td class="border border-slate-300 p-1 font-bold text-slate-800" id="modal-h2-home">0</td>
+                                <td class="border border-slate-300 p-1 font-bold text-slate-800" id="modal-h2-away">0</td>
+                            </tr>
+                            <tr class="font-extrabold bg-slate-50">
+                                <td class="border border-slate-300 p-1">SKOR AKHIR</td>
+                                <td class="border border-slate-300 p-1 text-red-700 text-xs" id="modal-final-home">0</td>
+                                <td class="border border-slate-300 p-1 text-blue-700 text-xs" id="modal-final-away">0</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 2. Official Team -->
+                <div>
+                    <h3 class="font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">2. OFFICIAL TEAM</h3>
+                    <div class="flex gap-2">
+                        <div class="w-1/2 border border-slate-300 rounded-lg overflow-hidden shadow-sm">
+                            <div class="bg-slate-50 text-slate-600 font-bold p-1 uppercase text-[9px] flex justify-between border-b border-slate-300">
+                                <span id="modal-off-home-title" class="text-slate-700 font-extrabold">-</span>
+                                <span class="opacity-80">KANDANG</span>
+                            </div>
+                            <table class="w-full text-[9px] border-collapse" id="modal-table-off-home"></table>
+                        </div>
+                        <div class="w-1/2 border border-slate-300 rounded-lg overflow-hidden shadow-sm">
+                            <div class="bg-slate-50 text-slate-600 font-bold p-1 uppercase text-[9px] flex justify-between border-b border-slate-300">
+                                <span id="modal-off-away-title" class="text-slate-700 font-extrabold">-</span>
+                                <span class="opacity-80">TANDANG</span>
+                            </div>
+                            <table class="w-full text-[9px] border-collapse" id="modal-table-off-away"></table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Jersey Team -->
+                <div>
+                    <h3 class="font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">3. JERSEY TEAM</h3>
+                    <div class="flex gap-2">
+                        <div class="w-1/2 border border-slate-300 rounded-lg p-1.5 bg-white shadow-sm">
+                            <div class="font-bold text-red-700 uppercase text-[9px] mb-0.5" id="modal-jersey-home-title">Kandang</div>
+                            <div class="text-[9px] font-bold text-slate-800" id="modal-val-jersey-home">-</div>
+                        </div>
+                        <div class="w-1/2 border border-slate-300 rounded-lg p-1.5 bg-white shadow-sm">
+                            <div class="font-bold text-blue-700 uppercase text-[9px] mb-0.5" id="modal-jersey-away-title">Tandang</div>
+                            <div class="text-[9px] font-bold text-slate-800" id="modal-val-jersey-away">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. DSP Players -->
+                <div>
+                    <h3 class="font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">4. DAFTAR SUSUNAN PEMAIN (DSP)</h3>
+                    <div class="flex gap-2">
+                        <div class="w-1/2 border border-slate-300 rounded-lg overflow-hidden shadow-sm bg-white">
+                            <div class="bg-slate-50 text-slate-600 font-bold p-1 uppercase text-[9px] flex justify-between border-b border-slate-300">
+                                <span id="modal-dsp-home-title" class="text-slate-700 font-extrabold">-</span>
+                                <span class="opacity-80">KANDANG</span>
+                            </div>
+                            <table class="w-full text-[9px] text-center border-collapse">
+                                <thead>
+                                    <tr class="font-bold text-slate-700 bg-slate-50">
+                                        <th class="border border-slate-300 p-0.5 w-5">No</th>
+                                        <th class="border border-slate-300 p-0.5 text-left">Nama Pemain</th>
+                                        <th class="border border-slate-300 p-0.5 w-14" title="Kartu Kuning">KK (1|2)</th>
+                                        <th class="border border-slate-300 p-0.5 w-7" title="Kartu Merah">KM</th>
+                                        <th class="border border-slate-300 p-0.5 w-5">G</th>
+                                        <th class="border border-slate-300 p-0.5 w-5 text-orange-600">MVP</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="modal-tbody-home-players"></tbody>
+                            </table>
+                        </div>
+                        <div class="w-1/2 border border-slate-300 rounded-lg overflow-hidden shadow-sm bg-white">
+                            <div class="bg-slate-50 text-slate-600 font-bold p-1 uppercase text-[9px] flex justify-between border-b border-slate-300">
+                                <span id="modal-dsp-away-title" class="text-slate-700 font-extrabold">-</span>
+                                <span class="opacity-80">TANDANG</span>
+                            </div>
+                            <table class="w-full text-[9px] text-center border-collapse">
+                                <thead>
+                                    <tr class="font-bold text-slate-700 bg-slate-50">
+                                        <th class="border border-slate-300 p-0.5 w-5">No</th>
+                                        <th class="border border-slate-300 p-0.5 text-left">Nama Pemain</th>
+                                        <th class="border border-slate-300 p-0.5 w-14" title="Kartu Kuning">KK (1|2)</th>
+                                        <th class="border border-slate-300 p-0.5 w-7" title="Kartu Merah">KM</th>
+                                        <th class="border border-slate-300 p-0.5 w-5">G</th>
+                                        <th class="border border-slate-300 p-0.5 w-5 text-orange-600">MVP</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="modal-tbody-away-players"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MVP Banner -->
+                <div class="bg-white border border-orange-200 rounded-lg p-1.5 shadow-sm">
+                    <div class="flex justify-between items-center mb-0.5">
+                        <div class="font-extrabold text-orange-600 text-[9px]">MAN OF THE MATCH</div>
+                        <div class="bg-orange-500 text-white px-1.5 py-0.2 rounded text-[7px] font-bold uppercase shadow-sm">Official Award</div>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-orange-200/60 pt-1 mt-0.5">
+                        <div class="font-black text-slate-800 text-[11px]">
+                            <span id="modal-val-mvp" class="text-red-700">-</span>
+                        </div>
+                        <div class="bg-red-800 text-white px-2 py-0.5 rounded-full text-[7px] font-bold uppercase shadow-sm border border-red-900">MVP of The Match</div>
+                    </div>
+                </div>
+
+                <!-- 5. Time Out and Foul -->
+                <div>
+                    <h3 class="font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">5. TIME OUT AND FOUL</h3>
+                    <div class="overflow-hidden rounded-lg border border-slate-300 shadow-sm bg-white">
+                        <table class="w-full border-collapse text-center text-[9px]">
+                            <tr class="font-bold text-slate-700 bg-slate-50">
+                                <th class="border border-slate-300 p-1" rowspan="2">Tim / Babak</th>
+                                <th class="border border-slate-300 p-0.5" colspan="2">Babak I</th>
+                                <th class="border border-slate-300 p-0.5" colspan="2">Babak II</th>
+                            </tr>
+                            <tr class="text-[8px] text-slate-700 font-bold bg-slate-50">
+                                <th class="border border-slate-300 p-0.5 text-blue-600">Time Out</th>
+                                <th class="border border-slate-300 p-0.5">Foul (1 - 6)</th>
+                                <th class="border border-slate-300 p-0.5 text-blue-600">Time Out</th>
+                                <th class="border border-slate-300 p-0.5">Foul (1 - 6)</th>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-300 p-1 font-bold text-left uppercase text-red-700" id="modal-foul-home">-</td>
+                                <td class="border border-slate-300 p-0.5 text-center"><i id="m-to-h1-home" class="far fa-square text-slate-300 text-[11px]"></i></td>
+                                <td class="border border-slate-300 p-0.5">
+                                    <div class="flex justify-center gap-1 items-center font-mono text-[8px] text-slate-700 font-bold">
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-home-h1 far fa-square text-slate-300" data-value="1"></i>1</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-home-h1 far fa-square text-slate-300" data-value="2"></i>2</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-home-h1 far fa-square text-slate-300" data-value="3"></i>3</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-home-h1 far fa-square text-slate-300" data-value="4"></i>4</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-home-h1 far fa-square text-slate-300" data-value="5"></i>5</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-home-h1 far fa-square text-slate-300" data-value="6"></i>6</span>
+                                    </div>
+                                </td>
+                                <td class="border border-slate-300 p-0.5 text-center"><i id="m-to-h2-home" class="far fa-square text-slate-300 text-[11px]"></i></td>
+                                <td class="border border-slate-300 p-0.5">
+                                    <div class="flex justify-center gap-1 items-center font-mono text-[8px] text-slate-700 font-bold">
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-home-h2 far fa-square text-slate-300" data-value="1"></i>1</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-home-h2 far fa-square text-slate-300" data-value="2"></i>2</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-home-h2 far fa-square text-slate-300" data-value="3"></i>3</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-home-h2 far fa-square text-slate-300" data-value="4"></i>4</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-home-h2 far fa-square text-slate-300" data-value="5"></i>5</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-home-h2 far fa-square text-slate-300" data-value="6"></i>6</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-300 p-1 font-bold text-left uppercase text-blue-700" id="modal-foul-away">-</td>
+                                <td class="border border-slate-300 p-0.5 text-center"><i id="m-to-h1-away" class="far fa-square text-slate-300 text-[11px]"></i></td>
+                                <td class="border border-slate-300 p-0.5">
+                                    <div class="flex justify-center gap-1 items-center font-mono text-[8px] text-slate-700 font-bold">
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-away-h1 far fa-square text-slate-300" data-value="1"></i>1</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-away-h1 far fa-square text-slate-300" data-value="2"></i>2</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-away-h1 far fa-square text-slate-300" data-value="3"></i>3</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-away-h1 far fa-square text-slate-300" data-value="4"></i>4</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-away-h1 far fa-square text-slate-300" data-value="5"></i>5</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-away-h1 far fa-square text-slate-300" data-value="6"></i>6</span>
+                                    </div>
+                                </td>
+                                <td class="border border-slate-300 p-0.5 text-center"><i id="m-to-h2-away" class="far fa-square text-slate-300 text-[11px]"></i></td>
+                                <td class="border border-slate-300 p-0.5">
+                                    <div class="flex justify-center gap-1 items-center font-mono text-[8px] text-slate-700 font-bold">
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-away-h2 far fa-square text-slate-300" data-value="1"></i>1</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-away-h2 far fa-square text-slate-300" data-value="2"></i>2</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-away-h2 far fa-square text-slate-300" data-value="3"></i>3</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-away-h2 far fa-square text-slate-300" data-value="4"></i>4</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-away-h2 far fa-square text-slate-300" data-value="5"></i>5</span>
+                                        <span class="flex items-center gap-0.2"><i class="m-foul-away-h2 far fa-square text-slate-300" data-value="6"></i>6</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 6. Match Verification -->
+                <div>
+                    <h3 class="font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">6. MATCH VERIFICATION</h3>
+                    <div class="overflow-hidden rounded-lg border border-slate-300 shadow-sm bg-white">
+                        <table class="w-full border-collapse text-center text-[9px]">
+                            <tr class="font-bold text-slate-700 bg-slate-50">
+                                <th class="border border-slate-300 p-1 w-1/4">Official Team Home</th>
+                                <th class="border border-slate-300 p-1 w-1/4">Official Team Away</th>
+                                <th class="border border-slate-300 p-1 w-1/4">Referee</th>
+                                <th class="border border-slate-300 p-1 w-1/4">Match Commissioner</th>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-300 p-1 h-14 align-bottom font-bold uppercase text-[9px] text-slate-800" id="modal-ttd-home">-</td>
+                                <td class="border border-slate-300 p-1 h-14 align-bottom font-bold uppercase text-[9px] text-slate-800" id="modal-ttd-away">-</td>
+                                <td class="border border-slate-300 p-1 h-14 align-bottom font-bold uppercase text-[9px] text-slate-800" id="modal-ttd-referee">-</td>
+                                <td class="border border-slate-300 p-1 h-14 align-bottom text-slate-500 italic">Diverifikasi oleh (Admin)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM NOTIFICATION MODAL -->
+    <div id="custom-notification-modal" class="fixed inset-0 z-[200] hidden items-center justify-center bg-slate-950/80 backdrop-blur-md px-4 custom-notification-modal">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl text-center custom-notification-content relative overflow-hidden">
+            <div id="notification-icon-container" class="w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-4 shadow-inner text-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                <i id="notification-icon-element" class="fas fa-check-circle"></i>
+            </div>
+            <h3 id="notification-title" class="sporty-font text-lg font-bold text-white mb-2">Berhasil</h3>
+            <p id="notification-message" class="text-slate-300 text-xs mb-6 leading-relaxed whitespace-pre-line">Pesan</p>
+            <button onclick="closeCustomNotification()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg transition-all text-xs tracking-wider uppercase">Mengerti</button>
+        </div>
+    </div>
+
+    <!-- CUSTOM CONFIRM MODAL -->
+    <div id="custom-confirm-modal" class="fixed inset-0 z-[200] hidden items-center justify-center bg-slate-950/80 backdrop-blur-md px-4 custom-confirm-modal">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl text-center custom-confirm-content relative overflow-hidden">
+            <div class="w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-4 shadow-inner text-xl bg-amber-500/20 text-amber-400 border border-amber-500/30"><i class="fas fa-exclamation-triangle"></i></div>
+            <h3 id="confirm-title" class="sporty-font text-lg font-bold text-white mb-2">Konfirmasi Aksi</h3>
+            <p id="confirm-message" class="text-slate-300 text-xs mb-6 leading-relaxed whitespace-pre-line">Pesan konfirmasi</p>
+            <div class="grid grid-cols-2 gap-3">
+                <button id="confirm-btn-cancel" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl border border-white/10 transition-all text-xs uppercase tracking-wider">Batal</button>
+                <button id="confirm-btn-yes" class="bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg transition-all text-xs uppercase tracking-wider">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Pendeteksi Role Operations & Utilities -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isOperations = urlParams.get('role') === 'operations';
+
+            if (isOperations) {
+                const brandSubtitle = document.getElementById('navbar-subtitle');
+                if (brandSubtitle) {
+                    brandSubtitle.innerText = "Match Operations Panel";
+                }
+                const brandLink = document.getElementById('navbar-brand-link');
+                if (brandLink) {
+                    brandLink.setAttribute('href', 'operations.html');
+                }
+
+                const navContainer = document.getElementById('navbar-menu-container');
+                if (navContainer) {
+                    const currentPage = window.location.pathname.split('/').pop();
+                    
+                    navContainer.innerHTML = `
+                        <a href="operations.html" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-emerald-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Dashboard</a>
+                        <a href="master_data.html?role=operations&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-emerald-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Master Data (RO)</a>
+                        <a href="schedule.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('schedule') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Schedule</a>
+                        <a href="screening.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('screening') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Screening</a>
+                        <a href="topscorer.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('topscorer') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Top Scorer</a>
+                        <a href="discipline.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('discipline') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Discipline</a>
+                        <a href="archive.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('archive') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Archive</a>
+                    `;
+                }
+            }
+        });
+
+        function updateRealTimeClock() {
+            const now = new Date();
+            document.getElementById('current-date').innerText = now.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+            document.getElementById('current-time').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} WIB`;
+        }
+        setInterval(updateRealTimeClock, 1000); updateRealTimeClock();
+
+        window.showCustomNotification = function(title, message, type = 'success') {
+            const modal = document.getElementById('custom-notification-modal');
+            document.getElementById('notification-title').innerText = title; 
+            document.getElementById('notification-message').innerText = message;
+            modal.classList.add('modal-active'); 
+            setTimeout(() => modal.classList.add('custom-notification-active'), 10);
+        };
+        window.closeCustomNotification = function() {
+            const modal = document.getElementById('custom-notification-modal');
+            modal.classList.remove('custom-notification-active'); 
+            setTimeout(() => modal.classList.remove('modal-active'), 300);
+        };
+
+        window.showCustomConfirm = function(title, message, onYes) {
+            const modal = document.getElementById('custom-confirm-modal');
+            document.getElementById('confirm-title').innerText = title; 
+            document.getElementById('confirm-message').innerText = message;
+            modal.classList.add('modal-active'); 
+            setTimeout(() => modal.classList.add('custom-confirm-active'), 10);
+            
+            const btnY = document.getElementById('confirm-btn-yes'), btnC = document.getElementById('confirm-btn-cancel');
+            const newBtnY = btnY.cloneNode(true), newBtnC = btnC.cloneNode(true);
+            btnY.parentNode.replaceChild(newBtnY, btnY); btnC.parentNode.replaceChild(newBtnC, btnC);
+            
+            document.getElementById('confirm-btn-yes').onclick = function() { closeCustomConfirm(); if(onYes) onYes(); };
+            document.getElementById('confirm-btn-cancel').onclick = closeCustomConfirm;
+        };
+        window.closeCustomConfirm = function() {
+            const modal = document.getElementById('custom-confirm-modal');
+            modal.classList.remove('custom-confirm-active'); 
+            setTimeout(() => modal.classList.remove('modal-active'), 300);
+        };
+    </script>
+
+    <!-- Integrasi Firebase & Script Utama -->
+    <script src="config.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module">
+        let archiveData = [];
+        let allPlayersData = [];
+        let allOfficialsData = [];
+
+        async function initArchivePage() {
+            try {
+                allPlayersData = await window.getFromFirestore("master_player").catch(() => []);
+                allOfficialsData = await window.getFromFirestore("master_official").catch(() => []);
+            } catch(e) { 
+                allPlayersData = []; 
+                allOfficialsData = [];
+            }
+            await loadArchives();
+        }
+
+        window.loadArchives = async function() {
+            const icon = document.getElementById('refresh-icon');
+            if (icon) icon.classList.add('fa-spin');
+            
+            try {
+                let rawData = await window.getFromFirestore("master_archive");
+                archiveData = rawData.filter(d => d.id && d.id !== "dummy_data" && !String(d.id).toLowerCase().includes("null"));
+                renderArchiveTable();
+            } catch (err) {
+                console.error("Gagal meload data archive:", err);
+            } finally {
+                if (icon) setTimeout(() => icon.classList.remove('fa-spin'), 500);
+            }
+        }
+
+        window.renderArchiveTable = function() {
+            const tbody = document.getElementById('table-body');
+            const keyword = document.getElementById('search-input').value.toLowerCase();
+            
+            let filtered = archiveData.filter(d => {
+                const docNo = (d.docNo || "").toLowerCase();
+                const matchInfo = (d.matchInfo || "").toLowerCase();
+                return docNo.includes(keyword) || matchInfo.includes(keyword);
+            });
+
+            tbody.innerHTML = '';
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="py-12 text-center text-slate-500 italic">Belum ada arsip dokumen pertandingan yang tersimpan.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach((d, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-white/5 transition-colors border-b border-white/5";
+                tr.innerHTML = `
+                    <td class="py-3 px-4 text-center font-bold text-slate-400">${index + 1}</td>
+                    <td class="py-3 px-4 font-mono font-bold text-blue-400">${d.docNo || '-'}</td>
+                    <td class="py-3 px-4 text-slate-300">${d.date || '-'}</td>
+                    <td class="py-3 px-4 font-bold text-white uppercase tracking-wider text-[11px]">${d.matchInfo || '-'}</td>
+                    <td class="py-3 px-4 text-center sporty-font text-amber-400 text-sm font-black">${d.finalScore || '0 - 0'}</td>
+                    <td class="py-3 px-4 text-center">
+                        <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full text-[10px] font-bold">${d.status || 'Selesai'}</span>
+                    </td>
+                    <td class="py-3 px-4 text-center flex justify-center items-center gap-1.5">
+                        <button onclick="openArchiveReportModal('${d.matchId}')" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg transition-all shadow-md flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider" title="Buka Dokumen BAP">
+                            <i class="fas fa-folder-open text-[10px]"></i> Open
+                        </button>
+                        <button onclick="deleteArchive('${d.id}')" class="bg-rose-600 hover:bg-rose-500 text-white p-1.5 px-2.5 rounded-lg transition-all shadow-md" title="Hapus Arsip">
+                            <i class="fas fa-trash-alt text-[10px]"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.openArchiveReportModal = async function(matchId) {
+            try {
+                if (!allPlayersData || allPlayersData.length === 0) {
+                    allPlayersData = await window.getFromFirestore("master_player").catch(() => []);
+                }
+                if (!allOfficialsData || allOfficialsData.length === 0) {
+                    allOfficialsData = await window.getFromFirestore("master_official").catch(() => []);
+                }
+
+                const currentArchive = archiveData.find(d => String(d.matchId) === String(matchId) || String(d.id) === String(matchId));
+                const targetDocNo = currentArchive ? currentArchive.docNo : null;
+
+                let reports = await window.getFromFirestore("master_report").catch(() => []);
+                
+                let reportData = reports.find(r => 
+                    String(r.id) === String(matchId) || 
+                    String(r.matchNo) === String(matchId) || 
+                    String(r.matchId) === String(matchId) ||
+                    (targetDocNo && String(r.docNo) === String(targetDocNo))
+                );
+
+                if (!reportData && reports.length > 0) {
+                    const arcItem = currentArchive || archiveData.find(d => String(d.matchId) === String(matchId));
+                    reportData = reports.find(r => 
+                        (arcItem && r.matchInfo && r.matchInfo === arcItem.matchInfo) ||
+                        (arcItem && r.docNo && r.docNo === arcItem.docNo)
+                    ) || reports[0];
+                }
+
+                if (!reportData) {
+                    window.showCustomNotification("Data Tidak Ditemukan", "Data laporan pertandingan di master_report tidak ditemukan untuk ID: " + matchId, "error");
+                    return;
+                }
+
+                const finalDocNo = reportData.docNo || reportData.matchNo || (currentArchive ? currentArchive.docNo : null) || matchId || '-';
+                document.getElementById('modal-doc-no').innerText = finalDocNo.replace('DSP/AFKAB/2026/P.', '');
+                document.getElementById('modal-val-date').innerText = reportData.date || reportData.matchDate || '-';
+                document.getElementById('modal-val-time').innerText = reportData.time || reportData.kickoff || '09:00 WIB';
+                document.getElementById('modal-val-category').innerText = reportData.category || reportData.kompetisi || '-';
+                document.getElementById('modal-val-home').innerText = reportData.nameHomeTeam || reportData.homeTeam || '-';
+                document.getElementById('modal-val-away').innerText = reportData.nameAwayTeam || reportData.awayTeam || '-';
+
+                document.getElementById('modal-foul-home').innerText = reportData.nameHomeTeam || reportData.homeTeam || '-';
+                document.getElementById('modal-foul-away').innerText = reportData.nameAwayTeam || reportData.awayTeam || '-';
+
+                document.getElementById('modal-h1-home').innerText = reportData.scoreH1Home ?? reportData.h1Home ?? 0;
+                document.getElementById('modal-h1-away').innerText = reportData.scoreH1Away ?? reportData.h1Away ?? 0;
+                document.getElementById('modal-h2-home').innerText = reportData.scoreH2Home ?? reportData.h2Home ?? 0;
+                document.getElementById('modal-h2-away').innerText = reportData.scoreH2Away ?? reportData.h2Away ?? 0;
+                document.getElementById('modal-final-home').innerText = reportData.scoreFinalHome ?? reportData.finalHome ?? reportData.scoreHome ?? 0;
+                document.getElementById('modal-final-away').innerText = reportData.scoreFinalAway ?? reportData.finalAway ?? reportData.scoreAway ?? 0;
+
+                let homeTeamName = reportData.nameHomeTeam || reportData.homeTeam || 'Kandang';
+                let awayTeamName = reportData.nameAwayTeam || reportData.awayTeam || 'Tandang';
+                document.getElementById('modal-jersey-home-title').innerText = homeTeamName;
+                document.getElementById('modal-jersey-away-title').innerText = awayTeamName;
+                document.getElementById('modal-val-jersey-home').innerText = reportData.homeJersey || reportData.jerseyHome || '-';
+                document.getElementById('modal-val-jersey-away').innerText = reportData.awayJersey || reportData.jerseyAway || '-';
+
+                document.getElementById('modal-off-home-title').innerText = homeTeamName;
+                document.getElementById('modal-off-away-title').innerText = awayTeamName;
+                document.getElementById('modal-dsp-home-title').innerText = homeTeamName;
+                document.getElementById('modal-dsp-away-title').innerText = awayTeamName;
+
+                let screening = {};
+                try {
+                    if (reportData.screeningData) {
+                        screening = typeof reportData.screeningData === 'string' ? JSON.parse(reportData.screeningData) : reportData.screeningData;
+                    } 
+                } catch (e) { screening = {}; }
+
+                const scrHome = screening.home || screening.homeTeam || screening || {};
+                const scrAway = screening.away || screening.awayTeam || {};
+
+                // Mengambil pemain murni HANYA dari data hasil screening
+                let homePlayers = scrHome.players || scrHome.homePlayers || [];
+                let awayPlayers = scrAway.players || scrAway.awayPlayers || [];
+
+                renderModalOfficials(scrHome, 'modal-table-off-home', 'text-red-700');
+                renderModalOfficials(scrAway, 'modal-table-off-away', 'text-blue-700');
+
+                // Menentukan TTD (Tanda Tangan) Verification Bawah
+                let hcHome = '-';
+                if (Array.isArray(scrHome.officials) && scrHome.officials.length > 0) {
+                    hcHome = scrHome.officials[0].name || scrHome.officials[0].nama || '-';
+                } else {
+                    hcHome = scrHome.official1 || scrHome.officialHome1 || '-';
+                    if (typeof hcHome === 'object') hcHome = hcHome.name || hcHome.nama || '-';
+                }
+
+                let hcAway = '-';
+                if (Array.isArray(scrAway.officials) && scrAway.officials.length > 0) {
+                    hcAway = scrAway.officials[0].name || scrAway.officials[0].nama || '-';
+                } else {
+                    hcAway = scrAway.official1 || scrAway.officialAway1 || '-';
+                    if (typeof hcAway === 'object') hcAway = hcAway.name || hcAway.nama || '-';
+                }
+
+                document.getElementById('modal-ttd-home').innerText = hcHome;
+                document.getElementById('modal-ttd-away').innerText = hcAway;
+                document.getElementById('modal-ttd-referee').innerText = reportData.verifiedBy || reportData.referee || '-';
+
+                let foulsObj = {};
+                try {
+                    foulsObj = typeof reportData.foulsData === 'string' ? JSON.parse(reportData.foulsData) : (reportData.foulsData || {});
+                } catch (e) { foulsObj = {}; }
+
+                const toObj = foulsObj.timeOut || {};
+                
+                const setIconCheck = (id, isChecked) => {
+                    const el = document.getElementById(id);
+                    if(el) {
+                        el.className = isChecked ? 'fas fa-check-square text-slate-500 text-[12px]' : 'far fa-square text-slate-300 text-[12px]';
+                    }
+                };
+                
+                setIconCheck('m-to-h1-home', !!toObj.homeH1);
+                setIconCheck('m-to-h2-home', !!toObj.homeH2);
+                setIconCheck('m-to-h1-away', !!toObj.awayH1);
+                setIconCheck('m-to-h2-away', !!toObj.awayH2);
+
+                document.querySelectorAll('.m-foul-home-h1, .m-foul-home-h2, .m-foul-away-h1, .m-foul-away-h2').forEach(icon => {
+                    let baseClass = Array.from(icon.classList).find(c => c.includes('m-foul-'));
+                    icon.className = `${baseClass} far fa-square text-slate-300 text-[10px]`;
+                });
+
+                if (foulsObj.foulList) {
+                    foulsObj.foulList.forEach(f => {
+                        const cls = f.className.replace('foul-', 'm-foul-');
+                        const icon = document.querySelector(`i.${cls}[data-value="${f.val}"]`);
+                        if (icon) {
+                            let baseClass = Array.from(icon.classList).find(c => c.includes('m-foul-'));
+                            icon.className = `${baseClass} fas fa-check-square text-slate-500 text-[10px]`;
+                        }
+                    });
+                }
+
+                let goalsMap = reportData.playerGoals || reportData.goals || {};
+                let cardsMap = reportData.playerCards || reportData.cards || {};
+                let mvpId = reportData.mvpPlayerId || reportData.mvp || '';
+
+                let mvpNameText = 'Tidak ada / Belum dipilih';
+
+                renderModalPlayers(homePlayers, 'modal-tbody-home-players', goalsMap, cardsMap, mvpId, homeTeamName, reportData.homeTeamId, (pName, jNo, tName) => {
+                    mvpNameText = `${jNo} - ${pName} <span class="text-slate-500 font-normal">(${tName})</span>`;
+                });
+                renderModalPlayers(awayPlayers, 'modal-tbody-away-players', goalsMap, cardsMap, mvpId, awayTeamName, reportData.awayTeamId, (pName, jNo, tName) => {
+                    mvpNameText = `${jNo} - ${pName} <span class="text-slate-500 font-normal">(${tName})</span>`;
+                });
+
+                document.getElementById('modal-val-mvp').innerHTML = mvpNameText;
+                
+                const modal = document.getElementById('archive-report-modal');
+                modal.classList.add('modal-active');
+
+            } catch (err) {
+                console.error("Gagal membuka arsip report:", err);
+                window.showCustomNotification("Error", "Gagal memuat detail laporan: " + err.message, "error");
+            }
+        }
+
+        window.closeArchiveReportModal = function() {
+            const modal = document.getElementById('archive-report-modal');
+            modal.classList.remove('modal-active');
+        }
+
+        window.printArchiveReport = function() {
+            window.print();
+        }
+
+        // FUNGSI RENDER OFFICIAL (DIBATASI STRICT MAKSIMAL 2 ORANG DARI DATA SCREENING)
+        function renderModalOfficials(scrTeam, tableId, textColorClass) {
+            const tbody = document.getElementById(tableId);
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            let officials = [];
+            if (scrTeam) {
+                const off1 = scrTeam.official1 || scrTeam.officialHome1 || scrTeam.officialAway1;
+                const off2 = scrTeam.official2 || scrTeam.officialHome2 || scrTeam.officialAway2;
+                
+                if (off1 && off1 !== '-') officials.push(off1);
+                if (off2 && off2 !== '-') officials.push(off2);
+            }
+
+            if (officials.length === 0) {
+                officials = [
+                    { name: '-', position: 'Head Coach' },
+                    { name: '-', position: 'Assistant Coach - I' }
+                ];
+            } else if (officials.length === 1) {
+                officials.push({ name: '-', position: 'Assistant Coach - I' });
+            } else if (officials.length > 2) {
+                officials = officials.slice(0, 2);
+            }
+
+            officials.forEach((item, idx) => {
+                let offIdStr = String(typeof item === 'object' ? (item.id || item.officialId || item.name || item.nama) : item).trim();
+                let offName = typeof item === 'object' ? (item.name || item.nama || offIdStr) : offIdStr;
+                let offPos = typeof item === 'object' ? (item.position || item.posisi || item.jabatan) : '';
+
+                let officialObj = allOfficialsData.find(o => 
+                    String(o.id) === offIdStr || 
+                    String(o.officialId) === offIdStr || 
+                    Object.values(o).some(val => String(val).trim() === offIdStr)
+                );
+
+                if (!officialObj && typeof item === 'string') {
+                    officialObj = allOfficialsData.find(o => (o.name || o.nama || '').trim().toLowerCase() === offIdStr.toLowerCase());
+                }
+
+                if (officialObj) {
+                    offName = officialObj.name || officialObj.nama || offName;
+                    offPos = officialObj.position || officialObj.posisi || officialObj.jabatan || offPos;
+                }
+
+                if (!offPos || offPos === '-') {
+                    if (idx === 0) offPos = 'Head Coach';
+                    else if (idx === 1) offPos = 'Assistant Coach - I';
+                    else offPos = 'Official';
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="border border-slate-300 p-1 text-center w-6 text-slate-800 font-bold">${idx + 1}.</td>
+                    <td class="border border-slate-300 p-1 font-bold text-slate-800">${offName}</td>
+                    <td class="border border-slate-300 p-1 ${textColorClass} text-right italic font-semibold">${offPos}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // FUNGSI RENDER PEMAIN (SESUAI DATA SCREENING & BATAS 14 BARIS)
+        function renderModalPlayers(playerList, tbodyId, goalsMap, cardsMap, mvpId, teamNameStr, teamIdStr, onMvpFound) {
+            const tbody = document.getElementById(tbodyId);
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            const validPlayerIds = playerList || [];
+            const MAX_ROWS = 14; 
+            const iconEmpty = '<span class="inline-flex items-center justify-center w-3.5 h-3.5 border border-slate-300 rounded-[2px] bg-white"></span>';
+            
+            for (let i = 0; i < MAX_ROWS; i++) {
+                const item = validPlayerIds[i];
+                const tr = document.createElement('tr');
+
+                if (!item) {
+                    tr.className = "bg-white text-slate-400";
+                    tr.innerHTML = `
+                        <td class="border border-slate-300 p-0.5 font-bold text-center">-</td>
+                        <td class="border border-slate-300 p-0.5 text-left italic">-</td>
+                        <td class="border border-slate-300 p-0.5">
+                            <div class="flex justify-center gap-1 items-center">${iconEmpty} ${iconEmpty}</div>
+                        </td>
+                        <td class="border border-slate-300 p-0.5">
+                            <div class="flex justify-center items-center">${iconEmpty}</div>
+                        </td>
+                        <td class="border border-slate-300 p-0.5 font-bold text-center">-</td>
+                        <td class="border border-slate-300 p-0.5 font-bold text-center">-</td>
+                    `;
+                } else {
+                    let pId = typeof item === 'object' ? (item.id || item.playerId || item.name || item.nama) : item;
+                    let pIdStr = String(pId).trim();
+                    let searchName = typeof item === 'object' ? (item.name || item.nama || pId) : pId;
+                    
+                    if (typeof searchName === 'string') {
+                        searchName = searchName.trim().toLowerCase();
+                    }
+
+                    let playerObj = allPlayersData.find(p => {
+                        return String(p.id) === pIdStr || 
+                               String(p.playerId) === pIdStr ||
+                               String(p.player_id) === pIdStr;
+                    });
+                    
+                    if (!playerObj) {
+                        playerObj = allPlayersData.find(p => String(p.name || '').trim().toLowerCase() === searchName || String(p.nama || '').trim().toLowerCase() === searchName);
+                    }
+
+                    let jerseyNo = '-';
+                    if (playerObj) {
+                        jerseyNo = playerObj.jerseyNo || playerObj.jerseyNumber || playerObj.noPunggung || playerObj.nomorPunggung || playerObj.jersey || playerObj.punggung || '-';
+                    } else if (typeof item === 'object') {
+                        jerseyNo = item.jersey || item.jerseyNo || item.noPunggung || item.nomorPunggung || '-';
+                    }
+
+                    const pName = playerObj ? (playerObj.name || playerObj.nama) : (typeof item === 'object' ? (item.name || item.nama || pId) : pId);
+                    const realPlayerId = playerObj ? (playerObj.id || playerObj.playerId || pId) : pId;
+                    
+                    const categoryStr = playerObj ? (playerObj.category || '') : (typeof item === 'object' ? (item.category || '') : '');
+                    
+                    // PERBAIKAN: Hanya bernilai true jika kategori secara spesifik adalah U-19
+                    let isU19 = categoryStr.toUpperCase() === 'U-19' || categoryStr.toUpperCase().includes('U-19');
+
+                    const card = cardsMap[realPlayerId] || cardsMap[pName] || cardsMap[pId] || (playerObj ? (cardsMap[playerObj.id] || cardsMap[playerObj.name]) : { kk1: false, kk2: false, km: false });
+                    const goals = goalsMap[realPlayerId] || goalsMap[pName] || goalsMap[pId] || (playerObj ? (goalsMap[playerObj.id] || goalsMap[playerObj.name]) : 0);
+
+                    if (mvpId && (String(mvpId) === String(realPlayerId) || String(mvpId) === String(pId) || String(mvpId) === String(pName))) {
+                        onMvpFound(pName, jerseyNo, teamNameStr);
+                    }
+
+                    let hasKk1 = card && (card.kk1 || card.yellow1 || card.yellowCount >= 1);
+                    let hasKk2 = card && (card.kk2 || card.yellow2 || card.yellowCount >= 2);
+                    let hasKm = card && (card.km || card.red || card.redCard || card.yellowCount >= 2);
+
+                    let iconKk1 = hasKk1 ? '<span class="inline-flex items-center justify-center w-3.5 h-3.5 bg-amber-500 text-white rounded-[2px] text-[8px]"><i class="fas fa-check"></i></span>' : iconEmpty;
+                    let iconKk2 = hasKk2 ? '<span class="inline-flex items-center justify-center w-3.5 h-3.5 bg-amber-500 text-white rounded-[2px] text-[8px]"><i class="fas fa-check"></i></span>' : iconEmpty;
+                    let iconKm = hasKm ? '<span class="inline-flex items-center justify-center w-3.5 h-3.5 bg-red-600 text-white rounded-[2px] text-[8px]"><i class="fas fa-check"></i></span>' : iconEmpty;
+
+                    let isMvpChecked = mvpId && (String(mvpId) === String(realPlayerId) || String(mvpId) === String(pId) || String(mvpId) === String(pName)) ? '<i class="fas fa-check-circle text-orange-600 text-[10px]"></i>' : '-';
+
+                    tr.className = isU19 ? "bg-emerald-500/10 text-slate-900 font-semibold" : "bg-white text-slate-900";
+                    tr.innerHTML = `
+                        <td class="border border-slate-300 p-0.5 font-bold text-slate-800 text-center">${jerseyNo}</td>
+                        <td class="border border-slate-300 p-0.5 text-left font-semibold text-slate-800 flex justify-between items-center px-1">
+                            <span>${pName}</span>
+                            ${isU19 ? '<span class="bg-emerald-600 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider">U-19</span>' : ''}
+                        </td>
+                        <td class="border border-slate-300 p-0.5">
+                            <div class="flex justify-center gap-1 items-center">${iconKk1} ${iconKk2}</div>
+                        </td>
+                        <td class="border border-slate-300 p-0.5">
+                            <div class="flex justify-center items-center">${iconKm}</div>
+                        </td>
+                        <td class="border border-slate-300 p-0.5 font-bold text-blue-600 text-center">${goals > 0 ? goals : '-'}</td>
+                        <td class="border border-slate-300 p-0.5 text-center">${isMvpChecked}</td>
+                    `;
+                }
+                tbody.appendChild(tr);
+            }
+        }
+
+        window.viewArchiveDetail = function(matchId) {
+            const role = new URLSearchParams(window.location.search).get('role') || 'coordinator';
+            if (role === 'operations') {
+                if (typeof window.showCustomNotification === 'function') {
+                    window.showCustomNotification('Akses Terbatas', 'Menu Official Report tersedia untuk Match Coordinator dan Match Commissioner.', 'warning');
+                }
+                return;
+            }
+            const reportRole = role === 'commissioner' ? 'commissioner' : 'coordinator';
+            window.location.href = `report.html?role=${reportRole}&matchId=${encodeURIComponent(matchId)}`;
+        }
+
+        window.deleteArchive = function(id) {
+            showCustomConfirm(
+                "Konfirmasi Hapus Arsip",
+                "Apakah Anda yakin ingin menghapus arsip dokumen pertandingan ini?",
+                async function() {
+                    try {
+                        if (typeof window.deleteFromFirestore === 'function') {
+                            await window.deleteFromFirestore("master_archive", id);
+                        }
+                        if (typeof window.syncToSheets === 'function') {
+                            await window.syncToSheets("master_archive", { id: id }, "delete");
+                        }
+                        showCustomNotification("Berhasil", "Arsip dokumen berhasil dihapus dari database dan Sheets.", "success");
+                        loadArchives();
+                    } catch (err) {
+                        console.error("Gagal menghapus arsip:", err);
+                        showCustomNotification("Error", "Gagal menghapus data arsip: " + err.message, "error");
+                    }
+                }
+            );
+        }
+
+        setTimeout(initArchivePage, 800);
+    </script>
+
+    <script>
+        // Role context lock: logo navigation always returns to the dashboard for the active role.
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const role = params.get('role') || 'coordinator';
+            const dashboards = {
+                coordinator: 'coordinator.html?role=coordinator',
+                operations: 'operations.html?role=operations',
+                commissioner: 'commissioner.html?role=commissioner'
+            };
+            const brandLink = document.getElementById('navbar-brand-link');
+            if (brandLink && dashboards[role]) brandLink.setAttribute('href', dashboards[role]);
+        });
+    </script>
+</body>
+</html>

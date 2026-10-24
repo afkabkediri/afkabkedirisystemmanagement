@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="id" class="h-screen overflow-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discipline Panel - AFKAB Kediri</title>
+    
+    <!-- FAVICON (Ganti path/nama file di bawah ini sesuai dengan lokasi file .webp Anda) -->
+    <link rel="icon" type="image/webp" href="01. Logo Web/002. Logo Afkab.webp">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; overflow: hidden; }
+        .sporty-font { font-family: 'Syne', sans-serif; }
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(9, 13, 22, 0.90) 0%, rgba(17, 30, 56, 0.90) 50%, rgba(3, 46, 34, 0.90) 100%), url('01. Logo Web/001. Background.webp');
+            background-size: cover; background-position: center; background-attachment: fixed;
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.5); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.8); }
+        .modal-active { display: flex !important; }
+
+        /* Animasi Modal & Notifikasi */
+        .custom-notification-modal, .custom-confirm-modal, .form-modal { transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .custom-notification-content, .custom-confirm-content, .form-modal-content { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1); transform: scale(0.95); opacity: 0; }
+        .custom-notification-active .custom-notification-content, .custom-confirm-active .custom-confirm-content, .form-modal-active .form-modal-content { transform: scale(1); opacity: 1; }
+
+        @media print {
+            body { background: white !important; color: black !important; overflow: auto !important; }
+            header, nav, button, .no-print { display: none !important; }
+            .hero-bg { background: white !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 font-sans text-slate-100 antialiased h-screen hero-bg flex flex-col overflow-hidden">
+
+    <!-- Navbar Atas -->
+    <header class="w-full px-6 lg:px-10 py-3 flex items-center justify-between z-20 border-b border-white/10 backdrop-blur-md bg-slate-950/60 sticky top-0 flex-shrink-0 no-print">
+        <a href="index.html" id="navbar-brand-link" class="flex items-center space-x-3 transition-all duration-300 hover:opacity-80 group">
+            <div class="w-10 h-10 flex items-center justify-center transition-transform duration-300 group-hover:rotate-6">
+                <img src="01. Logo Web/002. Logo Afkab.webp" alt="Logo Afkab Kediri" class="w-full h-full object-contain">
+            </div>
+            <div>
+                <span class="sporty-font text-base font-extrabold tracking-wider text-white group-hover:text-blue-400 transition-colors">AFKAB KEDIRI</span>
+                <span id="navbar-subtitle" class="block text-[9px] text-amber-400 font-bold uppercase tracking-widest">Discipline Panel</span>
+            </div>
+        </a>
+
+        <!-- Menu Navigasi (Dinamis Berdasarkan Role: Match Commissioner / Match Operations vs Coordinator) -->
+        <nav id="navbar-menu-container" class="hidden xl:flex items-center space-x-1 bg-slate-900/40 p-1.5 rounded-2xl border border-white/10 backdrop-blur-md">
+            <a href="coordinator.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Dashboard</a>
+            <a href="master_data.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Master Data</a>
+            <a href="schedule.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Schedule</a>
+            <a href="screening.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Screening</a>
+            <a href="report.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Report</a>
+            <a href="topscorer.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Top Scorer</a>
+            <a href="discipline.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl bg-blue-600 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md">Discipline</a>
+            <a href="archive.html?role=coordinator" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-blue-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Archive</a>
+        </nav>
+
+        <div class="hidden lg:flex items-center space-x-3 bg-slate-900/60 border border-white/10 px-4 py-1.5 rounded-full backdrop-blur-md text-xs text-slate-300 font-semibold shadow-inner">
+            <span id="current-date">--</span>
+            <span class="text-slate-500">|</span>
+            <span id="current-time" class="font-mono font-bold text-white">--:--:--</span>
+        </div>
+    </header>
+
+    <!-- Konten Utama -->
+    <main class="flex-1 w-full px-4 lg:px-8 py-5 flex flex-col max-w-screen-2xl mx-auto gap-3 overflow-hidden">
+        
+        <!-- Header & Baris Tombol Utiliti -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900/60 border border-white/10 p-4 rounded-2xl backdrop-blur-xl shadow-lg flex-shrink-0 no-print">
+            <div>
+                <h1 class="sporty-font text-2xl font-bold text-white tracking-wide">Papan Kedisiplinan & Kartu</h1>
+                <p class="text-slate-400 text-xs mt-0.5">Kelola akumulasi kartu kuning, kartu merah, dan status sanksi suspend pemain.</p>
+            </div>
+
+            <!-- Tombol Utiliti -->
+            <div id="utility-buttons-container" class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+                <button onclick="openAddModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md flex items-center space-x-1.5">
+                    <i class="fas fa-plus text-xs"></i>
+                    <span>Catat Hukuman</span>
+                </button>
+                <button onclick="loadDisciplines()" class="bg-slate-800 hover:bg-slate-700 text-blue-400 border border-white/10 p-2.5 rounded-xl text-xs transition-all shadow-md" title="Refresh Data">
+                    <i class="fas fa-sync-alt" id="refresh-icon"></i>
+                </button>
+
+                <!-- Input Pencarian -->
+                <div class="relative flex-1 sm:w-56">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400"><i class="fas fa-search text-xs"></i></span>
+                    <input type="text" id="search-input" oninput="renderTable()" placeholder="Cari pemain / tim..." class="w-full bg-slate-950/80 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-all shadow-inner">
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Filter Kategori (Putra / Putri) -->
+        <div class="flex items-center space-x-2 bg-slate-900/60 border border-white/10 p-1.5 rounded-2xl backdrop-blur-xl w-fit flex-shrink-0 no-print">
+            <button onclick="switchCategory('Putra')" id="btn-cat-putra" class="px-5 py-2 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-md">Putra</button>
+            <button onclick="switchCategory('Putri')" id="btn-cat-putri" class="px-5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white">Putri</button>
+        </div>
+
+        <!-- Tabel Data Kedisiplinan -->
+        <div class="bg-slate-900/60 border border-white/10 rounded-3xl p-6 backdrop-blur-xl shadow-2xl flex-1 flex flex-col min-h-0 overflow-hidden">
+            <div class="flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/40 custom-scrollbar relative">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-900/95 text-slate-300 uppercase text-[10px] tracking-wider sticky top-0 z-20 border-b border-white/10 shadow-md">
+                        <tr>
+                            <th class="py-3 px-4 font-bold text-center w-14 bg-slate-900">#</th>
+                            <th class="py-3 px-4 font-bold bg-slate-900">Nama Pemain</th>
+                            <th class="py-3 px-4 font-bold bg-slate-900">Tim / Klub</th>
+                            <th class="py-3 px-4 font-bold text-center w-28 bg-slate-900">Kartu Kuning</th>
+                            <th class="py-3 px-4 font-bold text-center w-28 bg-slate-900">Kartu Merah</th>
+                            <th class="py-3 px-4 font-bold text-center w-40 bg-slate-900">Status Sanksi</th>
+                            <th class="py-3 px-4 font-bold text-center w-28 bg-slate-900">Sisa Laga Absen</th>
+                            <th id="table-header-action" class="py-3 px-4 font-bold text-center w-28 no-print bg-slate-900">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-white/5 text-xs text-slate-200">
+                        <!-- Data Kedisiplinan Dimuat Disini -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODAL FORM TAMBAH / EDIT DISCIPLINE -->
+    <div id="modal-form" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-md px-4 form-modal">
+        <div class="bg-slate-900 border border-white/10 rounded-3xl p-6 w-full max-w-md shadow-2xl form-modal-content relative overflow-hidden">
+            <div class="flex justify-between items-center border-b border-white/10 pb-4 mb-4">
+                <h3 id="modal-title" class="sporty-font text-lg font-bold text-white flex items-center">
+                    <i class="fas fa-exclamation-triangle text-amber-400 mr-2"></i> Input Sanksi & Kartu
+                </h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white w-8 h-8 rounded-lg flex items-center justify-center transition-all bg-white/5">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="discipline-form" onsubmit="saveDiscipline(event)" class="space-y-4">
+                <input type="hidden" id="form-mode" value="add">
+
+                <!-- Pilih Tim -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Pilih Tim</label>
+                    <select id="team-select" onchange="handleTeamChange()" required class="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-all appearance-none cursor-pointer">
+                        <option value="">-- Pilih Tim Dahulu --</option>
+                    </select>
+                    <input type="hidden" id="team-name" value="">
+                </div>
+
+                <!-- Pilih Pemain -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Pilih Pemain</label>
+                    <select id="player-select" onchange="handlePlayerChange()" required disabled class="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-all appearance-none disabled:opacity-50 disabled:cursor-not-allowed">
+                        <option value="">-- Pilih Tim Terlebih Dahulu --</option>
+                    </select>
+                    <input type="hidden" id="player-name" value="">
+                </div>
+
+                <!-- Kategori -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Kategori Kompetisi</label>
+                    <select id="category-select" required class="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-all appearance-none cursor-pointer">
+                        <option value="Putra">Putra</option>
+                        <option value="Putri">Putri</option>
+                    </select>
+                </div>
+
+                <!-- Jenis Pelanggaran / Kartu -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Jenis Hukuman / Kartu Masuk</label>
+                    <select id="violation-type" required class="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-all appearance-none cursor-pointer">
+                        <option value="yellow_1">Kartu Kuning ke-1 (Aman / Akumulasi)</option>
+                        <option value="yellow_2">Kartu Kuning ke-2 (Akumulasi -> Suspend 1 Laga)</option>
+                        <option value="red_indirect">Kartu Merah Tidak Langsung (2 Kuning di 1 Laga -> Suspend 1 Laga)</option>
+                        <option value="red_direct">Kartu Merah Langsung (Direct Red -> Suspend 2 Laga)</option>
+                    </select>
+                </div>
+
+                <div class="pt-4 grid grid-cols-2 gap-3 border-t border-white/10 mt-2">
+                    <button type="button" onclick="closeModal()" class="bg-slate-800 hover:bg-slate-700 text-white py-2.5 rounded-xl text-xs font-bold transition-all shadow-md">Batal</button>
+                    <button type="submit" id="btn-submit" class="bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl text-xs font-bold transition-all shadow-lg flex items-center justify-center">
+                        <i class="fas fa-save mr-2"></i> Simpan Sanksi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CUSTOM NOTIF & CONFIRM MODALS -->
+    <div id="custom-notification-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/80 backdrop-blur-md px-4 custom-notification-modal">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl text-center custom-notification-content relative overflow-hidden">
+            <div id="notification-icon-container" class="w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-4 shadow-inner text-xl"><i id="notification-icon-element" class="fas fa-info-circle"></i></div>
+            <h3 id="notification-title" class="sporty-font text-lg font-bold text-white mb-2">Info</h3>
+            <p id="notification-message" class="text-slate-300 text-xs mb-6 leading-relaxed whitespace-pre-line">Pesan</p>
+            <button onclick="closeCustomNotification()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg transition-all text-xs tracking-wider uppercase">Mengerti</button>
+        </div>
+    </div>
+
+    <div id="custom-confirm-modal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-slate-950/80 backdrop-blur-md px-4 custom-confirm-modal">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl text-center custom-confirm-content relative overflow-hidden">
+            <div class="w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-4 shadow-inner text-xl bg-amber-500/20 text-amber-400 border border-amber-500/30"><i class="fas fa-exclamation-triangle"></i></div>
+            <h3 id="confirm-title" class="sporty-font text-lg font-bold text-white mb-2">Konfirmasi</h3>
+            <p id="confirm-message" class="text-slate-300 text-xs mb-6 leading-relaxed whitespace-pre-line">Pesan konfirmasi</p>
+            <div class="grid grid-cols-2 gap-3">
+                <button id="confirm-btn-cancel" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl border border-white/10 transition-all text-xs uppercase tracking-wider">Batal</button>
+                <button id="confirm-btn-yes" class="bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg transition-all text-xs uppercase tracking-wider">Ya, Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Pendeteksi Role (Match Commissioner / Match Operations) & Utilities -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const role = urlParams.get('role');
+            const isReadonly = role === 'operations' || role === 'commissioner' || urlParams.get('readonly') === 'true';
+
+            if (role === 'commissioner' || (isReadonly && role === 'commissioner')) {
+                const brandSubtitle = document.getElementById('navbar-subtitle');
+                if (brandSubtitle) brandSubtitle.innerText = "Match Commissioner Panel";
+                
+                const brandLink = document.getElementById('navbar-brand-link');
+                if (brandLink) brandLink.setAttribute('href', 'commissioner.html');
+
+                const navContainer = document.getElementById('navbar-menu-container');
+                if (navContainer) {
+                    const currentPage = window.location.pathname.split('/').pop();
+                    navContainer.innerHTML = `
+                        <a href="commissioner.html" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Dashboard</a>
+                        <a href="master_data.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Master Data (RO)</a>
+                        <a href="schedule.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Schedule (RO)</a>
+                        <a href="report.html?role=commissioner" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Official Report</a>
+                        <a href="topscorer.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-amber-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Top Scorer (RO)</a>
+                        <a href="discipline.html?role=commissioner&readonly=true" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('discipline') ? 'bg-amber-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-amber-600/30'} text-xs uppercase tracking-wider transition-all">Discipline (RO)</a>
+                    `;
+                }
+            } else if (role === 'operations') {
+                const brandSubtitle = document.getElementById('navbar-subtitle');
+                if (brandSubtitle) {
+                    brandSubtitle.innerText = "Match Operations Panel";
+                }
+                const brandLink = document.getElementById('navbar-brand-link');
+                if (brandLink) {
+                    brandLink.setAttribute('href', 'operations.html');
+                }
+
+                const navContainer = document.getElementById('navbar-menu-container');
+                if (navContainer) {
+                    const currentPage = window.location.pathname.split('/').pop();
+                    
+                    navContainer.innerHTML = `
+                        <a href="operations.html" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-emerald-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Dashboard</a>
+                        <a href="master_data.html?role=operations&readonly=true" class="px-3.5 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-emerald-600/30 font-semibold text-xs uppercase tracking-wider transition-all">Master Data (RO)</a>
+                        <a href="schedule.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('schedule') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Schedule</a>
+                        <a href="screening.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('screening') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Screening</a>
+                        <a href="topscorer.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('topscorer') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Top Scorer</a>
+                        <a href="discipline.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('discipline') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Discipline</a>
+                        <a href="archive.html?role=operations" class="px-3.5 py-1.5 rounded-xl ${currentPage.includes('archive') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-300 hover:bg-emerald-600/30'} text-xs uppercase tracking-wider transition-all">Archive</a>
+                    `;
+                }
+            }
+
+            // Jika dalam mode readonly, sembunyikan tombol Catat Hukuman
+            if (isReadonly) {
+                const addBtn = document.querySelector('button[onclick="openAddModal()"]');
+                if (addBtn) addBtn.style.display = 'none';
+            }
+        });
+
+        function updateRealTimeClock() {
+            const now = new Date();
+            document.getElementById('current-date').innerText = now.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+            document.getElementById('current-time').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} WIB`;
+        }
+        setInterval(updateRealTimeClock, 1000); updateRealTimeClock();
+
+        window.showCustomNotification = function(title, message, type = 'info') {
+            const modal = document.getElementById('custom-notification-modal');
+            document.getElementById('notification-title').innerText = title; document.getElementById('notification-message').innerText = message;
+            const iC = document.getElementById('notification-icon-container'), iE = document.getElementById('notification-icon-element');
+            if(type === 'error' || type === 'warning') { iC.className = "w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-4 text-xl bg-rose-500/20 text-rose-400 border border-rose-500/30"; iE.className = "fas fa-exclamation-triangle"; }
+            else if(type === 'success') { iC.className = "w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-4 text-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"; iE.className = "fas fa-check-circle"; }
+            modal.classList.add('modal-active'); setTimeout(() => modal.classList.add('custom-notification-active'), 10);
+        };
+        window.closeCustomNotification = function() {
+            const modal = document.getElementById('custom-notification-modal');
+            modal.classList.remove('custom-notification-active'); setTimeout(() => modal.classList.remove('modal-active'), 300);
+        };
+
+        window.showCustomConfirm = function(title, message, onYes) {
+            const modal = document.getElementById('custom-confirm-modal');
+            document.getElementById('confirm-title').innerText = title; document.getElementById('confirm-message').innerText = message;
+            modal.classList.add('modal-active'); setTimeout(() => modal.classList.add('custom-confirm-active'), 10);
+            
+            const btnY = document.getElementById('confirm-btn-yes'), btnC = document.getElementById('confirm-btn-cancel');
+            const newBtnY = btnY.cloneNode(true), newBtnC = btnC.cloneNode(true);
+            btnY.parentNode.replaceChild(newBtnY, btnY); btnC.parentNode.replaceChild(newBtnC, btnC);
+            
+            document.getElementById('confirm-btn-yes').onclick = function() { closeCustomConfirm(); if(onYes) onYes(); };
+            document.getElementById('confirm-btn-cancel').onclick = closeCustomConfirm;
+        };
+        window.closeCustomConfirm = function() {
+            const modal = document.getElementById('custom-confirm-modal');
+            modal.classList.remove('custom-confirm-active'); setTimeout(() => modal.classList.remove('modal-active'), 300);
+        };
+
+        window.openAddModal = function() {
+            document.getElementById('discipline-form').reset();
+            document.getElementById('form-mode').value = 'add';
+            const modal = document.getElementById('modal-form');
+            modal.classList.add('modal-active');
+            setTimeout(() => modal.classList.add('form-modal-active'), 10);
+        };
+
+        window.closeModal = function() {
+            const modal = document.getElementById('modal-form');
+            modal.classList.remove('form-modal-active');
+            setTimeout(() => modal.classList.remove('modal-active'), 300);
+        };
+    </script>
+
+    <!-- Integrasi Firebase & Master Data -->
+    <script src="config.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module">
+        let allTeams = [];
+        let allPlayers = [];
+        let disciplineData = [];
+        let currentCategory = 'Putra';
+
+        window.switchCategory = function(cat) {
+            currentCategory = cat;
+            document.getElementById('btn-cat-putra').className = cat === 'Putra' ? "px-5 py-2 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-md" : "px-5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white";
+            document.getElementById('btn-cat-putri').className = cat === 'Putri' ? "px-5 py-2 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-md" : "px-5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white";
+            renderTable();
+        }
+
+        async function initPage() {
+            try {
+                allTeams = await window.getFromFirestore("master_team");
+                populateTeamDropdown();
+                allPlayers = await window.getFromFirestore("master_player");
+                await loadDisciplines();
+            } catch (err) {
+                console.error("Gagal inisialisasi data discipline:", err);
+            }
+        }
+
+        function populateTeamDropdown() {
+            const select = document.getElementById('team-select');
+            select.innerHTML = '<option value="">-- Pilih Tim Dahulu --</option>';
+            const sortedTeams = allTeams.sort((a,b) => (a.name || '').localeCompare(b.name || ''));
+            sortedTeams.forEach(t => {
+                if(!t.id && !t.teamId) return;
+                select.innerHTML += `<option value="${t.id || t.teamId}" data-name="${t.name}">${t.name}</option>`;
+            });
+        }
+
+        window.handleTeamChange = function() {
+            const teamSelect = document.getElementById('team-select');
+            const teamId = teamSelect.value;
+            const teamName = teamSelect.options[teamSelect.selectedIndex].getAttribute('data-name');
+            document.getElementById('team-name').value = teamName || '';
+
+            const playerSelect = document.getElementById('player-select');
+            playerSelect.innerHTML = '<option value="">-- Pilih Pemain --</option>';
+            document.getElementById('player-name').value = '';
+
+            if (teamId) {
+                playerSelect.disabled = false;
+                const filteredPlayers = allPlayers.filter(p => p.teamId === teamId);
+                const sortedPlayers = filteredPlayers.sort((a,b) => (a.name || '').localeCompare(b.name || ''));
+                
+                if (sortedPlayers.length > 0) {
+                    sortedPlayers.forEach(p => {
+                        if(!p.id) return;
+                        const jNo = p.jerseyNo ? `[${p.jerseyNo}] ` : '';
+                        playerSelect.innerHTML += `<option value="${p.id}" data-name="${p.name}">${jNo}${p.name}</option>`;
+                    });
+                } else {
+                    playerSelect.innerHTML = '<option value="">(Belum ada pemain di tim ini)</option>';
+                    playerSelect.disabled = true;
+                }
+            } else {
+                playerSelect.disabled = true;
+            }
+        }
+
+        window.handlePlayerChange = function() {
+            const select = document.getElementById('player-select');
+            const name = select.options[select.selectedIndex].getAttribute('data-name');
+            document.getElementById('player-name').value = name || '';
+        }
+
+        window.loadDisciplines = async function() {
+            const icon = document.getElementById('refresh-icon');
+            if (icon) icon.classList.add('fa-spin');
+            
+            try {
+                let rawData = await window.getFromFirestore("master_discipline");
+                disciplineData = rawData.filter(d => d.id && d.id !== "dummy_data");
+                renderTable();
+            } catch (err) {
+                console.error("Gagal meload data discipline:", err);
+            } finally {
+                if (icon) setTimeout(() => icon.classList.remove('fa-spin'), 500);
+            }
+        }
+
+        window.renderTable = function() {
+            const tbody = document.getElementById('table-body');
+            const keyword = document.getElementById('search-input').value.toLowerCase();
+            const urlParams = new URLSearchParams(window.location.search);
+            const isReadonly = urlParams.get('role') === 'operations' || urlParams.get('role') === 'commissioner' || urlParams.get('readonly') === 'true';
+
+            if (isReadonly) {
+                const actionHeader = document.getElementById('table-header-action');
+                if (actionHeader) actionHeader.style.display = 'none';
+            }
+            
+            let filtered = disciplineData.filter(d => {
+                const catString = String(d.category || 'Putra').toLowerCase();
+                
+                let matchCategory = false;
+                if (currentCategory === 'Putra') {
+                    matchCategory = catString.includes('putra');
+                } else if (currentCategory === 'Putri') {
+                    matchCategory = catString.includes('putri');
+                }
+
+                const pName = (d.name || "").toLowerCase();
+                const tName = (d.nameTeam || "").toLowerCase();
+                return matchCategory && (pName.includes(keyword) || tName.includes(keyword));
+            });
+
+            tbody.innerHTML = '';
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="${isReadonly ? 7 : 8}" class="py-12 text-center text-slate-500 italic">Belum ada catatan sanksi atau kartu untuk kategori ${currentCategory}.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach((d, index) => {
+                let statusBadge = `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full text-[10px] font-bold">Aman / Main</span>`;
+                if(d.isSuspended === true || d.isSuspended === "true") {
+                    statusBadge = `<span class="bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2.5 py-1 rounded-full text-[10px] font-bold animate-pulse"><i class="fas fa-ban mr-1"></i> SUSPENDED</span>`;
+                }
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-white/5 transition-colors border-b border-white/5";
+                
+                let actionColumnHtml = '';
+                if (!isReadonly) {
+                    actionColumnHtml = `
+                        <td class="py-3 px-4 text-center no-print">
+                            <button onclick="resetDiscipline('${d.id}')" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 p-2 rounded-lg transition-all shadow-md mr-1" title="Reset Sanksi / Pemutihan"><i class="fas fa-undo text-[10px]"></i></button>
+                            <button onclick="deleteDiscipline('${d.id}')" class="bg-rose-600/80 hover:bg-rose-500 text-white p-2 rounded-lg transition-all shadow-md" title="Hapus Data"><i class="fas fa-trash-alt text-[10px]"></i></button>
+                        </td>
+                    `;
+                }
+
+                tr.innerHTML = `
+                    <td class="py-3 px-4 text-center font-bold text-slate-400">${index + 1}</td>
+                    <td class="py-3 px-4 font-bold text-white uppercase tracking-wider text-[11px]">${d.name || '-'}</td>
+                    <td class="py-3 px-4 text-slate-400 text-[10px] uppercase">${d.nameTeam || '-'}</td>
+                    <td class="py-3 px-4 text-center">
+                        <span class="sporty-font text-amber-400 text-sm font-black bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">${d.yellowCardCount || 0}</span>
+                    </td>
+                    <td class="py-3 px-4 text-center">
+                        <span class="sporty-font text-rose-500 text-sm font-black bg-rose-500/10 px-2.5 py-1 rounded-lg border border-rose-500/20">${d.redCardCount || 0}</span>
+                    </td>
+                    <td class="py-3 px-4 text-center">${statusBadge}</td>
+                    <td class="py-3 px-4 text-center font-mono font-bold text-slate-300">${d.suspensionDuration || 0} Laga</td>
+                    ${actionColumnHtml}
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.saveDiscipline = async function(e) {
+            e.preventDefault();
+            
+            const teamId = document.getElementById('team-select').value;
+            const nameTeam = document.getElementById('team-name').value;
+            const playerId = document.getElementById('player-select').value;
+            const playerName = document.getElementById('player-name').value;
+            const category = document.getElementById('category-select').value;
+            const violationType = document.getElementById('violation-type').value;
+
+            if (!playerId) {
+                showCustomNotification("Validasi Error", "Pilih pemain terlebih dahulu!", "error");
+                return;
+            }
+
+            const btnSubmit = document.getElementById('btn-submit');
+            btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...';
+            btnSubmit.disabled = true;
+
+            try {
+                let existing = disciplineData.find(d => d.id === playerId);
+                let yellowCount = existing ? parseInt(existing.yellowCardCount || 0) : 0;
+                let redCount = existing ? parseInt(existing.redCardCount || 0) : 0;
+                let isSuspended = false;
+                let suspensionDuration = 0;
+
+                if (violationType === "yellow_1") {
+                    yellowCount += 1;
+                    if (yellowCount >= 2) {
+                        isSuspended = true;
+                        suspensionDuration = 1;
+                    }
+                } else if (violationType === "yellow_2") {
+                    yellowCount += 1;
+                    isSuspended = true;
+                    suspensionDuration = 1;
+                } else if (violationType === "red_indirect") {
+                    redCount += 1;
+                    isSuspended = true;
+                    suspensionDuration = 1;
+                } else if (violationType === "red_direct") {
+                    redCount += 1;
+                    isSuspended = true;
+                    suspensionDuration = 2;
+                }
+
+                const payload = {
+                    id: String(playerId),
+                    playerId: String(playerId),
+                    name: String(playerName),
+                    teamId: String(teamId),
+                    nameTeam: String(nameTeam),
+                    category: String(category),
+                    yellowCardCount: parseInt(yellowCount, 10),
+                    redCardCount: parseInt(redCount, 10),
+                    isSuspended: Boolean(isSuspended),
+                    suspensionDuration: parseInt(suspensionDuration, 10)
+                };
+
+                await window.upsertToFirestore("master_discipline", payload.id, payload);
+                await window.syncToSheets("master_discipline", payload, "update");
+
+                showCustomNotification("Berhasil", "Data kedisiplinan dan sanksi berhasil diperbarui!", "success");
+                closeModal();
+                await loadDisciplines();
+
+            } catch (err) {
+                console.error(err);
+                showCustomNotification("Error Sistem", "Gagal menyimpan data sanksi.", "error");
+            } finally {
+                btnSubmit.innerHTML = '<i class="fas fa-save mr-2"></i> Simpan Sanksi';
+                btnSubmit.disabled = false;
+            }
+        }
+
+        window.resetDiscipline = function(id) {
+            showCustomConfirm(
+                "Konfirmasi Pemutihan",
+                "Apakah Anda ingin mereset sanksi dan kartu pemain ini (Pemutihan / Status kembali Aman)?",
+                async function() {
+                    try {
+                        let target = disciplineData.find(d => d.id === id);
+                        if(!target) return;
+
+                        target.yellowCardCount = 0;
+                        target.redCardCount = 0;
+                        target.isSuspended = false;
+                        target.suspensionDuration = 0;
+
+                        await window.upsertToFirestore("master_discipline", id, target);
+                        await window.syncToSheets("master_discipline", target, "update");
+
+                        showCustomNotification("Berhasil", "Sanksi pemain berhasil direset.", "success");
+                        loadDisciplines();
+                    } catch (err) {
+                        showCustomNotification("Error", "Gagal mereset sanksi.", "error");
+                    }
+                }
+            );
+        }
+
+        window.deleteDiscipline = function(id) {
+            showCustomConfirm(
+                "Konfirmasi Hapus",
+                "Apakah Anda yakin ingin menghapus catatan sanksi pemain ini dari database?",
+                async function() {
+                    try {
+                        await window.deleteFromFirestore("master_discipline", id);
+                        await window.syncToSheets("master_discipline", { id: id }, "delete");
+
+                        showCustomNotification("Berhasil", "Catatan sanksi dihapus.", "success");
+                        loadDisciplines();
+                    } catch (err) {
+                        showCustomNotification("Error", "Gagal menghapus data.", "error");
+                    }
+                }
+            );
+        }
+
+        setTimeout(initPage, 800);
+    </script>
+
+    <script>
+        // Role context lock: logo navigation always returns to the dashboard for the active role.
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const role = params.get('role') || 'coordinator';
+            const dashboards = {
+                coordinator: 'coordinator.html?role=coordinator',
+                operations: 'operations.html?role=operations',
+                commissioner: 'commissioner.html?role=commissioner'
+            };
+            const brandLink = document.getElementById('navbar-brand-link');
+            if (brandLink && dashboards[role]) brandLink.setAttribute('href', dashboards[role]);
+        });
+    </script>
+</body>
+</html>

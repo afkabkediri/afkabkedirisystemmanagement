@@ -75,13 +75,301 @@
             .bg-red-600 { background-color: #dc2626 !important; }
             .bg-emerald-500\/10 { background-color: #ecfdf5 !important; }
         }
+
+
+        /* Desain dokumen resmi: warna identitas tim tetap terlihat pada preview dan hasil cetak. */
+        #print-area-bap.print-doc {
+            color: #172033;
+            background: #ffffff;
+            font-family: 'Outfit', Arial, sans-serif;
+            border: 1px solid #d5deea;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, .08);
+        }
+        #print-area-bap .doc-letterhead {
+            border-bottom: 3px solid #b91c1c !important;
+            padding-bottom: 7px !important;
+            margin-bottom: 5px;
+        }
+        #print-area-bap .doc-letterhead h1 { color: #172b4d !important; font-size: 13px !important; letter-spacing: .035em; }
+        #print-area-bap .doc-letterhead p { color: #52647d !important; }
+        #print-area-bap .doc-title h2 {
+            display: inline-block;
+            color: #b91c1c !important;
+            background: #fff1f2;
+            border: 1px solid #fecaca;
+            border-radius: 5px;
+            padding: 4px 16px;
+            font-size: 15px !important;
+            letter-spacing: .09em;
+        }
+        #print-area-bap .doc-match-meta { border-color: #b9c8dc !important; border-radius: 7px !important; }
+        #print-area-bap .doc-meta-table td { border-color: #c5d2e3 !important; }
+        #print-area-bap .doc-meta-table td:nth-child(odd) { background: #eaf0f8; color: #263a59; font-weight: 800; }
+        #print-area-bap .doc-meta-table tr:last-child td:nth-child(1) { background: #fff0f0; color: #b91c1c !important; }
+        #print-area-bap .doc-meta-table tr:last-child td:nth-child(3) { background: #eff6ff; color: #1d4ed8 !important; }
+        #print-area-bap .doc-section { margin-bottom: 0; break-inside: avoid; page-break-inside: avoid; }
+        #print-area-bap .doc-section-heading {
+            border-left: 4px solid #b91c1c !important;
+            background: #edf2f8 !important;
+            color: #1f2f49 !important;
+            border-radius: 0 4px 4px 0;
+            padding: 4px 7px !important;
+            margin-bottom: 4px !important;
+            font-size: 10px !important;
+            letter-spacing: .035em;
+        }
+        #print-area-bap .doc-score-table th,
+        #print-area-bap .doc-score-table td { border-color: #c4d0df !important; }
+        #print-area-bap .doc-score-table tr:first-child { background: #eaf0f8 !important; }
+        #print-area-bap .doc-score-table tr:last-child { background: #f1f5fb !important; }
+        #print-area-bap .doc-score-table tr:last-child td { font-weight: 900; }
+        #print-area-bap .doc-team-card { border-color: #c6d2e2 !important; border-radius: 6px !important; }
+        #print-area-bap .doc-team-header.home { background: #8f1d2c !important; color: #fff !important; border-bottom-color: #7f1d1d !important; }
+        #print-area-bap .doc-team-header.away { background: #1e477e !important; color: #fff !important; border-bottom-color: #17365f !important; }
+        #print-area-bap .doc-team-header.home span,
+        #print-area-bap .doc-team-header.away span { color: #fff !important; opacity: 1 !important; }
+        #print-area-bap .doc-officials-table td { border-color: #d0d9e6 !important; padding: 3px 5px !important; }
+        #print-area-bap .doc-officials-table tr:nth-child(odd) { background: #f7f9fc; }
+        #print-area-bap .doc-jersey-card.home { background: #fff5f5 !important; border-color: #efb4bb !important; }
+        #print-area-bap .doc-jersey-card.away { background: #eff6ff !important; border-color: #b7d0f2 !important; }
+        #print-area-bap .doc-player-table { table-layout: fixed; }
+        #print-area-bap .doc-player-table.home thead tr { background: #922333 !important; color: #fff !important; }
+        #print-area-bap .doc-player-table.away thead tr { background: #214d83 !important; color: #fff !important; }
+        #print-area-bap .doc-player-table thead th { color: #fff !important; border-color: #aebed2 !important; }
+        #print-area-bap .doc-player-table tbody td { border-color: #c6d2e2 !important; }
+        #print-area-bap .doc-player-table tbody tr:nth-child(even):not(.doc-player-u19) { background: #f4f7fb !important; }
+        #print-area-bap .doc-player-table tbody tr.doc-player-u19 { background: #dff7ed !important; }
+        #print-area-bap .doc-mvp-banner {
+            border: 1px solid #e9c76a !important;
+            border-radius: 7px !important;
+            padding: 6px 8px !important;
+            background: linear-gradient(90deg, #fff8df 0%, #fffdf6 60%, #fff7dc 100%) !important;
+        }
+        #print-area-bap .doc-mvp-banner > div:first-child { color: #9a4a08 !important; }
+        #print-area-bap .doc-mvp-banner #modal-val-mvp { color: #a61b29 !important; }
+        #print-area-bap .doc-mvp-banner .bg-orange-500 { background: #d97706 !important; color: #fff !important; }
+        #print-area-bap .doc-mvp-banner .bg-red-800 { background: #9f1d26 !important; color: #fff !important; }
+        #print-area-bap .doc-fouls-table { border-color: #c6d2e2 !important; }
+        #print-area-bap .doc-fouls-table th { border-color: #c6d2e2 !important; }
+        #print-area-bap .doc-fouls-table tr:first-child { background: #e8eef7 !important; color: #203551 !important; }
+        #print-area-bap .doc-fouls-table tr:nth-child(2) { background: #f1f5fb !important; }
+        #print-area-bap #modal-foul-home { background: #fff0f0; color: #b91c1c !important; }
+        #print-area-bap #modal-foul-away { background: #eff6ff; color: #1d4ed8 !important; }
+        #print-area-bap .doc-verification-table th { background: #243b5a !important; color: #fff !important; border-color: #49617f !important; }
+        #print-area-bap .doc-verification-table td { background: #fff !important; border-color: #c6d2e2 !important; }
+        #print-area-bap .doc-verification-table td:last-child { background: #f4f7fb !important; }
+        #print-area-bap .bg-emerald-600 { background-color: #059669 !important; color: #fff !important; }
+
+        @media print {
+            #print-area-bap.print-doc {
+                border: 0 !important;
+                box-shadow: none !important;
+                background: #fff !important;
+                transform: scale(.92) !important;
+                transform-origin: top center !important;
+            }
+            #print-area-bap .doc-letterhead,
+            #print-area-bap .doc-title h2,
+            #print-area-bap .doc-meta-table td:nth-child(odd),
+            #print-area-bap .doc-meta-table tr:last-child td:nth-child(1),
+            #print-area-bap .doc-meta-table tr:last-child td:nth-child(3),
+            #print-area-bap .doc-section-heading,
+            #print-area-bap .doc-score-table tr:first-child,
+            #print-area-bap .doc-score-table tr:last-child,
+            #print-area-bap .doc-team-header.home,
+            #print-area-bap .doc-team-header.away,
+            #print-area-bap .doc-jersey-card.home,
+            #print-area-bap .doc-jersey-card.away,
+            #print-area-bap .doc-player-table.home thead tr,
+            #print-area-bap .doc-player-table.away thead tr,
+            #print-area-bap .doc-player-table tbody tr.doc-player-u19,
+            #print-area-bap .doc-mvp-banner,
+            #print-area-bap .doc-fouls-table tr:first-child,
+            #print-area-bap .doc-fouls-table tr:nth-child(2),
+            #print-area-bap #modal-foul-home,
+            #print-area-bap #modal-foul-away,
+            #print-area-bap .doc-verification-table th,
+            #print-area-bap .doc-verification-table td:last-child {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            #print-area-bap .doc-section,
+            #print-area-bap .doc-team-card,
+            #print-area-bap .doc-mvp-banner { break-inside: avoid !important; page-break-inside: avoid !important; }
+        }
+
     </style>
+
+<style id="afkab-professional-refresh">
+
+/* AFKAB V10 — Professional interface system */
+:root {
+  --afkab-font-ui: 'Outfit', Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --afkab-font-display: 'Syne', 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  --afkab-accent: #3b82f6;
+  --afkab-accent-soft: rgba(59,130,246,.19);
+  --afkab-accent-line: rgba(96,165,250,.55);
+  --afkab-ease: cubic-bezier(.2,.75,.25,1);
+}
+html[data-afkab-role="coordinator"] {
+  --afkab-accent: #3b82f6;
+  --afkab-accent-soft: rgba(59,130,246,.20);
+  --afkab-accent-line: rgba(96,165,250,.62);
+}
+html[data-afkab-role="operations"] {
+  --afkab-accent: #10b981;
+  --afkab-accent-soft: rgba(16,185,129,.20);
+  --afkab-accent-line: rgba(52,211,153,.62);
+}
+html[data-afkab-role="commissioner"] {
+  --afkab-accent: #f59e0b;
+  --afkab-accent-soft: rgba(245,158,11,.20);
+  --afkab-accent-line: rgba(251,191,36,.64);
+}
+html[data-afkab-role="home"] {
+  --afkab-accent: #14b8a6;
+  --afkab-accent-soft: rgba(20,184,166,.20);
+  --afkab-accent-line: rgba(45,212,191,.62);
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: var(--afkab-font-ui) !important; font-optical-sizing: auto; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+.sporty-font, h1.sporty-font, h2.sporty-font, h3.sporty-font { font-family: var(--afkab-font-display) !important; letter-spacing: -.025em; font-weight: 800; background: transparent; box-shadow: none; text-shadow: none; }
+/* Keep text itself clean; visual surfaces belong to the surrounding layout, not behind individual words. */
+main h1, main h2, main h3, main p, main label { text-shadow: none; }
+main .sporty-font + p,
+main .text-slate-400.text-xs.mt-0\.5,
+main #page-subtitle { font-family: var(--afkab-font-ui); font-weight: 400; line-height: 1.55; letter-spacing: .005em; background: transparent !important; box-shadow: none !important; }
+.custom-notification-content h2, .custom-notification-content h3,
+.custom-confirm-content h2, .custom-confirm-content h3,
+#alert-modal-content h2, #confirm-modal-content h2,
+#notification-modal h2, #confirmation-modal h2 {
+  font-family: var(--afkab-font-ui) !important; font-size: 1.05rem; font-weight: 700; line-height: 1.3; letter-spacing: -.015em; background: transparent !important; box-shadow: none !important;
+}
+.custom-notification-content p, .custom-confirm-content p { font-family: var(--afkab-font-ui); font-size: .86rem; line-height: 1.55; background: transparent !important; }
+
+/* Use the available width instead of constraining the entire workspace to a narrow centered column. */
+main.max-w-screen-2xl { width: 100% !important; max-width: none !important; margin-left: 0 !important; margin-right: 0 !important; }
+main { padding-left: clamp(.75rem, 1.35vw, 1.5rem) !important; padding-right: clamp(.75rem, 1.35vw, 1.5rem) !important; }
+main > .w-full.max-w-5xl { max-width: min(100%, 1600px) !important; }
+
+/* Role-coloured, clear navigation hover/focus states. */
+header nav a {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid transparent;
+  line-height: 1.25;
+  white-space: nowrap;
+  transition: color .18s var(--afkab-ease), background-color .18s var(--afkab-ease), border-color .18s var(--afkab-ease), box-shadow .18s var(--afkab-ease), transform .18s var(--afkab-ease) !important;
+}
+header nav a:hover,
+header nav a:focus-visible {
+  color: #fff !important;
+  background-color: var(--afkab-accent-soft) !important;
+  border-color: var(--afkab-accent-line) !important;
+  box-shadow: 0 5px 14px rgba(0,0,0,.16), inset 0 0 0 1px rgba(255,255,255,.025);
+  transform: translateY(-1px);
+  outline: none;
+}
+header nav a:focus-visible { box-shadow: 0 0 0 3px var(--afkab-accent-soft); }
+#main-tabs button, [role="tab"] {
+  transition: color .18s var(--afkab-ease), background-color .18s var(--afkab-ease), border-color .18s var(--afkab-ease), box-shadow .18s var(--afkab-ease), transform .18s var(--afkab-ease) !important;
+}
+#main-tabs button:hover:not(.bg-blue-600), [role="tab"]:hover:not([aria-selected="true"]) {
+  background-color: var(--afkab-accent-soft) !important;
+  border-color: var(--afkab-accent-line) !important;
+  color: #fff !important;
+}
+
+/* Consistent title, subtitle, body and notice hierarchy. */
+main h1.sporty-font { line-height: 1.16; overflow-wrap: anywhere; }
+main h2 { line-height: 1.3; }
+main p { line-height: 1.55; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button, a { touch-action: manipulation; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--afkab-accent) !important;
+  outline-offset: 2px;
+}
+
+/* Dropdowns and form controls: understated surfaces, readable options and role-coloured focus. */
+select:not([multiple]) {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  min-height: 2.45rem;
+  padding-right: 2.65rem !important;
+  border-radius: .75rem !important;
+  border-color: rgba(148,163,184,.30) !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right .85rem center !important;
+  background-size: 1rem 1rem !important;
+  line-height: 1.35;
+  cursor: pointer;
+  transition: border-color .18s var(--afkab-ease), box-shadow .18s var(--afkab-ease), background-color .18s var(--afkab-ease) !important;
+}
+select:not([multiple]):hover { border-color: rgba(148,163,184,.58) !important; }
+select:not([multiple]):focus, select:not([multiple]):focus-visible {
+  border-color: var(--afkab-accent) !important;
+  box-shadow: 0 0 0 3px var(--afkab-accent-soft) !important;
+  outline: none !important;
+}
+select:disabled { opacity: .55; cursor: not-allowed; }
+select option, select optgroup { background: #111b2d; color: #e5edf8; }
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="hidden"]):not([type="file"]):not([type="color"]):not([type="submit"]):not([type="button"]), textarea {
+  border-radius: .7rem;
+  transition: border-color .18s var(--afkab-ease), box-shadow .18s var(--afkab-ease), background-color .18s var(--afkab-ease) !important;
+}
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="hidden"]):not([type="file"]):not([type="color"]):not([type="submit"]):not([type="button"]):focus,
+textarea:focus { border-color: var(--afkab-accent) !important; box-shadow: 0 0 0 3px var(--afkab-accent-soft) !important; outline: none !important; }
+.custom-dropdown-list {
+  border: 1px solid rgba(148,163,184,.25) !important;
+  border-radius: .9rem !important;
+  box-shadow: 0 18px 42px rgba(0,0,0,.32) !important;
+  transform-origin: top center;
+  transition: opacity .18s var(--afkab-ease), transform .18s var(--afkab-ease), visibility .18s ease !important;
+}
+.custom-dropdown-list button, .custom-dropdown-list [role="option"] {
+  border-radius: .55rem;
+  transition: color .16s ease, background-color .16s ease !important;
+}
+.custom-dropdown-list button:hover, .custom-dropdown-list [role="option"]:hover,
+.custom-dropdown-list button:focus-visible, .custom-dropdown-list [role="option"]:focus-visible {
+  background: var(--afkab-accent-soft) !important;
+  color: #fff !important;
+  outline: none;
+}
+
+/* Soft page entrance + native cross-page view transitions where supported. */
+@keyframes afkab-page-enter { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: 150ms ease-in both afkab-vt-out; }
+::view-transition-new(root) { animation: 220ms ease-out both afkab-vt-in; }
+@keyframes afkab-vt-out { to { opacity: 0; } }
+@keyframes afkab-vt-in { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 1279px) {
+  header nav { max-width: 100%; }
+  main h1.sporty-font { letter-spacing: -.02em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  @view-transition { navigation: none; }
+}
+@media print {
+  body { animation: none !important; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  select:not([multiple]) { background-image: none !important; padding-right: .5rem !important; }
+}
+
+</style>
 </head>
 <body class="bg-slate-950 font-sans text-slate-100 antialiased h-screen hero-bg flex flex-col overflow-hidden">
 
     <!-- Navbar Atas -->
     <header class="w-full px-6 lg:px-10 py-3 flex items-center justify-between z-20 border-b border-white/10 backdrop-blur-md bg-slate-950/60 sticky top-0 flex-shrink-0 no-print">
-        <a href="index.html" id="navbar-brand-link" class="flex items-center space-x-3 transition-all duration-300 hover:opacity-80 group">
+        <a href="index.html" id="navbar-brand-link" class="flex items-center space-x-3 transition-all duration-300 hover:opacity-80 group" title="Kembali ke Halaman Awal">
             <div class="w-10 h-10 flex items-center justify-center transition-transform duration-300 group-hover:rotate-6">
                 <img src="01. Logo Web/002. Logo Afkab.webp" alt="Logo Afkab Kediri" class="w-full h-full object-contain">
             </div>
@@ -175,9 +463,9 @@
 
         <!-- Area Konten Modal (Background Putih Bersih Tanpa Frame Abu-abu) -->
         <div class="flex-1 overflow-y-auto p-2 lg:p-4 bg-white flex justify-center custom-scrollbar">
-            <div id="print-area-bap" class="max-w-4xl w-full bg-white rounded-xl p-3 lg:p-3 space-y-1.5 shadow-none text-slate-900 text-[11px] my-auto">
+            <div id="print-area-bap" class="print-doc max-w-4xl w-full bg-white rounded-xl p-3 lg:p-3 space-y-1.5 shadow-none text-slate-900 text-[11px] my-auto">
                 <!-- Kop Surat -->
-                <div class="flex justify-between items-start border-b-2 border-red-700 pb-1.5">
+                <div class="doc-letterhead flex justify-between items-start border-b-2 border-red-700 pb-1.5">
                     <div>
                         <h1 class="font-extrabold text-sm uppercase text-slate-800">Asosiasi Futsal Kabupaten Kediri</h1>
                         <p class="text-[9px] text-slate-500 font-semibold tracking-wide">LIGA FUTSAL AFKAB KEDIRI 2026</p>
@@ -189,13 +477,13 @@
                 </div>
 
                 <!-- Judul -->
-                <div class="text-center mb-0.5 mt-0.5">
+                <div class="doc-title text-center mb-0.5 mt-0.5">
                     <h2 class="text-base font-black text-red-700 uppercase tracking-widest">BERITA ACARA PERTANDINGAN</h2>
                 </div>
 
                 <!-- Info Pertandingan -->
-                <div class="overflow-hidden rounded-lg border border-slate-300 shadow-sm">
-                    <table class="w-full border-collapse text-[10px]">
+                <div class="doc-match-meta overflow-hidden rounded-lg border border-slate-300 shadow-sm">
+                    <table class="doc-meta-table w-full border-collapse text-[10px]">
                         <tr>
                             <td class="border border-slate-300 p-1 font-bold w-1/4">HARI / TANGGAL</td>
                             <td class="border border-slate-300 p-1 w-1/4 font-semibold text-slate-700" id="modal-val-date">-</td>
@@ -218,10 +506,10 @@
                 </div>
 
                 <!-- 1. Skor -->
-                <div>
-                    <h3 class="font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">1. HASIL PERTANDINGAN</h3>
+                <div class="doc-section doc-score">
+                    <h3 class="doc-section-heading font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">1. HASIL PERTANDINGAN</h3>
                     <div class="overflow-hidden rounded-lg border border-slate-300 shadow-sm">
-                        <table class="w-full border-collapse text-center text-[10px]">
+                        <table class="doc-score-table w-full border-collapse text-center text-[10px]">
                             <tr class="font-bold bg-slate-50">
                                 <td class="border border-slate-300 p-1 w-1/3">Babak</td>
                                 <td class="border border-slate-300 p-1 w-1/3 text-red-700 uppercase">HOME</td>
@@ -247,35 +535,35 @@
                 </div>
 
                 <!-- 2. Official Team -->
-                <div>
-                    <h3 class="font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">2. OFFICIAL TEAM</h3>
+                <div class="doc-section doc-officials">
+                    <h3 class="doc-section-heading font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">2. OFFICIAL TEAM</h3>
                     <div class="flex gap-2">
-                        <div class="w-1/2 border border-slate-300 rounded-lg overflow-hidden shadow-sm">
-                            <div class="bg-slate-50 text-slate-600 font-bold p-1 uppercase text-[9px] flex justify-between border-b border-slate-300">
+                        <div class="doc-team-card home w-1/2 border border-slate-300 rounded-lg overflow-hidden shadow-sm">
+                            <div class="doc-team-header home bg-slate-50 text-slate-600 font-bold p-1 uppercase text-[9px] flex justify-between border-b border-slate-300">
                                 <span id="modal-off-home-title" class="text-slate-700 font-extrabold">-</span>
                                 <span class="opacity-80">KANDANG</span>
                             </div>
-                            <table class="w-full text-[9px] border-collapse" id="modal-table-off-home"></table>
+                            <table class="doc-officials-table home w-full text-[9px] border-collapse" id="modal-table-off-home"></table>
                         </div>
-                        <div class="w-1/2 border border-slate-300 rounded-lg overflow-hidden shadow-sm">
-                            <div class="bg-slate-50 text-slate-600 font-bold p-1 uppercase text-[9px] flex justify-between border-b border-slate-300">
+                        <div class="doc-team-card away w-1/2 border border-slate-300 rounded-lg overflow-hidden shadow-sm">
+                            <div class="doc-team-header away bg-slate-50 text-slate-600 font-bold p-1 uppercase text-[9px] flex justify-between border-b border-slate-300">
                                 <span id="modal-off-away-title" class="text-slate-700 font-extrabold">-</span>
                                 <span class="opacity-80">TANDANG</span>
                             </div>
-                            <table class="w-full text-[9px] border-collapse" id="modal-table-off-away"></table>
+                            <table class="doc-officials-table away w-full text-[9px] border-collapse" id="modal-table-off-away"></table>
                         </div>
                     </div>
                 </div>
 
                 <!-- 3. Jersey Team -->
-                <div>
-                    <h3 class="font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">3. JERSEY TEAM</h3>
+                <div class="doc-section doc-jerseys">
+                    <h3 class="doc-section-heading font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">3. JERSEY TEAM</h3>
                     <div class="flex gap-2">
-                        <div class="w-1/2 border border-slate-300 rounded-lg p-1.5 bg-white shadow-sm">
+                        <div class="doc-jersey-card home w-1/2 border border-slate-300 rounded-lg p-1.5 bg-white shadow-sm">
                             <div class="font-bold text-red-700 uppercase text-[9px] mb-0.5" id="modal-jersey-home-title">Kandang</div>
                             <div class="text-[9px] font-bold text-slate-800" id="modal-val-jersey-home">-</div>
                         </div>
-                        <div class="w-1/2 border border-slate-300 rounded-lg p-1.5 bg-white shadow-sm">
+                        <div class="doc-jersey-card away w-1/2 border border-slate-300 rounded-lg p-1.5 bg-white shadow-sm">
                             <div class="font-bold text-blue-700 uppercase text-[9px] mb-0.5" id="modal-jersey-away-title">Tandang</div>
                             <div class="text-[9px] font-bold text-slate-800" id="modal-val-jersey-away">-</div>
                         </div>
@@ -283,15 +571,15 @@
                 </div>
 
                 <!-- 4. DSP Players -->
-                <div>
-                    <h3 class="font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">4. DAFTAR SUSUNAN PEMAIN (DSP)</h3>
+                <div class="doc-section doc-players">
+                    <h3 class="doc-section-heading font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">4. DAFTAR SUSUNAN PEMAIN (DSP)</h3>
                     <div class="flex gap-2">
-                        <div class="w-1/2 border border-slate-300 rounded-lg overflow-hidden shadow-sm bg-white">
-                            <div class="bg-slate-50 text-slate-600 font-bold p-1 uppercase text-[9px] flex justify-between border-b border-slate-300">
+                        <div class="doc-team-card home w-1/2 border border-slate-300 rounded-lg overflow-hidden shadow-sm bg-white">
+                            <div class="doc-team-header home bg-slate-50 text-slate-600 font-bold p-1 uppercase text-[9px] flex justify-between border-b border-slate-300">
                                 <span id="modal-dsp-home-title" class="text-slate-700 font-extrabold">-</span>
                                 <span class="opacity-80">KANDANG</span>
                             </div>
-                            <table class="w-full text-[9px] text-center border-collapse">
+                            <table class="doc-player-table home w-full text-[9px] text-center border-collapse">
                                 <thead>
                                     <tr class="font-bold text-slate-700 bg-slate-50">
                                         <th class="border border-slate-300 p-0.5 w-5">No</th>
@@ -305,12 +593,12 @@
                                 <tbody id="modal-tbody-home-players"></tbody>
                             </table>
                         </div>
-                        <div class="w-1/2 border border-slate-300 rounded-lg overflow-hidden shadow-sm bg-white">
-                            <div class="bg-slate-50 text-slate-600 font-bold p-1 uppercase text-[9px] flex justify-between border-b border-slate-300">
+                        <div class="doc-team-card away w-1/2 border border-slate-300 rounded-lg overflow-hidden shadow-sm bg-white">
+                            <div class="doc-team-header away bg-slate-50 text-slate-600 font-bold p-1 uppercase text-[9px] flex justify-between border-b border-slate-300">
                                 <span id="modal-dsp-away-title" class="text-slate-700 font-extrabold">-</span>
                                 <span class="opacity-80">TANDANG</span>
                             </div>
-                            <table class="w-full text-[9px] text-center border-collapse">
+                            <table class="doc-player-table away w-full text-[9px] text-center border-collapse">
                                 <thead>
                                     <tr class="font-bold text-slate-700 bg-slate-50">
                                         <th class="border border-slate-300 p-0.5 w-5">No</th>
@@ -328,7 +616,7 @@
                 </div>
 
                 <!-- MVP Banner -->
-                <div class="bg-white border border-orange-200 rounded-lg p-1.5 shadow-sm">
+                <div class="doc-mvp-banner bg-white border border-orange-200 rounded-lg p-1.5 shadow-sm">
                     <div class="flex justify-between items-center mb-0.5">
                         <div class="font-extrabold text-orange-600 text-[9px]">MAN OF THE MATCH</div>
                         <div class="bg-orange-500 text-white px-1.5 py-0.2 rounded text-[7px] font-bold uppercase shadow-sm">Official Award</div>
@@ -342,10 +630,10 @@
                 </div>
 
                 <!-- 5. Time Out and Foul -->
-                <div>
-                    <h3 class="font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">5. TIME OUT AND FOUL</h3>
+                <div class="doc-section doc-fouls">
+                    <h3 class="doc-section-heading font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">5. TIME OUT AND FOUL</h3>
                     <div class="overflow-hidden rounded-lg border border-slate-300 shadow-sm bg-white">
-                        <table class="w-full border-collapse text-center text-[9px]">
+                        <table class="doc-fouls-table w-full border-collapse text-center text-[9px]">
                             <tr class="font-bold text-slate-700 bg-slate-50">
                                 <th class="border border-slate-300 p-1" rowspan="2">Tim / Babak</th>
                                 <th class="border border-slate-300 p-0.5" colspan="2">Babak I</th>
@@ -412,10 +700,10 @@
                 </div>
 
                 <!-- 6. Match Verification -->
-                <div>
-                    <h3 class="font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">6. MATCH VERIFICATION</h3>
+                <div class="doc-section doc-verification">
+                    <h3 class="doc-section-heading font-bold border-l-4 border-red-700 bg-slate-100 px-2 py-1 mb-1 text-[11px] text-slate-800 uppercase tracking-wide">6. MATCH VERIFICATION</h3>
                     <div class="overflow-hidden rounded-lg border border-slate-300 shadow-sm bg-white">
-                        <table class="w-full border-collapse text-center text-[9px]">
+                        <table class="doc-verification-table w-full border-collapse text-center text-[9px]">
                             <tr class="font-bold text-slate-700 bg-slate-50">
                                 <th class="border border-slate-300 p-1 w-1/4">Official Team Home</th>
                                 <th class="border border-slate-300 p-1 w-1/4">Official Team Away</th>
@@ -473,7 +761,7 @@
                 }
                 const brandLink = document.getElementById('navbar-brand-link');
                 if (brandLink) {
-                    brandLink.setAttribute('href', 'operations.html');
+                    brandLink.setAttribute('href', 'index.html');
                 }
 
                 const navContainer = document.getElementById('navbar-menu-container');
@@ -544,8 +832,8 @@
 
         async function initArchivePage() {
             try {
-                allPlayersData = await window.getFromFirestore("master_player").catch(() => []);
-                allOfficialsData = await window.getFromFirestore("master_official").catch(() => []);
+                allPlayersData = await window.getFromFirestore("master_player", true).catch(() => []);
+                allOfficialsData = await window.getFromFirestore("master_official", true).catch(() => []);
             } catch(e) { 
                 allPlayersData = []; 
                 allOfficialsData = [];
@@ -558,7 +846,7 @@
             if (icon) icon.classList.add('fa-spin');
             
             try {
-                let rawData = await window.getFromFirestore("master_archive");
+                let rawData = await window.getFromFirestore("master_archive", true);
                 archiveData = rawData.filter(d => d.id && d.id !== "dummy_data" && !String(d.id).toLowerCase().includes("null"));
                 renderArchiveTable();
             } catch (err) {
@@ -597,7 +885,7 @@
                         <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full text-[10px] font-bold">${d.status || 'Selesai'}</span>
                     </td>
                     <td class="py-3 px-4 text-center flex justify-center items-center gap-1.5">
-                        <button onclick="openArchiveReportModal('${d.matchId}')" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg transition-all shadow-md flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider" title="Buka Dokumen BAP">
+                        <button onclick="openArchiveReportModal('${d.id}')" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg transition-all shadow-md flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider" title="Buka Dokumen BAP">
                             <i class="fas fa-folder-open text-[10px]"></i> Open
                         </button>
                         <button onclick="deleteArchive('${d.id}')" class="bg-rose-600 hover:bg-rose-500 text-white p-1.5 px-2.5 rounded-lg transition-all shadow-md" title="Hapus Arsip">
@@ -609,41 +897,59 @@
             });
         }
 
-        window.openArchiveReportModal = async function(matchId) {
+        window.openArchiveReportModal = async function(archiveKey) {
             try {
+                // Tutup tampilan lama terlebih dahulu agar data sebelumnya tidak tampak
+                // jika laporan untuk arsip yang dipilih tidak ditemukan.
+                const archiveModal = document.getElementById('archive-report-modal');
+                if (archiveModal) archiveModal.classList.remove('modal-active');
+
+                // Tombol membuka berdasarkan ID arsip; ID pertandingan diambil dari arsip tersebut.
+                // Jangan gunakan nomor urut/nomor pertandingan sebagai pengganti ID yang unik.
+                const requestedKey = String(archiveKey ?? '').trim();
+                const currentArchive = archiveData.find(d =>
+                    (requestedKey && String(d.id ?? '').trim() === requestedKey) ||
+                    (requestedKey && String(d.matchId ?? '').trim() === requestedKey)
+                ) || null;
+                const targetMatchId = String(
+                    currentArchive?.matchId ||
+                    (requestedKey.startsWith('ARC-') ? requestedKey.slice(4) : requestedKey)
+                ).trim();
+
                 if (!allPlayersData || allPlayersData.length === 0) {
-                    allPlayersData = await window.getFromFirestore("master_player").catch(() => []);
+                    allPlayersData = await window.getFromFirestore("master_player", true).catch(() => []);
                 }
                 if (!allOfficialsData || allOfficialsData.length === 0) {
-                    allOfficialsData = await window.getFromFirestore("master_official").catch(() => []);
+                    allOfficialsData = await window.getFromFirestore("master_official", true).catch(() => []);
                 }
 
-                const currentArchive = archiveData.find(d => String(d.matchId) === String(matchId) || String(d.id) === String(matchId));
-                const targetDocNo = currentArchive ? currentArchive.docNo : null;
+                // Selalu baca ulang master_report dari Firestore, bukan cache localStorage.
+                const reports = await window.getFromFirestore("master_report", true).catch(() => []);
+                const keyOf = value => String(value ?? '').trim();
 
-                let reports = await window.getFromFirestore("master_report").catch(() => []);
-                
-                let reportData = reports.find(r => 
-                    String(r.id) === String(matchId) || 
-                    String(r.matchNo) === String(matchId) || 
-                    String(r.matchId) === String(matchId) ||
-                    (targetDocNo && String(r.docNo) === String(targetDocNo))
+                // Prioritas 1: ID dokumen/field ID yang sama dengan matchId milik arsip.
+                let reportData = reports.find(r =>
+                    targetMatchId && (keyOf(r.id) === targetMatchId || keyOf(r.docId) === targetMatchId)
                 );
 
-                if (!reportData && reports.length > 0) {
-                    const arcItem = currentArchive || archiveData.find(d => String(d.matchId) === String(matchId));
-                    reportData = reports.find(r => 
-                        (arcItem && r.matchInfo && r.matchInfo === arcItem.matchInfo) ||
-                        (arcItem && r.docNo && r.docNo === arcItem.docNo)
-                    ) || reports[0];
+                // Prioritas 2: field matchId eksplisit, hanya jika ID utama tidak ditemukan.
+                if (!reportData && targetMatchId) {
+                    reportData = reports.find(r => keyOf(r.matchId) === targetMatchId);
                 }
 
+                // Tidak menebak laporan berdasarkan nomor dokumen/nama tim.
+                // Jika ID pertandingan tidak cocok, hentikan dan tampilkan notifikasi.
+
                 if (!reportData) {
-                    window.showCustomNotification("Data Tidak Ditemukan", "Data laporan pertandingan di master_report tidak ditemukan untuk ID: " + matchId, "error");
+                    window.showCustomNotification(
+                        "Data Tidak Ditemukan",
+                        "Tidak ditemukan dokumen master_report yang cocok dengan ID pertandingan: " + (targetMatchId || requestedKey || '-'),
+                        "error"
+                    );
                     return;
                 }
 
-                const finalDocNo = reportData.docNo || reportData.matchNo || (currentArchive ? currentArchive.docNo : null) || matchId || '-';
+                const finalDocNo = reportData.docNo || reportData.matchNo || (currentArchive ? currentArchive.docNo : null) || targetMatchId || '-';
                 document.getElementById('modal-doc-no').innerText = finalDocNo.replace('DSP/AFKAB/2026/P.', '');
                 document.getElementById('modal-val-date').innerText = reportData.date || reportData.matchDate || '-';
                 document.getElementById('modal-val-time').innerText = reportData.time || reportData.kickoff || '09:00 WIB';
@@ -687,8 +993,8 @@
                 let homePlayers = scrHome.players || scrHome.homePlayers || [];
                 let awayPlayers = scrAway.players || scrAway.awayPlayers || [];
 
-                renderModalOfficials(scrHome, 'modal-table-off-home', 'text-red-700');
-                renderModalOfficials(scrAway, 'modal-table-off-away', 'text-blue-700');
+                renderModalOfficials(scrHome, 'modal-table-off-home', 'text-red-700', reportData.homeTeamId);
+                renderModalOfficials(scrAway, 'modal-table-off-away', 'text-blue-700', reportData.awayTeamId);
 
                 // Menentukan TTD (Tanda Tangan) Verification Bawah
                 let hcHome = '-';
@@ -779,17 +1085,22 @@
             window.print();
         }
 
-        // FUNGSI RENDER OFFICIAL (DIBATASI STRICT MAKSIMAL 2 ORANG DARI DATA SCREENING)
-        function renderModalOfficials(scrTeam, tableId, textColorClass) {
+        // Render maksimal 2 official; pencarian master_official dibatasi dengan teamId pertandingan ini.
+        function renderModalOfficials(scrTeam, tableId, textColorClass, teamIdStr) {
             const tbody = document.getElementById(tableId);
             if (!tbody) return;
             tbody.innerHTML = '';
-            
+
+            const expectedTeamId = String(teamIdStr ?? '').trim();
+            const normalized = value => String(value ?? '').trim().toLowerCase();
+            const teamOfficials = allOfficialsData.filter(o =>
+                !expectedTeamId || String(o.teamId ?? '').trim() === expectedTeamId
+            );
+
             let officials = [];
             if (scrTeam) {
                 const off1 = scrTeam.official1 || scrTeam.officialHome1 || scrTeam.officialAway1;
                 const off2 = scrTeam.official2 || scrTeam.officialHome2 || scrTeam.officialAway2;
-                
                 if (off1 && off1 !== '-') officials.push(off1);
                 if (off2 && off2 !== '-') officials.push(off2);
             }
@@ -806,18 +1117,21 @@
             }
 
             officials.forEach((item, idx) => {
-                let offIdStr = String(typeof item === 'object' ? (item.id || item.officialId || item.name || item.nama) : item).trim();
-                let offName = typeof item === 'object' ? (item.name || item.nama || offIdStr) : offIdStr;
-                let offPos = typeof item === 'object' ? (item.position || item.posisi || item.jabatan) : '';
+                const isObject = item && typeof item === 'object';
+                const offKey = String(isObject ? (item.id || item.officialId || item.official_id || item.name || item.nama || '') : item).trim();
+                let offName = isObject ? (item.name || item.nama || offKey) : offKey;
+                let offPos = isObject ? (item.position || item.posisi || item.jabatan || '') : '';
 
-                let officialObj = allOfficialsData.find(o => 
-                    String(o.id) === offIdStr || 
-                    String(o.officialId) === offIdStr || 
-                    Object.values(o).some(val => String(val).trim() === offIdStr)
+                let officialObj = teamOfficials.find(o =>
+                    [o.id, o.officialId, o.official_id].some(id => String(id ?? '').trim() === offKey)
                 );
-
-                if (!officialObj && typeof item === 'string') {
-                    officialObj = allOfficialsData.find(o => (o.name || o.nama || '').trim().toLowerCase() === offIdStr.toLowerCase());
+                if (!officialObj && offName && offName !== '-') {
+                    const nameMatches = teamOfficials.filter(o =>
+                        normalized(o.name || o.nama) === normalized(offName) ||
+                        normalized(o.name || o.nama) === normalized(offKey)
+                    );
+                    // Jika teamId tidak tersedia, jangan gunakan nama yang ambigu antar tim.
+                    if (expectedTeamId || nameMatches.length === 1) officialObj = nameMatches[0];
                 }
 
                 if (officialObj) {
@@ -856,7 +1170,7 @@
                 const tr = document.createElement('tr');
 
                 if (!item) {
-                    tr.className = "bg-white text-slate-400";
+                    tr.className = "doc-player-empty bg-white text-slate-400";
                     tr.innerHTML = `
                         <td class="border border-slate-300 p-0.5 font-bold text-center">-</td>
                         <td class="border border-slate-300 p-0.5 text-left italic">-</td>
@@ -878,14 +1192,22 @@
                         searchName = searchName.trim().toLowerCase();
                     }
 
-                    let playerObj = allPlayersData.find(p => {
-                        return String(p.id) === pIdStr || 
-                               String(p.playerId) === pIdStr ||
-                               String(p.player_id) === pIdStr;
-                    });
-                    
-                    if (!playerObj) {
-                        playerObj = allPlayersData.find(p => String(p.name || '').trim().toLowerCase() === searchName || String(p.nama || '').trim().toLowerCase() === searchName);
+                    // ID pemain harus cocok DAN pemain harus terdaftar pada teamId sisi pertandingan ini.
+                    // Ini mencegah nama/nomor jersey diambil dari pemain tim lain.
+                    const expectedTeamId = String(teamIdStr ?? '').trim();
+                    const sameTeam = p => !expectedTeamId || String(p.teamId ?? '').trim() === expectedTeamId;
+                    const playerKeyMatches = p => [p.id, p.playerId, p.player_id, p.docId]
+                        .some(id => String(id ?? '').trim() === pIdStr);
+
+                    let playerObj = allPlayersData.find(p => sameTeam(p) && playerKeyMatches(p));
+
+                    if (!playerObj && searchName) {
+                        const nameMatches = allPlayersData.filter(p => sameTeam(p) &&
+                            (String(p.name || '').trim().toLowerCase() === searchName ||
+                             String(p.nama || '').trim().toLowerCase() === searchName)
+                        );
+                        // Nama hanya boleh menjadi kunci jika unik, kecuali sudah dibatasi oleh teamId.
+                        if (expectedTeamId || nameMatches.length === 1) playerObj = nameMatches[0];
                     }
 
                     let jerseyNo = '-';
@@ -920,7 +1242,7 @@
 
                     let isMvpChecked = mvpId && (String(mvpId) === String(realPlayerId) || String(mvpId) === String(pId) || String(mvpId) === String(pName)) ? '<i class="fas fa-check-circle text-orange-600 text-[10px]"></i>' : '-';
 
-                    tr.className = isU19 ? "bg-emerald-500/10 text-slate-900 font-semibold" : "bg-white text-slate-900";
+                    tr.className = isU19 ? "doc-player-u19 bg-emerald-500/10 text-slate-900 font-semibold" : "doc-player-row bg-white text-slate-900";
                     tr.innerHTML = `
                         <td class="border border-slate-300 p-0.5 font-bold text-slate-800 text-center">${jerseyNo}</td>
                         <td class="border border-slate-300 p-0.5 text-left font-semibold text-slate-800 flex justify-between items-center px-1">
@@ -977,20 +1299,21 @@
 
         setTimeout(initArchivePage, 800);
     </script>
-
-    <script>
-        // Role context lock: logo navigation always returns to the dashboard for the active role.
-        window.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const role = params.get('role') || 'coordinator';
-            const dashboards = {
-                coordinator: 'coordinator.html?role=coordinator',
-                operations: 'operations.html?role=operations',
-                commissioner: 'commissioner.html?role=commissioner'
-            };
-            const brandLink = document.getElementById('navbar-brand-link');
-            if (brandLink && dashboards[role]) brandLink.setAttribute('href', dashboards[role]);
-        });
-    </script>
+<script id="afkab-professional-role-theme">
+(() => {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const requestedRole = (params.get('role') || '').toLowerCase();
+    const filename = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    const pageRole = filename === 'index.html' ? 'home' :
+      filename === 'operations.html' ? 'operations' :
+      filename === 'commissioner.html' ? 'commissioner' : 'coordinator';
+    const role = ['coordinator', 'operations', 'commissioner'].includes(requestedRole) ? requestedRole : pageRole;
+    document.documentElement.setAttribute('data-afkab-role', role);
+  } catch (_) {
+    document.documentElement.setAttribute('data-afkab-role', 'coordinator');
+  }
+})();
+</script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 // app.js
 // Import Firebase module (Versi 10.x.x Modular)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc, deleteDoc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
 // 1. Inisialisasi Firebase menggunakan data dari config.js
 const app = initializeApp(CONFIG.FIREBASE);
@@ -104,23 +104,31 @@ async function upsertToFirestore(collectionName, customId, dataObj) {
 // Fungsi untuk menghapus data di Firestore berdasarkan custom field 'id'[cite: 33]
 async function deleteFromFirestore(collectionName, teamId) {
     try {
+        const targetId = String(teamId);
         const q = query(collection(db, collectionName), where("id", "==", teamId));
         const querySnapshot = await getDocs(q);
-        
-        if (!querySnapshot.empty) {
-            const docRef = doc(db, collectionName, querySnapshot.docs[0].id);
-            await deleteDoc(docRef);
-            console.log(`🗑️ Data dengan ID ${teamId} berhasil dihapus dari Firestore.`);
-            
-            // Hapus cache terkait
-            localStorage.removeItem(`afkab_cache_${collectionName}`);
-            
-            return { success: true };
+        const documentIds = new Set(querySnapshot.docs.map((item) => item.id));
+
+        // Dukungan dokumen legacy dengan ID Firestore otomatis dan dokumen dengan custom document ID.
+        const directRef = doc(db, collectionName, targetId);
+        const directSnapshot = await getDoc(directRef);
+        if (directSnapshot.exists()) documentIds.add(directSnapshot.id);
+
+        if (documentIds.size === 0) {
+            return { success: false, message: "Dokumen tidak ditemukan di Firestore" };
         }
-        return { success: false, message: "Dokumen tidak ditemukan di Firestore" };
+
+        // Hapus semua duplikat yang memiliki field id sama agar data lama tidak muncul lagi.
+        for (const documentId of documentIds) {
+            await deleteDoc(doc(db, collectionName, documentId));
+        }
+
+        console.log(`🗑️ ${documentIds.size} dokumen dengan ID ${targetId} berhasil dihapus dari Firestore (${collectionName}).`);
+        localStorage.removeItem(`afkab_cache_${collectionName}`);
+        return { success: true };
     } catch (error) {
         console.error("❌ Error hapus Firestore:", error);
-        return { success: false, error: error };
+        return { success: false, error: error, message: error?.message || "Gagal menghapus dokumen Firestore" };
     }
 }
 

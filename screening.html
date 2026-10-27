@@ -227,6 +227,73 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
 }
 
 </style>
+
+<style id="afkab-screening-solid-roster-cards">
+  /* Roster modal is fixed to the viewport. Player cards never create an inner scroll region. */
+  #modal-roster-screening { overflow: hidden !important; overscroll-behavior: none; }
+  #modal-roster-screening > div { height: 95vh !important; max-height: 95vh !important; overflow: hidden !important; }
+  #modal-roster-screening > div > div:nth-child(2) { min-height: 0; overflow: hidden !important; padding: clamp(8px, 1.1vw, 18px) !important; }
+  #modal-roster-screening .grid.grid-cols-1.lg\:grid-cols-2 { min-height: 0; }
+  #roster-home-players, #roster-away-players {
+    display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-auto-rows: minmax(0, auto); align-content: start; gap: 7px !important;
+    max-height: none !important; height: auto !important; overflow: visible !important; min-height: 0;
+  }
+  .roster-player-card {
+    min-width: 0; min-height: 49px; padding: 7px 8px; border-radius: 13px;
+    display: flex; align-items: center; gap: 8px; background: #1e3a8a !important;
+    border: 1px solid #35549a !important; color: #fff !important;
+    box-shadow: 0 2px 5px rgba(15,23,42,.12); transition: background-color .16s ease, border-color .16s ease, transform .16s ease;
+  }
+  .roster-player-card:hover:not(.is-suspended):not(.is-u19) { background: #25469c !important; border-color: #6685d4 !important; }
+  /* Kategori U-19 dibedakan dengan merah marun; U-17 tetap biru. */
+  .roster-player-card.is-u19:not(.is-suspended) { background: #a33327 !important; border-color: #bd493b !important; }
+  .roster-player-card.is-u19:hover:not(.is-suspended) { background: #b13b2e !important; border-color: #d56a5c !important; }
+  .roster-player-card:has(input:checked) { border-color: #7dd3fc !important; box-shadow: 0 0 0 1px rgba(125,211,252,.35), 0 3px 8px rgba(15,23,42,.15); }
+  .roster-player-card.is-suspended { background: #d28a8a !important; border-color: #d99d9d !important; color: #fff !important; }
+  .roster-player-checkbox { appearance: auto; accent-color: #22c55e; width: 17px; height: 17px; flex: 0 0 17px; margin: 0; }
+  .roster-player-number { width: 28px; height: 30px; flex: 0 0 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; font: 800 12px/1 'Outfit', sans-serif; }
+  .roster-player-number--active { background: #334c89 !important; color: #facc15 !important; border: 1px solid #6076ac; }
+  .roster-player-number--suspended { background: rgba(255,255,255,.22) !important; color: #ffe4a3 !important; border: 1px solid rgba(255,255,255,.28); }
+  .roster-player-copy { min-width: 0; flex: 1 1 auto; display: flex; flex-direction: column; gap: 3px; }
+  .roster-player-name { min-width: 0; color: #fff !important; font: 800 11px/1.15 'Outfit', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .roster-player-meta { min-width: 0; display: block; font: 600 9px/1.15 'Outfit', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .roster-player-meta--active { color: #dbeafe !important; }
+  .roster-player-meta--suspended { color: rgba(255,255,255,.86) !important; }
+  .roster-player-status { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; }
+  .roster-player-status--active { width: 19px; height: 19px; border-radius: 4px; background: #159b68; border: 1px solid rgba(255,255,255,.2); color: #dcfce7; font-size: 10px; }
+  .roster-player-status--suspended { padding: 3px 5px; border-radius: 5px; background: rgba(190,24,24,.25); color: #fff; font-size: 7px; line-height: 1; font-weight: 900; letter-spacing: .02em; }
+  @media (max-width: 1279px) {
+    #modal-roster-screening > div { width: 99% !important; }
+    #modal-roster-screening .grid.grid-cols-1.lg\:grid-cols-2 { gap: 8px !important; }
+    #modal-roster-screening .grid.grid-cols-1.lg\:grid-cols-2 > div { padding: 9px !important; }
+    #roster-home-players, #roster-away-players { gap: 5px !important; }
+    .roster-player-card { min-height: 43px; padding: 5px 6px; gap: 6px; border-radius: 10px; }
+    .roster-player-checkbox { width: 15px; height: 15px; flex-basis: 15px; }
+    .roster-player-number { width: 24px; height: 25px; flex-basis: 24px; font-size: 10px; }
+    .roster-player-name { font-size: 10px; }
+    .roster-player-meta { font-size: 8px; }
+    .roster-player-status--active { width: 16px; height: 16px; font-size: 9px; }
+  }
+  @media (max-height: 800px) {
+    #modal-roster-screening > div { height: 97vh !important; max-height: 97vh !important; }
+    #modal-roster-screening > div > div:nth-child(2) { padding-top: 7px !important; padding-bottom: 7px !important; }
+    #modal-roster-screening .grid.grid-cols-1.lg\:grid-cols-2 > div { padding: 8px !important; }
+    #modal-roster-screening .grid.grid-cols-1.lg\:grid-cols-2 > div > div:first-child > div:first-child { margin-bottom: 6px !important; }
+    #roster-home-players, #roster-away-players { gap: 4px !important; }
+    .roster-player-card { min-height: 38px; padding: 4px 5px; gap: 5px; }
+    .roster-player-number { width: 22px; height: 23px; flex-basis: 22px; font-size: 10px; }
+    .roster-player-name { font-size: 9px; }
+    .roster-player-meta { font-size: 7px; }
+  }
+  @media (max-width: 767px) {
+    #modal-roster-screening > div { height: 97vh !important; }
+    #modal-roster-screening .grid.grid-cols-1.lg\:grid-cols-2 { grid-template-columns: minmax(0,1fr) !important; }
+    #modal-roster-screening > div > div:nth-child(2) { overflow: hidden !important; }
+    #roster-home-players, #roster-away-players { grid-template-columns: repeat(3,minmax(0,1fr)) !important; }
+  }
+</style>
+
 </head>
 <body class="bg-slate-950 font-sans text-slate-100 antialiased h-screen hero-bg flex flex-col overflow-hidden">
 
@@ -383,7 +450,7 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
 
             <!-- Body Roster Modal (Tanpa Scroll / Flex Fit Sejajar) -->
             <div class="w-full flex-1 p-4 lg:p-5 relative flex flex-col justify-between overflow-hidden">
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 h-full items-stretch">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 h-full items-stretch">
                     
                     <!-- KOLOM HOME TEAM -->
                     <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm flex flex-col justify-between relative overflow-hidden h-full">
@@ -447,7 +514,7 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
                             <h4 class="text-[10px] font-bold text-slate-700 mb-2 flex items-center flex-shrink-0">
                                 Daftar Pemain (Pilih 3 s.d 14 Pemain)
                             </h4>
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 auto-rows-max items-start overflow-y-auto max-h-[42vh]" id="roster-home-players">
+                            <div class="roster-player-grid grid grid-cols-1 sm:grid-cols-3 gap-2 auto-rows-max items-start" id="roster-home-players">
                                 <!-- Card Pemain Diisi JS -->
                             </div>
                         </div>
@@ -515,7 +582,7 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
                             <h4 class="text-[10px] font-bold text-slate-700 mb-2 flex items-center flex-shrink-0">
                                 Daftar Pemain (Pilih 3 s.d 14 Pemain)
                             </h4>
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 auto-rows-max items-start overflow-y-auto max-h-[42vh]" id="roster-away-players">
+                            <div class="roster-player-grid grid grid-cols-1 sm:grid-cols-3 gap-2 auto-rows-max items-start" id="roster-away-players">
                                 <!-- Card Pemain Diisi JS -->
                             </div>
                         </div>
@@ -1393,39 +1460,30 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
 
                     const isU19 = (ply.category || '').toUpperCase().includes('U-19');
                     
-                    let cardTheme, numTheme, textMuted, checkboxAttr, statusBadge;
+                    let numTheme, textMuted, checkboxAttr, statusBadge;
 
                     if (isSuspended) {
-                        // Desain khusus pemain yang terkena sanksi suspend (Warna Merah/Marun dan tidak bisa diklik)
-                        cardTheme = "bg-rose-950/90 text-rose-200 border-2 border-rose-600 shadow-md cursor-not-allowed opacity-90";
-                        numTheme = "bg-rose-900 border border-rose-500 text-rose-300 shadow-inner";
-                        textMuted = "text-rose-300/80";
-                        checkboxAttr = "disabled"; // Checkbox dinonaktifkan
-                        statusBadge = `<span class="bg-rose-600 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wider ml-1 animate-pulse"><i class="fas fa-ban mr-0.5"></i> SUSPENDED</span>`;
-                    } else if (isU19) {
-                        cardTheme = "bg-[#064e3b] text-white hover:bg-[#065f46] border border-[#059669] shadow-sm";
-                        numTheme = "bg-[#022c22] border border-[#047857] text-emerald-300 shadow-inner";
-                        textMuted = "text-emerald-300/80";
-                        checkboxAttr = "";
-                        statusBadge = "";
+                        // Pemain suspend ditandai marun muda dan checkbox dikunci.
+                        numTheme = "roster-player-number--suspended";
+                        textMuted = "roster-player-meta--suspended";
+                        checkboxAttr = "disabled";
+                        statusBadge = `<span class="roster-player-status roster-player-status--suspended"><i class="fas fa-ban mr-0.5"></i> SUSPEND</span>`;
                     } else {
-                        cardTheme = "bg-[#1e293b] text-white hover:bg-[#334155] border border-slate-700 shadow-sm";
-                        numTheme = "bg-[#0f172a] border border-slate-600 text-blue-200 shadow-inner";
-                        textMuted = "text-slate-400";
+                        numTheme = "roster-player-number--active";
+                        textMuted = "roster-player-meta--active";
                         checkboxAttr = "";
-                        statusBadge = "";
+                        statusBadge = `<span class="roster-player-status roster-player-status--active" title="Pemain terdaftar"><i class="fas fa-check"></i></span>`;
                     }
-                    
+
                     let html = `
-                    <label class="${cardTheme} rounded-xl p-2.5 flex items-center space-x-2.5 ${isSuspended ? 'cursor-not-allowed' : 'cursor-pointer'} transition-all duration-200 hover:shadow-md group relative">
-                        <input type="checkbox" value="${ply.id}" class="player-cb-${side} w-4 h-4 rounded text-emerald-600 bg-slate-900 border-slate-600 focus:ring-0 ${isSuspended ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}" ${checkboxAttr} onchange="updatePlayerCount('${side}', this)" data-u19="${isU19}">
-                        <div class="w-7 h-7 rounded-lg ${numTheme} flex items-center justify-center font-bold text-xs flex-shrink-0">${ply.jerseyNo || '-'}</div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-[11px] font-bold truncate tracking-wide text-white leading-tight flex items-center flex-wrap">
-                                ${ply.name || 'Pemain'} ${statusBadge}
-                            </p>
-                            <p class="text-[9px] ${textMuted} truncate mt-0.5 font-medium">${ply.position || '-'} • ${ply.category || '-'}</p>
-                        </div>
+                    <label class="roster-player-card ${isSuspended ? 'is-suspended' : ''} ${isU19 ? 'is-u19' : ''} ${isSuspended ? 'cursor-not-allowed' : 'cursor-pointer'} group relative">
+                        <input type="checkbox" value="${ply.id}" class="player-cb-${side} roster-player-checkbox ${isSuspended ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}" ${checkboxAttr} onchange="updatePlayerCount('${side}', this)" data-u19="${isU19}">
+                        <span class="roster-player-number ${numTheme}">${ply.jerseyNo || '-'}</span>
+                        <span class="roster-player-copy">
+                            <span class="roster-player-name" title="${ply.name || 'Pemain'}">${ply.name || 'Pemain'}</span>
+                            <span class="roster-player-meta ${textMuted}">${ply.position || '-'} <span aria-hidden="true">•</span> ${ply.category || '-'}</span>
+                        </span>
+                        ${statusBadge}
                     </label>`;
                     
                     container.innerHTML += html;

@@ -70,6 +70,70 @@
             z-index: 1;
         }
 
+        /* Master Data team-detail modal: wide, compact, and no internal scrolling */
+        #modal-team-detail { padding: 2vh 2vw; }
+        #modal-team-detail-content {
+            width: 96vw !important;
+            max-width: 1600px !important;
+            max-height: 96vh !important;
+            padding: clamp(16px, 1.5vw, 26px) !important;
+            overflow: hidden !important;
+            gap: 0;
+        }
+        #modal-team-detail-content .team-detail-main { min-height: 0; }
+        #detail-team-logo { width: 58px; height: 58px; }
+        #detail-team-name { font-size: clamp(20px, 1.5vw, 28px); line-height: 1.1; }
+        #detail-team-meta { font-size: 12px; }
+        #detail-officials-container {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 8px;
+        }
+        #detail-officials-container > div { min-width: 0; padding: 10px 12px; }
+        #detail-officials-container h4 { max-width: none; font-size: 12px; }
+        #detail-officials-container span { font-size: 10px; }
+        #detail-players-container {
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 8px;
+        }
+        #detail-players-container > div {
+            min-width: 0;
+            min-height: 66px;
+            padding: 9px 11px;
+            border-radius: 13px;
+            gap: 5px;
+            box-shadow: 0 3px 10px rgba(15, 23, 42, .06);
+        }
+        #detail-players-container > div > div:first-child { margin-bottom: 2px; }
+        #detail-players-container > div > div:first-child span:first-child {
+            width: 27px; height: 27px; border-radius: 8px; font-size: 12px;
+        }
+        #detail-players-container > div > div:first-child span:last-child {
+            font-size: 8px; letter-spacing: .02em;
+        }
+        #detail-players-container h4 {
+            font-size: 12px; line-height: 1.25; font-weight: 800;
+            white-space: normal; display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden; min-height: 30px;
+        }
+        #detail-players-container p { font-size: 10px; line-height: 1.2; }
+        #modal-team-detail-content h3 { font-size: 12px; letter-spacing: .035em; }
+        @media (min-width: 1450px) {
+            #detail-players-container { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+        }
+        @media (max-width: 1100px) {
+            #modal-team-detail { padding: 10px; }
+            #modal-team-detail-content { width: 98vw !important; max-height: 98vh !important; padding: 14px !important; }
+            #detail-officials-container { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            #detail-players-container { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+        }
+        @media (max-width: 700px) {
+            #detail-officials-container { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            #detail-players-container { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+            #detail-players-container > div { padding: 7px; min-height: 60px; }
+            #detail-players-container h4 { font-size: 10px; }
+            #detail-players-container p { font-size: 9px; }
+        }
+
         /* Efek Hover Halus pada Kartu Pemain */
         .player-card-hover {
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -253,6 +317,238 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
 }
 
 </style>
+
+<style id="afkab-master-team-solid-player-cards">
+  /* Solid, high-contrast roster cards; keep each team's logo watermark behind the content. */
+  #modal-team-detail { overflow: hidden !important; overscroll-behavior: contain; }
+  #modal-team-detail-content { overflow: hidden !important; max-height: 96vh !important; }
+  #modal-team-detail-content .space-y-3 { min-height: 0; }
+  #detail-players-container {
+    display: grid !important;
+    grid-template-columns: repeat(8, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+    align-content: start;
+  }
+  #detail-players-container > .team-player-roster-card {
+    min-width: 0; min-height: 61px; padding: 7px 9px; border: 1px solid #3155a2;
+    border-radius: 13px; background: #1e3a8a !important; color: #fff !important;
+    display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 8px;
+    box-shadow: 0 3px 8px rgba(15,23,42,.12); transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+  }
+  #detail-players-container > .team-player-roster-card[data-age-band="u19"] { background: #9f3327 !important; border-color: #b94c39 !important; }
+  #detail-players-container > .team-player-roster-card:hover { background: #25469b !important; box-shadow: 0 7px 16px rgba(15,23,42,.18); transform: translateY(-1px); }
+  #detail-players-container > .team-player-roster-card[data-age-band="u19"]:hover { background: #b13d30 !important; }
+  .team-player-jersey { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 29px; height: 30px; border-radius: 8px; font: 800 12px/1 'Outfit', sans-serif; color: #fff; background: #356cf6; box-shadow: inset 0 1px rgba(255,255,255,.16); }
+  .team-player-jersey--u19 { background: #74251e; }
+  .team-player-jersey--u17 { background: #2859d8; }
+  #detail-players-container .team-player-roster-card__body { min-width: 0; flex: 1 1 auto; }
+  #detail-players-container .team-player-roster-card__body h4 { color: #fff !important; font-size: 11px !important; line-height: 1.15 !important; font-weight: 800 !important; margin: 0 0 3px; white-space: normal !important; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 0; max-height: 26px; }
+  #detail-players-container .team-player-roster-card__body p { color: rgba(255,255,255,.78) !important; font-size: 9px !important; line-height: 1.15 !important; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; }
+  .team-player-card-status { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 18px; width: 18px; height: 18px; border-radius: 4px; color: #d1fae5; background: #149568; border: 1px solid rgba(255,255,255,.2); font-size: 9px; }
+  @media (min-width: 1500px) { #detail-players-container { grid-template-columns: repeat(9, minmax(0, 1fr)) !important; } }
+  @media (max-width: 1199px) { #detail-players-container { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 6px !important; } #detail-players-container > .team-player-roster-card { min-height: 54px; padding: 6px 7px; gap: 6px; } }
+  @media (max-width: 700px) {
+    #modal-team-detail-content { padding: 12px !important; }
+    #detail-players-container { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 5px !important; }
+    #detail-players-container > .team-player-roster-card { min-height: 47px; padding: 5px 6px; border-radius: 9px; gap: 5px; }
+    .team-player-jersey { width: 22px; height: 23px; border-radius: 6px; font-size: 10px; }
+    #detail-players-container .team-player-roster-card__body h4 { font-size: 9px !important; line-height: 1.1 !important; max-height: 20px; }
+    #detail-players-container .team-player-roster-card__body p { font-size: 8px !important; }
+    .team-player-card-status { flex-basis: 15px; width: 15px; height: 15px; font-size: 8px; }
+  }
+</style>
+
+
+<style id="afkab-v15-team-modal-near-fullscreen">
+  /* Referensi V15: Modal Data Team dibuat nyaris memenuhi viewport, tanpa area scroll. */
+  #modal-team-detail {
+    padding: 5px !important;
+    overflow: hidden !important;
+    overscroll-behavior: none;
+  }
+  #modal-team-detail-content {
+    width: 99vw !important;
+    max-width: none !important;
+    height: 98vh !important;
+    min-height: 98vh !important;
+    max-height: 98vh !important;
+    box-sizing: border-box !important;
+    padding: clamp(16px, 1.6vw, 28px) !important;
+    border-radius: 24px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  #modal-team-detail-content > .flex.items-center.space-x-4 {
+    flex: 0 0 auto;
+    min-height: 76px;
+    padding-bottom: 14px !important;
+    margin-bottom: 14px !important;
+  }
+  #detail-team-logo { width: 66px !important; height: 66px !important; }
+  #detail-team-name { font-size: clamp(24px, 2vw, 34px) !important; line-height: 1.05 !important; }
+  #detail-team-meta { font-size: 13px !important; }
+  #modal-team-detail-content > .space-y-3 {
+    flex: 1 1 auto;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start;
+    gap: clamp(12px, 1.35vh, 18px) !important;
+  }
+  #modal-team-detail-content > .space-y-3 > :not([hidden]) ~ :not([hidden]) { margin-top: 0 !important; }
+  #modal-team-detail-content > .space-y-3 > div:first-child {
+    flex: 0 0 auto;
+    min-height: 68px;
+    padding: 14px 16px !important;
+    align-items: center;
+  }
+  #modal-team-detail-content > .space-y-3 > div:first-child span:first-child { font-size: 10px !important; margin-bottom: 4px !important; }
+  #modal-team-detail-content > .space-y-3 > div:first-child span:last-child { font-size: 13px !important; }
+  #modal-team-detail-content > .space-y-3 > div:nth-child(2),
+  #modal-team-detail-content > .space-y-3 > div:last-child { flex: 0 0 auto; min-height: 0; }
+  #modal-team-detail-content h3 { font-size: 14px !important; line-height: 1.2 !important; }
+  #detail-officials-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px 10px !important;
+  }
+  #detail-officials-container > div {
+    min-width: 0;
+    min-height: 54px;
+    padding: 10px 14px !important;
+    border-radius: 13px !important;
+  }
+  #detail-officials-container h4 { font-size: 12px !important; max-width: none !important; }
+  #detail-officials-container span { font-size: 10px !important; }
+  #detail-players-container {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 9px 10px !important;
+    align-content: start !important;
+  }
+  #detail-players-container[data-roster-density="dense"] { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+  #detail-players-container[data-roster-density="very-dense"] { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; }
+  #detail-players-container > .team-player-roster-card {
+    min-width: 0;
+    min-height: 62px !important;
+    padding: 9px 11px !important;
+    gap: 9px !important;
+    border-radius: 14px !important;
+  }
+  #detail-players-container .team-player-jersey { width: 31px !important; height: 32px !important; border-radius: 9px !important; font-size: 13px !important; }
+  #detail-players-container .team-player-roster-card__body { min-width: 0; flex: 1 1 auto; }
+  #detail-players-container .team-player-roster-card__body h4 {
+    font-size: 12px !important;
+    line-height: 1.17 !important;
+    max-height: 29px !important;
+    margin-bottom: 3px !important;
+  }
+  #detail-players-container .team-player-roster-card__body p { font-size: 10px !important; line-height: 1.15 !important; }
+  #detail-players-container .team-player-card-status { flex-basis: 20px; width: 20px; height: 20px; font-size: 10px; }
+
+  @media (max-height: 820px) and (min-width: 1101px) {
+    #modal-team-detail-content { padding: 14px 20px !important; }
+    #modal-team-detail-content > .flex.items-center.space-x-4 { min-height: 62px; padding-bottom: 9px !important; margin-bottom: 9px !important; }
+    #detail-team-logo { width: 54px !important; height: 54px !important; }
+    #modal-team-detail-content > .space-y-3 { gap: 8px !important; }
+    #modal-team-detail-content > .space-y-3 > div:first-child { min-height: 54px; padding: 8px 12px !important; }
+    #detail-officials-container { gap: 6px 8px !important; }
+    #detail-officials-container > div { min-height: 44px; padding: 7px 10px !important; }
+    #detail-players-container { gap: 6px 8px !important; }
+    #detail-players-container > .team-player-roster-card { min-height: 52px !important; padding: 6px 8px !important; gap: 7px !important; }
+    #detail-players-container .team-player-jersey { width: 26px !important; height: 27px !important; font-size: 11px !important; }
+    #detail-players-container .team-player-roster-card__body h4 { font-size: 10px !important; max-height: 24px !important; }
+    #detail-players-container .team-player-roster-card__body p { font-size: 9px !important; }
+  }
+  @media (max-width: 1100px) {
+    #modal-team-detail { padding: 5px !important; }
+    #modal-team-detail-content { width: 99vw !important; height: 98vh !important; min-height: 98vh !important; max-height: 98vh !important; padding: 14px !important; border-radius: 18px !important; }
+    #detail-officials-container { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    #detail-players-container { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 6px !important; }
+    #detail-players-container[data-roster-density="dense"] { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+    #detail-players-container[data-roster-density="very-dense"] { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+    #detail-players-container > .team-player-roster-card { min-height: 52px !important; padding: 6px 7px !important; gap: 6px !important; }
+    #detail-players-container .team-player-jersey { width: 25px !important; height: 26px !important; font-size: 10px !important; }
+    #detail-players-container .team-player-roster-card__body h4 { font-size: 10px !important; max-height: 23px !important; }
+    #detail-players-container .team-player-roster-card__body p { font-size: 9px !important; }
+  }
+  @media (max-width: 700px) {
+    #modal-team-detail-content { padding: 11px !important; border-radius: 14px !important; }
+    #modal-team-detail-content > .flex.items-center.space-x-4 { min-height: 54px; padding-bottom: 8px !important; margin-bottom: 8px !important; gap: 10px !important; }
+    #detail-team-logo { width: 44px !important; height: 44px !important; }
+    #detail-team-name { font-size: 19px !important; }
+    #detail-team-meta { font-size: 10px !important; }
+    #modal-team-detail-content > .space-y-3 { gap: 7px !important; }
+    #modal-team-detail-content > .space-y-3 > div:first-child { min-height: 48px; padding: 7px 9px !important; gap: 7px !important; }
+    #modal-team-detail-content > .space-y-3 > div:first-child span:last-child { font-size: 10px !important; }
+    #modal-team-detail-content h3 { font-size: 10px !important; }
+    #detail-officials-container { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 5px !important; }
+    #detail-officials-container > div { min-height: 40px; padding: 6px 7px !important; }
+    #detail-officials-container h4 { font-size: 9px !important; }
+    #detail-officials-container span { font-size: 8px !important; }
+    #detail-players-container,
+    #detail-players-container[data-roster-density="dense"],
+    #detail-players-container[data-roster-density="very-dense"] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 5px !important; }
+    #detail-players-container > .team-player-roster-card { min-height: 42px !important; padding: 4px 5px !important; gap: 5px !important; border-radius: 8px !important; }
+    #detail-players-container .team-player-jersey { width: 20px !important; height: 21px !important; font-size: 9px !important; border-radius: 5px !important; }
+    #detail-players-container .team-player-roster-card__body h4 { font-size: 8px !important; line-height: 1.1 !important; max-height: 18px !important; }
+    #detail-players-container .team-player-roster-card__body p { font-size: 7px !important; }
+    #detail-players-container .team-player-card-status { flex-basis: 14px; width: 14px; height: 14px; font-size: 7px; }
+  }
+</style>
+
+
+<style id="afkab-v15-final-team-modal-fix">
+  /* Modal Data Team: hampir full-screen, komposisi mengikuti referensi 4 kolom. */
+  #modal-team-detail { inset:0 !important; padding:1vh .5vw !important; overflow:hidden !important; align-items:center !important; justify-content:center !important; overscroll-behavior:none; }
+  #modal-team-detail-content { width:99vw !important; max-width:none !important; height:98vh !important; min-height:98vh !important; max-height:98vh !important; padding:clamp(12px,1.35vw,24px) !important; margin:0 !important; overflow:hidden !important; box-sizing:border-box !important; transform-origin:center center; }
+  #modal-team-detail-content > button[onclick="closeTeamDetailModal()"] { top:12px !important; right:14px !important; width:40px !important; height:40px !important; }
+  #modal-team-detail-content > .flex.items-center.space-x-4 { padding-right:48px !important; }
+  #modal-team-detail-content > .space-y-3 { flex:1 1 auto !important; min-height:0 !important; overflow:hidden !important; }
+  #modal-team-detail-content > .space-y-3 > div:nth-child(2) { flex:0 0 auto !important; }
+  #modal-team-detail-content > .space-y-3 > div:last-child { flex:1 1 auto !important; min-height:0 !important; display:flex !important; flex-direction:column !important; }
+  #modal-team-detail-content > .space-y-3 > div:last-child > div:first-child { flex:0 0 auto !important; }
+  #detail-officials-container { grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:7px 9px !important; }
+  #detail-players-container { flex:1 1 auto !important; min-height:0 !important; grid-template-columns:repeat(4,minmax(0,1fr)) !important; gap:8px 10px !important; align-content:start !important; overflow:visible !important; }
+  #detail-players-container[data-roster-density="dense"] { grid-template-columns:repeat(5,minmax(0,1fr)) !important; }
+  #detail-players-container[data-roster-density="very-dense"] { grid-template-columns:repeat(6,minmax(0,1fr)) !important; }
+  #detail-players-container > .team-player-roster-card { min-height:58px !important; padding:8px 10px !important; gap:8px !important; cursor:pointer !important; pointer-events:auto !important; position:relative !important; z-index:2 !important; }
+  #detail-players-container .team-player-roster-card * { pointer-events:none; }
+  #detail-players-container .team-player-jersey { width:30px !important; height:31px !important; font-size:12px !important; }
+  #detail-players-container .team-player-roster-card__body h4 { font-size:11px !important; max-height:26px !important; }
+  #detail-players-container .team-player-roster-card__body p { font-size:9px !important; }
+  @media (max-height:800px) and (min-width:1101px) {
+    #modal-team-detail-content { padding:10px 16px !important; }
+    #modal-team-detail-content > .flex.items-center.space-x-4 { min-height:54px !important; padding-bottom:7px !important; margin-bottom:7px !important; }
+    #detail-team-logo { width:48px !important; height:48px !important; }
+    #modal-team-detail-content > .space-y-3 { gap:6px !important; }
+    #modal-team-detail-content > .space-y-3 > div:first-child { min-height:48px !important; padding:6px 10px !important; }
+    #detail-officials-container { gap:5px 7px !important; }
+    #detail-officials-container > div { min-height:39px !important; padding:5px 9px !important; }
+    #detail-players-container { gap:5px 7px !important; }
+    #detail-players-container > .team-player-roster-card { min-height:47px !important; padding:5px 7px !important; gap:6px !important; }
+    #detail-players-container .team-player-jersey { width:25px !important; height:26px !important; font-size:10px !important; }
+    #detail-players-container .team-player-roster-card__body h4 { font-size:10px !important; max-height:23px !important; }
+    #detail-players-container .team-player-roster-card__body p { font-size:8px !important; }
+  }
+  @media (max-width:1100px) {
+    #modal-team-detail-content { width:99vw !important; height:98vh !important; min-height:98vh !important; max-height:98vh !important; }
+    #detail-players-container { grid-template-columns:repeat(4,minmax(0,1fr)) !important; }
+    #detail-players-container[data-roster-density="dense"] { grid-template-columns:repeat(4,minmax(0,1fr)) !important; }
+    #detail-players-container[data-roster-density="very-dense"] { grid-template-columns:repeat(5,minmax(0,1fr)) !important; }
+  }
+  @media (max-width:700px) {
+    #modal-team-detail-content { padding:10px !important; border-radius:14px !important; }
+    #modal-team-detail-content > .space-y-3 { gap:5px !important; }
+    #detail-officials-container { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+    #detail-players-container, #detail-players-container[data-roster-density="dense"], #detail-players-container[data-roster-density="very-dense"] { grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:4px !important; }
+    #detail-players-container > .team-player-roster-card { min-height:38px !important; padding:3px 4px !important; gap:4px !important; }
+    #detail-players-container .team-player-jersey { width:19px !important; height:20px !important; font-size:8px !important; }
+    #detail-players-container .team-player-roster-card__body h4 { font-size:8px !important; max-height:17px !important; }
+    #detail-players-container .team-player-roster-card__body p { font-size:7px !important; }
+  }
+</style>
+
 </head>
 <body class="bg-slate-950 font-sans text-slate-100 antialiased selection:bg-blue-500 selection:text-slate-950 h-screen hero-bg flex flex-col overflow-hidden">
 
@@ -576,7 +872,7 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
 
     <!-- MODAL POPUP: Detail Tim, Official, & Pemain -->
     <div id="modal-team-detail" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4">
-        <div class="bg-white border border-slate-200 rounded-3xl p-5 w-full max-w-5xl shadow-2xl relative transform scale-95 transition-all duration-300 flex flex-col text-slate-800" id="modal-team-detail-content">
+        <div class="bg-white border border-slate-200 rounded-3xl p-5 w-full shadow-2xl relative transform scale-95 transition-all duration-300 flex flex-col text-slate-800" id="modal-team-detail-content">
             
             <button onclick="closeTeamDetailModal()" class="absolute -top-3 -right-3 text-slate-600 hover:text-white bg-white hover:bg-rose-600 w-9 h-9 rounded-full flex items-center justify-center transition-colors shadow-lg border border-slate-200 z-20">
                 <i class="fas fa-times text-sm"></i>
@@ -2046,6 +2342,8 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
                 
                 const filteredOfficials = officialsData.filter(o => (o.teamId || "").toString().trim() === targetTeamId);
                 const filteredPlayers = playersData.filter(p => (p.teamId || "").toString().trim() === targetTeamId);
+                // Gunakan lebih banyak kolom untuk roster besar agar seluruh pemain tetap terlihat tanpa scroll.
+                plyContainer.dataset.rosterDensity = filteredPlayers.length > 25 ? 'very-dense' : (filteredPlayers.length > 20 ? 'dense' : 'standard');
 
                 const jabatanOrder = {
                     'manager': 1,
@@ -2088,32 +2386,19 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
                     plyContainer.innerHTML = '';
                     filteredPlayers.forEach(ply => {
                         const plyCategory = (ply.category || "").toString().trim().toUpperCase();
-                        
-                        let cardStyle = "bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200 text-slate-800"; 
-                        let jerseyBadgeBg = "bg-blue-600 text-white";
+                        const ageBand = plyCategory.includes('U-19') ? 'u19' : (plyCategory.includes('U-17') ? 'u17' : 'other');
+                        const jerseyBadgeBg = ageBand === 'u19' ? 'team-player-jersey--u19' : 'team-player-jersey--u17';
 
-                        if (plyCategory.includes('U-19')) {
-                            cardStyle = "bg-gradient-to-br from-emerald-50 via-white to-white border-emerald-300 shadow-[0_2px_10px_-2px_rgba(16,185,129,0.3)]";
-                            jerseyBadgeBg = "bg-emerald-600 text-white";
-                        } else if (plyCategory.includes('U-17')) {
-                            cardStyle = "bg-gradient-to-br from-blue-50 via-white to-white border-blue-300 shadow-[0_2px_10px_-2px_rgba(30,58,138,0.2)]";
-                            jerseyBadgeBg = "bg-blue-600 text-white";
-                        }
-
-                        const plyString = encodeURIComponent(JSON.stringify({ ...ply, teamName: team.name || '-' }));
+                        const plyString = encodeURIComponent(JSON.stringify({ ...ply, teamName: team.name || '-' })).replace(/'/g, '%27');
 
                         plyContainer.innerHTML += `
-                            <div onclick="openPlayerDetailModal('${plyString}')" class="${cardStyle} player-card-hover border rounded-xl p-2 flex flex-col justify-between shadow-sm cursor-pointer">
-                                <div class="flex items-center justify-between mb-1">
-                                    <span class="w-5 h-5 rounded-md ${jerseyBadgeBg} font-mono font-bold text-[10px] flex items-center justify-center shadow">
-                                        ${ply.jerseyNo || '-'}
-                                    </span>
-                                    <span class="text-[8px] font-mono text-slate-400">${ply.id || ''}</span>
+                            <div onclick="openPlayerDetailModal('${plyString}')" data-age-band="${ageBand}" title="ID Registrasi: ${ply.id || '-'}" class="team-player-roster-card player-card-hover cursor-pointer">
+                                <span class="team-player-jersey ${jerseyBadgeBg}">${ply.jerseyNo || '-'}</span>
+                                <div class="team-player-roster-card__body">
+                                    <h4 title="${ply.name || '-'}">${ply.name || '-'}</h4>
+                                    <p>${ply.position || '-'} <span aria-hidden="true">•</span> ${ply.category || '-'}</p>
                                 </div>
-                                <div>
-                                    <h4 class="text-[11px] font-bold text-slate-900 truncate" title="${ply.name || '-'}">${ply.name || '-'}</h4>
-                                    <p class="text-[9px] text-slate-500 font-medium truncate">${ply.position || '-'} • ${ply.category || '-'}</p>
-                                </div>
+                                <span class="team-player-card-status" aria-label="Pemain terdaftar"><i class="fas fa-check"></i></span>
                             </div>
                         `;
                     });

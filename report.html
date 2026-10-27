@@ -1151,15 +1151,19 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
                     
                     const categoryStr = playerObj ? (playerObj.category || '') : (typeof item === 'object' ? (item.category || '') : '');
                     const categoryUpper = categoryStr.toUpperCase();
+                    const normalizedCategory = categoryUpper.replace(/\s+/g, '');
+                    const isU19Player = normalizedCategory.includes('U-19') || normalizedCategory.includes('U19') ||
+                        playerObj?.isU19 === true || String(playerObj?.isU19 || '').toLowerCase() === 'true';
                     
                     let rowBgClass = "bg-white text-slate-900";
                     let badgeHtml = '';
 
-                    // Menampilkan Badge Kategori Secara Dinamis (U-19, U-17, dsb.)
-                    if (categoryUpper.includes('U-') || playerObj?.isU19) {
+                    // Hanya pemain U-19 yang memiliki tag kategori; U-17 tetap tanpa badge.
+                    if (categoryUpper.includes('U-') || isU19Player) {
                         rowBgClass = "bg-emerald-50/90 text-emerald-950 font-medium";
-                        let displayCat = categoryUpper.includes('U-') ? categoryUpper : 'U-19';
-                        badgeHtml = `<span class="bg-emerald-600 text-white text-[8px] px-1.5 py-0.5 rounded font-bold shadow-sm border border-emerald-700 flex-shrink-0">${displayCat}</span>`;
+                    }
+                    if (isU19Player) {
+                        badgeHtml = `<span class="bg-amber-300 text-amber-950 text-[8px] px-1.5 py-0.5 rounded font-bold shadow-sm border border-amber-500 flex-shrink-0">U-19</span>`;
                     }
                     
                     const disabledAttr = isLocked ? 'disabled' : '';

@@ -27,17 +27,29 @@
             position: relative;
         }
 
-        @keyframes marquee {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-50%); }
+        @keyframes afkab-logo-marquee {
+            from { transform: translate3d(0, 0, 0); }
+            to   { transform: translate3d(-50%, 0, 0); }
         }
-        .animate-marquee {
+        #login-view .animate-marquee {
             display: flex;
             width: max-content;
-            animation: marquee 35s linear infinite;
+            min-width: max-content;
+            flex: 0 0 auto;
+            animation-name: afkab-logo-marquee;
+            animation-duration: 42s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            animation-play-state: running;
+            will-change: transform;
         }
-        .animate-marquee:hover {
-            animation-play-state: paused;
+        #login-view .animate-marquee > div,
+        #login-view .animate-marquee img {
+            flex-shrink: 0;
+        }
+        /* Logo tetap berjalan ketika kursor berada di atas barisan. */
+        #login-view .animate-marquee:hover {
+            animation-play-state: running !important;
         }
     </style>
 
@@ -196,6 +208,12 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  /* Keep the requested team-logo ticker moving, but slower, even if reduced motion is enabled. */
+  #login-view .animate-marquee {
+    animation-duration: 60s !important;
+    animation-iteration-count: infinite !important;
+    animation-play-state: running !important;
+  }
   @view-transition { navigation: none; }
 }
 @media print {
@@ -249,8 +267,8 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
                     <!-- Running Ticker Logo Tim -->
                     <div class="pt-2 overflow-hidden relative">
                         <div class="w-full overflow-hidden relative py-4 bg-slate-900/30 backdrop-blur-md rounded-2xl border border-white/10">
-                            <div class="animate-marquee flex items-center space-x-16">
-                                <div class="flex items-center space-x-16">
+                            <div class="animate-marquee flex items-center">
+                                <div class="flex items-center space-x-16 shrink-0 pr-16">
                                     <img src="02. Logo Team/Putra Logo - AFQ.webp" alt="AFQ" class="w-20 h-20 object-contain filter drop-shadow-lg">
                                     <img src="02. Logo Team/Putra Logo - Amarta.webp" alt="Amarta" class="w-20 h-20 object-contain filter drop-shadow-lg">
                                     <img src="02. Logo Team/Putra Logo - Anak Manis.webp" alt="Anak Manis" class="w-20 h-20 object-contain filter drop-shadow-lg">
@@ -273,7 +291,7 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
                                     <img src="02. Logo Team/Putri Logo - SMK BM.webp" alt="SMK BM" class="w-20 h-20 object-contain filter drop-shadow-lg">
                                     <img src="02. Logo Team/Putri Logo - SMK CB.webp" alt="SMK CB" class="w-20 h-20 object-contain filter drop-shadow-lg">
                                 </div>
-                                <div class="flex items-center space-x-16">
+                                <div class="flex items-center space-x-16 shrink-0 pr-16">
                                     <img src="02. Logo Team/Putra Logo - AFQ.webp" alt="AFQ" class="w-20 h-20 object-contain filter drop-shadow-lg">
                                     <img src="02. Logo Team/Putra Logo - Amarta.webp" alt="Amarta" class="w-20 h-20 object-contain filter drop-shadow-lg">
                                     <img src="02. Logo Team/Putra Logo - Anak Manis.webp" alt="Anak Manis" class="w-20 h-20 object-contain filter drop-shadow-lg">

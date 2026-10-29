@@ -1349,11 +1349,17 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
             let screeningData = allScreenings.find(s => String(s.id) === String(matchId));
             
             // Jika ID persis tidak ketemu, gunakan kombinasi nomor match dan nama tim home
-            if (!screeningData) {
-                screeningData = allScreenings.find(s => 
-                    String(s.matchNo) === String(matchData?.matchNo) && 
-                    (String(s.nameHomeTeam).toLowerCase() === String(matchData?.nameHomeTeam).toLowerCase() || String(s.homeTeamId) === String(matchData?.homeTeamId))
-                );
+            if (!screeningData && matchData) {
+                const normKey = value => String(value ?? '').trim().toLocaleLowerCase();
+                const sameValue = (a, b) => normKey(a) !== '' && normKey(a) === normKey(b);
+                screeningData = allScreenings.find(s => {
+                    const sameMatchNo = sameValue(s.matchNo, matchData.matchNo);
+                    const sameHome = sameValue(s.homeTeamId, matchData.homeTeamId) ||
+                        sameValue(s.nameHomeTeam || s.homeTeamName, matchData.nameHomeTeam);
+                    const sameAway = sameValue(s.awayTeamId, matchData.awayTeamId) ||
+                        sameValue(s.nameAwayTeam || s.awayTeamName, matchData.nameAwayTeam);
+                    return sameMatchNo && sameHome && sameAway;
+                });
             }
 
             if (!screeningData && !reportData) {
@@ -1642,8 +1648,29 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
             }
 
             try {
-                const matchData = allSchedules.find(m => String(m.id) === String(currentActiveMatchId)) || {};
-                const screeningData = allScreenings.find(s => s.id === currentActiveMatchId || s.matchNo == matchData.matchNo) || {};
+                const matchData = allSchedules.find(m => String(m.id ?? '').trim() === String(currentActiveMatchId ?? '').trim()) || {};
+                const normKey = value => String(value ?? '').trim().toLocaleLowerCase();
+                const sameValue = (a, b) => normKey(a) !== '' && normKey(a) === normKey(b);
+                // Jangan memilih screening hanya karena matchNo sama: nomor pertandingan
+                // dapat berulang pada kategori/pekan berbeda. Prioritaskan ID unik, lalu
+                // cocokkan nomor pertandingan DAN kedua tim.
+                let screeningRecord = allScreenings.find(s =>
+                    String(s.id ?? s.docId ?? '').trim() === String(currentActiveMatchId ?? '').trim()
+                );
+                if (!screeningRecord) {
+                    screeningRecord = allScreenings.find(s => {
+                        const sameMatchNo = sameValue(s.matchNo, matchData.matchNo);
+                        const sameHome = sameValue(s.homeTeamId, matchData.homeTeamId) ||
+                            sameValue(s.nameHomeTeam || s.homeTeamName, matchData.nameHomeTeam);
+                        const sameAway = sameValue(s.awayTeamId, matchData.awayTeamId) ||
+                            sameValue(s.nameAwayTeam || s.awayTeamName, matchData.nameAwayTeam);
+                        return sameMatchNo && sameHome && sameAway;
+                    });
+                }
+                if (!screeningRecord) {
+                    throw new Error('Data screening yang cocok tidak ditemukan untuk pertandingan ini. Data tidak disimpan agar roster tim lain tidak tertaut.');
+                }
+                const screeningData = screeningRecord;
 
                 const h1Home = parseInt(document.getElementById('score-h1-home')?.value || 0);
                 const h1Away = parseInt(document.getElementById('score-h1-away')?.value || 0);

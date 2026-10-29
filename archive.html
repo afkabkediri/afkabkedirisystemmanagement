@@ -829,11 +829,13 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
         let archiveData = [];
         let allPlayersData = [];
         let allOfficialsData = [];
+        let allScreeningsData = [];
 
         async function initArchivePage() {
             try {
                 allPlayersData = await window.getFromFirestore("master_player", true).catch(() => []);
                 allOfficialsData = await window.getFromFirestore("master_official", true).catch(() => []);
+                allScreeningsData = await window.getFromFirestore("master_screening", true).catch(() => []);
             } catch(e) { 
                 allPlayersData = []; 
                 allOfficialsData = [];
@@ -922,6 +924,9 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
                 if (!allOfficialsData || allOfficialsData.length === 0) {
                     allOfficialsData = await window.getFromFirestore("master_official", true).catch(() => []);
                 }
+                if (!allScreeningsData || allScreeningsData.length === 0) {
+                    allScreeningsData = await window.getFromFirestore("master_screening", true).catch(() => []);
+                }
 
                 // Selalu baca ulang master_report dari Firestore, bukan cache localStorage.
                 const reports = await window.getFromFirestore("master_report", true).catch(() => []);
@@ -979,12 +984,56 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
                 document.getElementById('modal-dsp-home-title').innerText = homeTeamName;
                 document.getElementById('modal-dsp-away-title').innerText = awayTeamName;
 
-                let screening = {};
-                try {
-                    if (reportData.screeningData) {
-                        screening = typeof reportData.screeningData === 'string' ? JSON.parse(reportData.screeningData) : reportData.screeningData;
-                    } 
-                } catch (e) { screening = {}; }
+                const parseScreening = value => {
+                    if (typeof value === 'string') {
+                        try { return JSON.parse(value); } catch (_) { return {}; }
+                    }
+                    return value && typeof value === 'object' ? value : {};
+                };
+                let screening = parseScreening(reportData.screeningData);
+
+                // Pemulihan arsip lama: versi sebelumnya dapat menyimpan roster dari
+                // pertandingan lain akibat pencarian screening berdasarkan matchNo saja.
+                // Gunakan master_screening yang cocok dengan ID pertandingan; fallback
+                // hanya jika snapshot laporan tidak sama dengan roster screening tersebut.
+                const normKey = value => String(value ?? '').trim().toLocaleLowerCase();
+                const sameValue = (a, b) => normKey(a) !== '' && normKey(a) === normKey(b);
+                const sameRoster = (a, b) => {
+                    const ids = list => (Array.isArray(list) ? list : []).map(item => {
+                        if (item && typeof item === 'object') {
+                            return String(item.id || item.playerId || item.player_id || item.docId || item.uid || item.name || item.nama || '').trim();
+                        }
+                        return String(item ?? '').trim();
+                    }).filter(Boolean).sort();
+                    const aa = ids(a), bb = ids(b);
+                    return aa.length > 0 && aa.length === bb.length && aa.every((id, i) => id === bb[i]);
+                };
+                let matchingScreening = allScreeningsData.find(s =>
+                    String(s.id ?? s.docId ?? '').trim() === targetMatchId
+                );
+                if (!matchingScreening) {
+                    matchingScreening = allScreeningsData.find(s => {
+                        const sameNo = sameValue(s.matchNo, reportData.matchNo);
+                        const sameHome = sameValue(s.homeTeamId, reportData.homeTeamId) ||
+                            sameValue(s.nameHomeTeam || s.homeTeamName, reportData.nameHomeTeam || reportData.homeTeam);
+                        const sameAway = sameValue(s.awayTeamId, reportData.awayTeamId) ||
+                            sameValue(s.nameAwayTeam || s.awayTeamName, reportData.nameAwayTeam || reportData.awayTeam);
+                        return sameNo && sameHome && sameAway;
+                    });
+                }
+                if (matchingScreening) {
+                    const current = parseScreening(matchingScreening.screeningData || matchingScreening);
+                    const currentHome = current.home || current.homeTeam || current;
+                    const currentAway = current.away || current.awayTeam || {};
+                    const savedHome = screening.home || screening.homeTeam || screening;
+                    const savedAway = screening.away || screening.awayTeam || {};
+                    const homeSame = sameRoster(savedHome.players || savedHome.homePlayers, currentHome.players || currentHome.homePlayers);
+                    const awaySame = sameRoster(savedAway.players || savedAway.awayPlayers, currentAway.players || currentAway.awayPlayers);
+                    if (!homeSame || !awaySame) {
+                        console.warn('[Archive] Snapshot screening tidak cocok dengan master_screening untuk pertandingan', targetMatchId, '; memakai roster yang cocok.');
+                        screening = current;
+                    }
+                }
 
                 const scrHome = screening.home || screening.homeTeam || screening || {};
                 const scrAway = screening.away || screening.awayTeam || {};
@@ -1055,6 +1104,9 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
                 let goalsMap = reportData.playerGoals || reportData.goals || {};
                 let cardsMap = reportData.playerCards || reportData.cards || {};
                 let mvpId = reportData.mvpPlayerId || reportData.mvp || '';
+                if (typeof goalsMap === 'string') { try { goalsMap = JSON.parse(goalsMap); } catch (_) { goalsMap = {}; } }
+                if (typeof cardsMap === 'string') { try { cardsMap = JSON.parse(cardsMap); } catch (_) { cardsMap = {}; } }
+                if (mvpId && typeof mvpId === 'object') mvpId = mvpId.id || mvpId.playerId || mvpId.name || mvpId.nama || '';
 
                 let mvpNameText = 'Tidak ada / Belum dipilih';
 
@@ -1155,109 +1207,125 @@ body { animation: afkab-page-enter .24s var(--afkab-ease) both; }
             });
         }
 
-        // FUNGSI RENDER PEMAIN (SESUAI DATA SCREENING & BATAS 14 BARIS)
+        // Render pemain arsip menggunakan semua bentuk ID yang mungkin tersimpan
+        // pada screening/master_player, lalu membaca statistik berdasarkan alias ID yang sama.
         function renderModalPlayers(playerList, tbodyId, goalsMap, cardsMap, mvpId, teamNameStr, teamIdStr, onMvpFound) {
             const tbody = document.getElementById(tbodyId);
             if (!tbody) return;
             tbody.innerHTML = '';
-            
-            const validPlayerIds = playerList || [];
-            const MAX_ROWS = 14; 
+
+            const validPlayerIds = Array.isArray(playerList) ? playerList : [];
+            const MAX_ROWS = 14;
             const iconEmpty = '<span class="inline-flex items-center justify-center w-3.5 h-3.5 border border-slate-300 rounded-[2px] bg-white"></span>';
-            
+            const norm = value => String(value ?? '').trim();
+            const normName = value => norm(value).toLocaleLowerCase();
+            const idFields = ['id', 'playerId', 'player_id', 'docId', 'documentId', 'uid'];
+            const teamFields = ['teamId', 'team_id', 'teamID', 'idTeam'];
+            const nameFields = ['name', 'nama', 'playerName', 'player_name'];
+            const collectValues = (obj, fields) => fields.map(k => obj && typeof obj === 'object' ? obj[k] : null)
+                .filter(v => v !== null && v !== undefined && norm(v) !== '').map(norm);
+            const parseMap = value => {
+                if (typeof value === 'string') {
+                    try { value = JSON.parse(value); } catch (_) { return {}; }
+                }
+                return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+            };
+            goalsMap = parseMap(goalsMap);
+            cardsMap = parseMap(cardsMap);
+            const lookupByAliases = (map, aliases, fallback) => {
+                for (const key of aliases) {
+                    if (Object.prototype.hasOwnProperty.call(map, key)) return map[key];
+                }
+                // Mendukung key yang tersimpan dengan spasi/casing berbeda.
+                const wanted = new Set(aliases.map(normName));
+                const foundKey = Object.keys(map).find(key => wanted.has(normName(key)));
+                return foundKey !== undefined ? map[foundKey] : fallback;
+            };
+
             for (let i = 0; i < MAX_ROWS; i++) {
                 const item = validPlayerIds[i];
                 const tr = document.createElement('tr');
 
                 if (!item) {
-                    tr.className = "doc-player-empty bg-white text-slate-400";
+                    tr.className = 'doc-player-empty bg-white text-slate-400';
                     tr.innerHTML = `
                         <td class="border border-slate-300 p-0.5 font-bold text-center">-</td>
                         <td class="border border-slate-300 p-0.5 text-left italic">-</td>
-                        <td class="border border-slate-300 p-0.5">
-                            <div class="flex justify-center gap-1 items-center">${iconEmpty} ${iconEmpty}</div>
-                        </td>
-                        <td class="border border-slate-300 p-0.5">
-                            <div class="flex justify-center items-center">${iconEmpty}</div>
-                        </td>
+                        <td class="border border-slate-300 p-0.5"><div class="flex justify-center gap-1 items-center">${iconEmpty} ${iconEmpty}</div></td>
+                        <td class="border border-slate-300 p-0.5"><div class="flex justify-center items-center">${iconEmpty}</div></td>
                         <td class="border border-slate-300 p-0.5 font-bold text-center">-</td>
-                        <td class="border border-slate-300 p-0.5 font-bold text-center">-</td>
-                    `;
+                        <td class="border border-slate-300 p-0.5 font-bold text-center">-</td>`;
                 } else {
-                    let pId = typeof item === 'object' ? (item.id || item.playerId || item.name || item.nama) : item;
-                    let pIdStr = String(pId).trim();
-                    let searchName = typeof item === 'object' ? (item.name || item.nama || pId) : pId;
-                    
-                    if (typeof searchName === 'string') {
-                        searchName = searchName.trim().toLowerCase();
+                    const itemIsObject = typeof item === 'object' && item !== null;
+                    const itemAliases = itemIsObject ? collectValues(item, idFields) : [norm(item)];
+                    // Sebagian data screening menyimpan ID pada field lain atau langsung berupa string.
+                    const itemNameValues = itemIsObject ? collectValues(item, nameFields) : [];
+                    const rawName = itemNameValues[0] || (!itemIsObject ? norm(item) : '');
+                    const expectedTeamId = norm(teamIdStr);
+                    const teamOf = p => collectValues(p, teamFields);
+                    const belongsToTeam = p => !expectedTeamId || teamOf(p).length === 0 || teamOf(p).includes(expectedTeamId);
+                    const playerIds = p => collectValues(p, idFields);
+                    const playerNames = p => collectValues(p, nameFields);
+                    const idSet = new Set(itemAliases);
+
+                    // Utamakan kecocokan ID + tim; jika struktur master berbeda, coba ID unik lintas koleksi.
+                    let candidates = allPlayersData.filter(p => playerIds(p).some(id => idSet.has(id)));
+                    let playerObj = candidates.find(belongsToTeam) || (candidates.length === 1 ? candidates[0] : null);
+
+                    // Kompatibilitas dengan data master lama: ID kadang tersimpan di field nonstandar.
+                    if (!playerObj && itemAliases.length) {
+                        const legacyMatches = allPlayersData.filter(p => Object.values(p || {}).some(value => idSet.has(norm(value))));
+                        const legacyTeamMatches = legacyMatches.filter(belongsToTeam);
+                        if (legacyTeamMatches.length === 1) playerObj = legacyTeamMatches[0];
+                        else if (legacyTeamMatches.length === 0 && legacyMatches.length === 1) playerObj = legacyMatches[0];
                     }
 
-                    // ID pemain harus cocok DAN pemain harus terdaftar pada teamId sisi pertandingan ini.
-                    // Ini mencegah nama/nomor jersey diambil dari pemain tim lain.
-                    const expectedTeamId = String(teamIdStr ?? '').trim();
-                    const sameTeam = p => !expectedTeamId || String(p.teamId ?? '').trim() === expectedTeamId;
-                    const playerKeyMatches = p => [p.id, p.playerId, p.player_id, p.docId]
-                        .some(id => String(id ?? '').trim() === pIdStr);
-
-                    let playerObj = allPlayersData.find(p => sameTeam(p) && playerKeyMatches(p));
-
-                    if (!playerObj && searchName) {
-                        const nameMatches = allPlayersData.filter(p => sameTeam(p) &&
-                            (String(p.name || '').trim().toLowerCase() === searchName ||
-                             String(p.nama || '').trim().toLowerCase() === searchName)
-                        );
-                        // Nama hanya boleh menjadi kunci jika unik, kecuali sudah dibatasi oleh teamId.
-                        if (expectedTeamId || nameMatches.length === 1) playerObj = nameMatches[0];
+                    // Fallback nama dibatasi ke tim bila tersedia, lalu hanya menerima hasil yang unik.
+                    if (!playerObj && rawName) {
+                        const nameMatches = allPlayersData.filter(p => playerNames(p).some(n => normName(n) === normName(rawName)));
+                        const teamMatches = nameMatches.filter(belongsToTeam);
+                        if (teamMatches.length === 1) playerObj = teamMatches[0];
+                        else if (teamMatches.length === 0 && nameMatches.length === 1) playerObj = nameMatches[0];
                     }
 
-                    let jerseyNo = '-';
-                    if (playerObj) {
-                        jerseyNo = playerObj.jerseyNo || playerObj.jerseyNumber || playerObj.noPunggung || playerObj.nomorPunggung || playerObj.jersey || playerObj.punggung || '-';
-                    } else if (typeof item === 'object') {
-                        jerseyNo = item.jersey || item.jerseyNo || item.noPunggung || item.nomorPunggung || '-';
-                    }
+                    const aliases = [...new Set([
+                        ...itemAliases,
+                        ...playerIds(playerObj || {}),
+                        ...itemNameValues,
+                        ...playerNames(playerObj || {}),
+                        rawName
+                    ].map(norm).filter(Boolean))];
+                    const pName = playerNames(playerObj || {})[0] || rawName || itemAliases[0] || '-';
+                    const jerseyNo = (playerObj && (playerObj.jerseyNo || playerObj.jerseyNumber || playerObj.noPunggung || playerObj.nomorPunggung || playerObj.jersey || playerObj.punggung))
+                        || (itemIsObject && (item.jerseyNo || item.jerseyNumber || item.noPunggung || item.nomorPunggung || item.jersey || item.punggung)) || '-';
+                    const categoryStr = norm((playerObj && playerObj.category) || (itemIsObject && item.category) || '');
+                    const isU19 = categoryStr.toUpperCase().replace(/\s+/g, '').includes('U-19') || categoryStr.toUpperCase().replace(/\s+/g, '').includes('U19');
 
-                    const pName = playerObj ? (playerObj.name || playerObj.nama) : (typeof item === 'object' ? (item.name || item.nama || pId) : pId);
-                    const realPlayerId = playerObj ? (playerObj.id || playerObj.playerId || pId) : pId;
-                    
-                    const categoryStr = playerObj ? (playerObj.category || '') : (typeof item === 'object' ? (item.category || '') : '');
-                    
-                    // PERBAIKAN: Hanya bernilai true jika kategori secara spesifik adalah U-19
-                    let isU19 = categoryStr.toUpperCase() === 'U-19' || categoryStr.toUpperCase().includes('U-19');
+                    const cardValue = lookupByAliases(cardsMap, aliases, {});
+                    const goalValue = lookupByAliases(goalsMap, aliases, 0);
+                    const card = typeof cardValue === 'string' ? (() => { try { return JSON.parse(cardValue); } catch (_) { return {}; } })() : (cardValue || {});
+                    const goals = Number(goalValue && typeof goalValue === 'object' ? (goalValue.goals ?? goalValue.goal ?? goalValue.value ?? 0) : goalValue) || 0;
+                    const mvpAliases = [norm(mvpId)];
+                    const isMvp = !!norm(mvpId) && aliases.some(alias => mvpAliases.includes(alias));
 
-                    const card = cardsMap[realPlayerId] || cardsMap[pName] || cardsMap[pId] || (playerObj ? (cardsMap[playerObj.id] || cardsMap[playerObj.name]) : { kk1: false, kk2: false, km: false });
-                    const goals = goalsMap[realPlayerId] || goalsMap[pName] || goalsMap[pId] || (playerObj ? (goalsMap[playerObj.id] || goalsMap[playerObj.name]) : 0);
+                    if (isMvp && typeof onMvpFound === 'function') onMvpFound(pName, jerseyNo, teamNameStr);
 
-                    if (mvpId && (String(mvpId) === String(realPlayerId) || String(mvpId) === String(pId) || String(mvpId) === String(pName))) {
-                        onMvpFound(pName, jerseyNo, teamNameStr);
-                    }
+                    const hasKk1 = !!(card.kk1 || card.yellow1 || card.yellowCard1 || Number(card.yellowCount || card.yellowCardCount || 0) >= 1);
+                    const hasKk2 = !!(card.kk2 || card.yellow2 || card.yellowCard2 || Number(card.yellowCount || card.yellowCardCount || 0) >= 2);
+                    const hasKm = !!(card.km || card.red || card.redCard || card.redCardCount > 0 || (Number(card.yellowCount || card.yellowCardCount || 0) >= 2 && (card.km === true || card.red === true)));
+                    const iconKk1 = hasKk1 ? '<span class="inline-flex items-center justify-center w-3.5 h-3.5 bg-amber-500 text-white rounded-[2px] text-[8px]"><i class="fas fa-check"></i></span>' : iconEmpty;
+                    const iconKk2 = hasKk2 ? '<span class="inline-flex items-center justify-center w-3.5 h-3.5 bg-amber-500 text-white rounded-[2px] text-[8px]"><i class="fas fa-check"></i></span>' : iconEmpty;
+                    const iconKm = hasKm ? '<span class="inline-flex items-center justify-center w-3.5 h-3.5 bg-red-600 text-white rounded-[2px] text-[8px]"><i class="fas fa-check"></i></span>' : iconEmpty;
+                    const isMvpChecked = isMvp ? '<i class="fas fa-check-circle text-orange-600 text-[10px]"></i>' : '-';
 
-                    let hasKk1 = card && (card.kk1 || card.yellow1 || card.yellowCount >= 1);
-                    let hasKk2 = card && (card.kk2 || card.yellow2 || card.yellowCount >= 2);
-                    let hasKm = card && (card.km || card.red || card.redCard || card.yellowCount >= 2);
-
-                    let iconKk1 = hasKk1 ? '<span class="inline-flex items-center justify-center w-3.5 h-3.5 bg-amber-500 text-white rounded-[2px] text-[8px]"><i class="fas fa-check"></i></span>' : iconEmpty;
-                    let iconKk2 = hasKk2 ? '<span class="inline-flex items-center justify-center w-3.5 h-3.5 bg-amber-500 text-white rounded-[2px] text-[8px]"><i class="fas fa-check"></i></span>' : iconEmpty;
-                    let iconKm = hasKm ? '<span class="inline-flex items-center justify-center w-3.5 h-3.5 bg-red-600 text-white rounded-[2px] text-[8px]"><i class="fas fa-check"></i></span>' : iconEmpty;
-
-                    let isMvpChecked = mvpId && (String(mvpId) === String(realPlayerId) || String(mvpId) === String(pId) || String(mvpId) === String(pName)) ? '<i class="fas fa-check-circle text-orange-600 text-[10px]"></i>' : '-';
-
-                    tr.className = isU19 ? "doc-player-u19 bg-emerald-500/10 text-slate-900 font-semibold" : "doc-player-row bg-white text-slate-900";
+                    tr.className = isU19 ? 'doc-player-u19 bg-emerald-500/10 text-slate-900 font-semibold' : 'doc-player-row bg-white text-slate-900';
                     tr.innerHTML = `
                         <td class="border border-slate-300 p-0.5 font-bold text-slate-800 text-center">${jerseyNo}</td>
-                        <td class="border border-slate-300 p-0.5 text-left font-semibold text-slate-800 flex justify-between items-center px-1">
-                            <span>${pName}</span>
-                            ${isU19 ? '<span class="bg-emerald-600 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider">U-19</span>' : ''}
-                        </td>
-                        <td class="border border-slate-300 p-0.5">
-                            <div class="flex justify-center gap-1 items-center">${iconKk1} ${iconKk2}</div>
-                        </td>
-                        <td class="border border-slate-300 p-0.5">
-                            <div class="flex justify-center items-center">${iconKm}</div>
-                        </td>
+                        <td class="border border-slate-300 p-0.5 text-left font-semibold text-slate-800 px-1"><div class="flex justify-between items-center"><span>${pName}</span>${isU19 ? '<span class="bg-emerald-600 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider">U-19</span>' : ''}</div></td>
+                        <td class="border border-slate-300 p-0.5"><div class="flex justify-center gap-1 items-center">${iconKk1} ${iconKk2}</div></td>
+                        <td class="border border-slate-300 p-0.5"><div class="flex justify-center items-center">${iconKm}</div></td>
                         <td class="border border-slate-300 p-0.5 font-bold text-blue-600 text-center">${goals > 0 ? goals : '-'}</td>
-                        <td class="border border-slate-300 p-0.5 text-center">${isMvpChecked}</td>
-                    `;
+                        <td class="border border-slate-300 p-0.5 text-center">${isMvpChecked}</td>`;
                 }
                 tbody.appendChild(tr);
             }
